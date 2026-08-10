@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Momcozy User Guide</title>
+    <script>
+      (() => {
+        if (window.parent !== window) {
+          document.documentElement.classList.add("is-embedded");
+        }
+
+        const storedMomcozyTheme = localStorage.getItem("momcozy-theme");
+        const prefersDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+        if (storedMomcozyTheme === "dark" || (!storedMomcozyTheme && prefersDarkTheme)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="./momcozy-theme.css?v=20260709-labels-primary" />
+    <link rel="stylesheet" href="./styles.css?v=20260709-brand-heading" />
+  </head>
+  <body>
+    <button class="theme-toggle" type="button" id="themeToggle" aria-label="Switch to dark mode" aria-pressed="false">
+      <svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 14.6A8.2 8.2 0 0 1 9.4 3 7.2 7.2 0 1 0 21 14.6Z" />
+      </svg>
+      <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2.2M12 19.8V22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M2 12h2.2M19.8 12H22M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6" />
+      </svg>
+    </button>
+    <main class="app" aria-label="Momcozy user guide">
+      <section class="screen screen-list is-active" id="listScreen">
+        <div class="list-topbar" id="listTopbar">
+          <div class="statusbar statusbar-list" aria-hidden="true">
+            <img class="status-time" src="./assets/Time.svg" alt="" />
+            <img class="status-levels" src="./assets/Levels.svg" alt="" />
+          </div>
+          <button class="nav-circle" type="button" id="listBackButton" aria-label="Back">
+            <img src="./assets/Icon_Arrow1.png" alt="" aria-hidden="true" />
+          </button>
+        </div>
+
+        <header class="list-hero">
+          <h1>Momcozy just got better organized.</h1>
+        </header>
+
+        <section class="intro-copy" aria-label="Guide introduction">
+          <p>We've reorganized the Home and Devices tabs to bring your records, reminders, devices, and the things you use most every day into one convenient place.</p>
+          <p>No need to remember multiple entry points or jump between pages to find what you need.</p>
+          <p>Life with a little one is busy enough.</p>
+          <p>We hope that whenever you open the app, what you want to check, log, or manage is right where you expect it.</p>
+          <p>This guide is short and simple—let's get you up to speed.</p>
+        </section>
+
+        <div class="guide-list" id="guideList"></div>
+
+        <section class="faq-section" aria-label="Frequently asked questions">
+          <h2>FAQ</h2>
+          <div class="faq-list" id="faqList"></div>
+        </section>
+
+        <section class="contact-section" aria-label="Feedback">
+          <h2>We're Listening</h2>
+          <p>We'd love to hear your feedback. If something feels off or you'd like to see improvements, let us know.</p>
+          <p>Need help? We're always here to support you.</p>
+          <button class="contact-button" type="button">
+            <span class="contact-button__icon" aria-hidden="true"></span>
+            Contact Us
+          </button>
+        </section>
+
+        <div class="home-indicator" aria-hidden="true"></div>
+      </section>
+
+      <section class="screen screen-detail" id="detailScreen" aria-hidden="true">
+        <img class="detail-background" id="detailBackground" src="./assets/momcozy-cover-pink.png" alt="" aria-hidden="true" />
+        <div class="detail-gradient-mask" id="detailGradientMask" aria-hidden="true"></div>
+
+        <div class="statusbar statusbar-detail" aria-hidden="true">
+          <img class="status-time" src="./assets/Time.svg" alt="" />
+          <img class="status-levels" src="./assets/Levels.svg" alt="" />
+        </div>
+
+        <header class="detail-nav">
+          <button class="nav-circle" type="button" id="backButton" aria-label="Back to guide list">
+            <img src="./assets/Icon_Arrow1.png" alt="" aria-hidden="true" />
+          </button>
+          <h2>New Update</h2>
+        </header>
+
+        <div class="carousel" id="carousel" tabindex="0" aria-label="New updates, swipe horizontally">
+          <div class="slides" id="slides"></div>
+        </div>
+
+        <footer class="detail-footer">
+          <div class="progress" id="progressDots" aria-label="Current page"></div>
+        </footer>
+      </section>
+    </main>
+
+    <script src="./assets/lottie.js?v=5.12.2-safari"></script>
+    <script src="./script.js?v=20260706-token-chevrons"></script>
+  </body>
+</html>

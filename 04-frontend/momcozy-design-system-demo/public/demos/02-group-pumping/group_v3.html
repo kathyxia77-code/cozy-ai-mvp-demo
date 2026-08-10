@@ -1,0 +1,5457 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Momcozy Pumping Moms</title>
+  <link rel="stylesheet" href="../01-user-guide/momcozy-theme.css">
+  <style>
+    :root {
+      --primary: var(--colors-semantic-fills-mom-primary);
+      --primary-soft: var(--colors-brands-mom-500);
+      --rose-75: var(--colors-brands-mom-75);
+      --rose-100: var(--colors-brands-mom-100);
+      --ink: var(--colors-text-color-text-primary);
+      --ink-soft: var(--colors-text-color-text-primary);
+      --muted: var(--colors-text-color-text-secondary);
+      --muted-2: var(--colors-text-color-text-secondary);
+      --line: var(--colors-border-primary);
+      --hairline: var(--colors-border-secondary);
+      --surface: var(--colors-backgrouds-secondary);
+      --app-bg: var(--colors-backgrouds-primary);
+      --shadow: color-mix(in srgb, var(--colors-grays-black) 12%, transparent);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--app-bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--app-bg);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      letter-spacing: 0;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .stage {
+      min-height: 100vh;
+      display: grid;
+      place-items: start center;
+      padding: 32px 16px;
+    }
+
+    .phone {
+      position: relative;
+      width: 393px;
+      height: min(852px, calc(100vh - 64px));
+      min-height: 680px;
+      overflow: hidden;
+      border: 1px solid var(--hairline);
+      border-radius: 32px;
+      background: var(--colors-backgrouds-primary);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      left: -237px;
+      top: -565px;
+      width: 850px;
+      height: 850px;
+      background: url("./assets/top-pink-glow-figma.svg") center / 100% 100% no-repeat;
+      opacity: 1;
+      pointer-events: none;
+      z-index: 0;
+      transition: opacity 220ms ease, transform 320ms cubic-bezier(.2, .9, .22, 1);
+    }
+
+    .phone.is-scrolled::before,
+    .phone.is-post::before {
+      opacity: 0;
+      transform: translateY(-160px);
+    }
+
+    .phone.is-post {
+      background: var(--colors-backgrouds-primary);
+    }
+    .phone.is-post .bottom-fade,
+    .phone.is-post > .post-button,
+    .phone.is-post .tag-picker,
+    .phone.is-post .join-confirm {
+      display: none;
+    }
+
+    .scroll {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: 96px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .scroll::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+
+    .scroll::before {
+      content: "";
+      display: none;
+    }
+
+    .phone.is-scrolled .scroll::before {
+      position: sticky;
+      top: 0;
+      z-index: 19;
+      display: block;
+      width: 393px;
+      height: 146px;
+      margin-bottom: -146px;
+      background:
+        linear-gradient(180deg, var(--colors-backgrouds-primary) 0%, color-mix(in srgb, var(--colors-backgrouds-primary) 0%, transparent) 100%) 0 122px / 100% 24px no-repeat,
+        linear-gradient(var(--colors-backgrouds-primary), var(--colors-backgrouds-primary)) 0 0 / 100% 122px no-repeat;
+      pointer-events: none;
+    }
+
+    .status-bar {
+      display: flex;
+      visibility: hidden;
+      height: 16px;
+      align-items: center;
+      justify-content: center;
+      gap: 154px;
+      padding: 0 24px;
+      color: var(--colors-grays-black);
+      position: sticky;
+      top: 0;
+      z-index: 21;
+      background: transparent;
+      isolation: isolate;
+    }
+
+    .status-bar::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 0;
+      z-index: -1;
+      width: 100vw;
+      height: 100%;
+      transform: translateX(-50%);
+      background: transparent;
+    }
+
+    .phone.is-scrolled .status-bar::before {
+      background: transparent;
+    }
+
+    .phone.is-post .status-bar::before {
+      background: var(--colors-backgrouds-primary);
+    }
+
+    .time {
+      flex: 1 0 0;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 590;
+      line-height: 22px;
+    }
+
+    .levels {
+      flex: 1 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      height: 22px;
+    }
+
+    .cellular {
+      width: 20px;
+      height: 13px;
+      display: flex;
+      align-items: center;
+      flex: 0 0 auto;
+    }
+
+    .cellular svg {
+      width: 20px;
+      height: 13px;
+      display: block;
+    }
+
+    .wifi {
+      width: 18px;
+      height: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    .wifi svg {
+      width: 18px;
+      height: 13px;
+      display: block;
+    }
+
+    .battery {
+      width: 27px;
+      height: 13px;
+      border: 1.3px solid var(--colors-grays-black);
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .battery::before {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: 2px;
+      width: 19px;
+      height: 7px;
+      border-radius: 2px;
+      background: var(--colors-grays-black);
+    }
+
+    .battery::after {
+      content: "";
+      position: absolute;
+      right: -3px;
+      top: 4px;
+      width: 2px;
+      height: 5px;
+      border-radius: 0 2px 2px 0;
+      background: var(--colors-grays-black);
+    }
+
+    .top-nav {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      position: sticky;
+      top: 16px;
+      z-index: 20;
+      background: transparent;
+      overflow: visible;
+      transition: background 180ms ease, box-shadow 180ms ease;
+    }
+
+    .nav-tab-host {
+      position: absolute;
+      left: 50%;
+      right: auto;
+      top: -35px;
+      z-index: 1;
+      display: none;
+      width: 520px;
+      height: 140px;
+      overflow: hidden;
+      pointer-events: none;
+      transform: translateX(-50%);
+    }
+
+    .nav-tab-host::before,
+    .nav-tab-host::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      z-index: 2;
+      width: 76px;
+      height: 156px;
+      pointer-events: none;
+    }
+
+    .nav-tab-host::before {
+      left: 0;
+      background: linear-gradient(90deg, color-mix(in srgb, var(--colors-backgrouds-primary) 80%, transparent) 0%, color-mix(in srgb, var(--colors-backgrouds-primary) 0%, transparent) 100%);
+    }
+
+    .nav-tab-host::after {
+      right: 0;
+      background: linear-gradient(270deg, color-mix(in srgb, var(--colors-backgrouds-primary) 80%, transparent) 0%, color-mix(in srgb, var(--colors-backgrouds-primary) 0%, transparent) 100%);
+    }
+
+    .nav-tab-selection-ring {
+      position: absolute;
+      left: 50%;
+      top: 41.5px;
+      z-index: 2;
+      box-sizing: border-box;
+      width: 94px;
+      height: 94px;
+      border: 3px solid var(--colors-brands-mom-500);
+      border-radius: 40px;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .phone.is-scrolled .top-nav {
+      background: var(--colors-backgrouds-primary);
+      box-shadow: none;
+    }
+
+    .phone.is-scrolled .nav-tab-host {
+      display: block;
+    }
+
+    .round-icon {
+      position: relative;
+      z-index: 3;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 0.8px solid var(--colors-border-secondary);
+      border-radius: 999px;
+      background: var(--colors-grays-0);
+      color: var(--colors-text-color-text-primary);
+    }
+
+    .round-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      transition: transform 180ms ease;
+      transform-origin: center;
+    }
+
+    .phone.is-scrolled .round-icon[aria-label="Back"] svg {
+      transform: rotate(-90deg);
+    }
+
+    .nav-more {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 160ms ease;
+    }
+
+    .nav-more-icon {
+      width: 24px;
+      height: 24px;
+      display: block;
+      background: currentColor;
+      -webkit-mask: url("./assets/iconall.svg") center / contain no-repeat;
+      mask: url("./assets/iconall.svg") center / contain no-repeat;
+    }
+
+    .phone.is-scrolled .nav-more {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .group-info {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 393px;
+      margin-top: 8px;
+      padding: 8px 16px;
+      border-radius: 24px;
+      transition: opacity 180ms ease, max-height 220ms ease, margin 220ms ease, padding 220ms ease;
+    }
+
+    .phone.is-scrolled .group-info,
+    .phone.is-scrolled .status-heading {
+      max-height: 0;
+      margin-top: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      opacity: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .group-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 361px;
+    }
+
+    .group-main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--colors-semantic-fills-mom-pressed);
+      font-family: var(--font-brand);
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: 0.48px;
+    }
+
+    .active-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .avatar-stack {
+      display: flex;
+      align-items: center;
+    }
+
+    .mini-avatar {
+      position: relative;
+      width: 16px;
+      height: 16px;
+      margin-right: -4px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--colors-grays-0);
+      font-size: 7px;
+      font-weight: 700;
+      line-height: 1;
+      box-shadow: 0 0 0 0.5px var(--colors-grays-0);
+    }
+
+    .mini-avatar:last-child {
+      margin-right: 0;
+    }
+
+    .mini-avatar:nth-child(1) {
+      z-index: 3;
+    }
+
+    .mini-avatar:nth-child(2) {
+      z-index: 2;
+    }
+
+    .mini-avatar:nth-child(3) {
+      z-index: 1;
+    }
+
+    .meta {
+      color: var(--colors-text-color-text-primary);
+      font-size: 13px;
+      line-height: 17px;
+    }
+
+    .join {
+      width: 83px;
+      height: 40px;
+      flex: 0 0 auto;
+      border: 0;
+      border-radius: 20px;
+      background: var(--colors-semantic-fills-mom-primary);
+      color: var(--colors-semantic-labels-mom-primary);
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 17px;
+      cursor: pointer;
+      transition: background 160ms ease, color 160ms ease;
+    }
+
+    .join.is-joined {
+      background: var(--colors-grays-0);
+      color: var(--colors-semantic-fills-mom-pressed);
+    }
+
+    .description {
+      width: 358px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 17px;
+    }
+
+    .status-heading {
+      width: 361px;
+      height: 50px;
+      margin: 16px 0 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: opacity 180ms ease, height 220ms ease, margin 220ms ease;
+    }
+
+    .phone.is-scrolled .status-heading {
+      height: 0;
+    }
+
+    .status-title {
+      margin: 0;
+      color: var(--ink);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 22px;
+    }
+
+    .tag-wall {
+      position: relative;
+      width: 393px;
+      height: 360px;
+      margin-top: 0;
+      overflow: hidden;
+      border-radius: 28px;
+      touch-action: pan-y;
+      transition: height 320ms cubic-bezier(.2, .9, .22, 1);
+    }
+
+    .phone.is-filter-mode .tag-wall {
+      height: 360px;
+    }
+
+    .phone.is-scrolled .tag-wall {
+      height: 0;
+      margin-top: 0;
+      overflow: hidden;
+      position: relative;
+      top: auto;
+      z-index: auto;
+      background: transparent;
+      box-shadow: none;
+      border-radius: 0;
+      touch-action: none;
+      cursor: default;
+      pointer-events: none;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .phone.is-scrolled .tag-wall.is-row-dragging {
+      cursor: grabbing;
+      scroll-behavior: "auto";
+    }
+
+    .phone.is-scrolled .tag-wall::after {
+      content: "";
+      position: absolute;
+      left: var(--row-width, 780px);
+      top: 0;
+      width: 1px;
+      height: 1px;
+      pointer-events: none;
+    }
+
+    .bubble-status-banner {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 0;
+      z-index: 14;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      border: 0;
+      border-radius: 24px;
+      color: var(--colors-text-color-text-primary);
+      background: var(--colors-grays-0);
+      box-shadow: none;
+      opacity: 0;
+      transform: translateY(40px);
+      pointer-events: none;
+      transition:
+        opacity 260ms ease,
+        transform 260ms cubic-bezier(.2, .9, .22, 1);
+    }
+
+    .bubble-status-banner.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .bubble-status-banner-title {
+      min-width: 0;
+      flex: 1 1 auto;
+      color: var(--colors-text-color-text-primary);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0.28px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bubble-status-banner-action {
+      height: 32px;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 12px;
+      border: 1px solid color-mix(in srgb, var(--colors-grays-900) 20%, transparent);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--colors-semantic-fills-mom-pressed);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 18px;
+      letter-spacing: 0.24px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .phone.is-scrolled .bubble-status-banner {
+      display: none;
+    }
+
+    .row-scroll-spacer {
+      display: none;
+    }
+
+    .phone.is-scrolled .row-scroll-spacer {
+      display: none;
+      width: var(--row-width, 780px);
+      height: 106px;
+      pointer-events: none;
+    }
+
+    .phone.is-scrolled .tag-wall::-webkit-scrollbar {
+      display: none;
+    }
+
+    .phone.is-scrolled .react-bubble {
+      display: none;
+    }
+
+    .bubble.is-all-filter {
+      display: none;
+    }
+
+    .phone.is-scrolled .bubble.is-all-filter {
+      display: block;
+    }
+
+    .phone.is-scrolled .bubble {
+      transition:
+        width 220ms cubic-bezier(.2, .9, .22, 1),
+        height 220ms cubic-bezier(.2, .9, .22, 1),
+        transform 220ms cubic-bezier(.2, .9, .22, 1);
+    }
+
+    .phone.is-scrolled .bubble-core {
+      padding: 5px;
+    }
+
+    .phone.is-scrolled .bubble:not(.is-active) .bubble-core {
+      transform: scale(1);
+    }
+
+    .phone.is-scrolled .bubble.is-active .bubble-core {
+      transform: scale(1);
+      box-shadow: inset 0 4px 16px 0 var(--colors-brands-mom-75), 0 8px 20px color-mix(in srgb, var(--colors-brands-mom-700) 12%, transparent);
+    }
+
+    .phone.is-scrolled .bubble.is-active::after {
+      display: block;
+      width: 96px;
+      height: 96px;
+      border-color: var(--colors-brands-mom-500);
+      box-shadow: none;
+    }
+
+    .phone.is-scrolled .tag-wall > .bubble {
+      display: none;
+    }
+
+    .scroll-bubble-tabs {
+      display: none;
+    }
+
+    .phone.is-scrolled .nav-tab-host .scroll-bubble-tabs {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 0 216px;
+      touch-action: pan-x;
+      cursor: grab;
+      pointer-events: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .phone.is-scrolled .nav-tab-host .scroll-bubble-tabs.is-row-dragging {
+      cursor: grabbing;
+      scroll-behavior: "auto";
+    }
+
+    .phone.is-scrolled .nav-tab-host .scroll-bubble-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .scroll-tab-bubble {
+      position: relative;
+      flex: 0 0 88px;
+      width: 88px;
+      height: 88px;
+      display: grid;
+      place-items: stretch;
+      margin-top: var(--arc-y, 46.5px);
+      padding: 0;
+      border: 0;
+      border-radius: 36px;
+      background: transparent;
+      color: var(--colors-semantic-fills-mom-primary);
+      cursor: pointer;
+      scroll-snap-align: center;
+      transition:
+        margin-top 220ms cubic-bezier(.2, .9, .22, 1),
+        transform 180ms cubic-bezier(.2, .9, .22, 1);
+    }
+
+    .scroll-tab-bubble.is-active {
+      width: 88px;
+      height: 88px;
+      border-radius: 36px;
+      z-index: 2;
+    }
+
+    .scroll-tab-core {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-auto-rows: min-content;
+      align-content: center;
+      justify-items: center;
+      gap: 2px;
+      padding: 5px;
+      border-radius: inherit;
+      text-align: center;
+      background:
+        url("data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect x='0' y='0' height='100%' width='100%' fill='url(%23g1)' opacity='0.8'/><defs><radialGradient id='g1' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(-2.5 -0.2 0.2 -2.5 95 40)'><stop stop-color='rgba(255,255,255,1)' offset='0'/><stop stop-color='rgba(255,255,255,0)' offset='1'/></radialGradient></defs></svg>"),
+        url("data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect x='0' y='0' height='100%' width='100%' fill='url(%23g2)' opacity='0.8'/><defs><radialGradient id='g2' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(3 -1.8 1.8 3 0 48)'><stop stop-color='rgba(255,255,255,1)' offset='0'/><stop stop-color='rgba(255,255,255,0)' offset='1'/></radialGradient></defs></svg>"),
+        linear-gradient(180deg, var(--colors-brands-mom-300) 0%, var(--colors-brands-mom-100) 50%, color-mix(in srgb, var(--colors-brands-mom-100) 0%, transparent) 100%);
+      box-shadow: inset 0 4px 16px 0 var(--colors-brands-mom-75);
+    }
+
+    .scroll-tab-bubble.is-reacted .scroll-tab-core,
+    .tag-expanded-bubble.is-reacted .scroll-tab-core {
+      color: var(--colors-grays-0);
+      background:
+        url("data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect x='0' y='0' height='100%' width='100%' fill='url(%23g1)' opacity='0.4'/><defs><radialGradient id='g1' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(-3 -0.6 0.6 -3 90 45)'><stop stop-color='rgba(255,255,255,1)' offset='0'/><stop stop-color='rgba(255,255,255,0)' offset='1'/></radialGradient></defs></svg>"),
+        url("data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect x='0' y='0' height='100%' width='100%' fill='url(%23g2)' opacity='0.4'/><defs><radialGradient id='g2' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(3.2 -1.35 1.35 3.2 -5 49)'><stop stop-color='rgba(255,255,255,1)' offset='0'/><stop stop-color='rgba(255,255,255,0)' offset='1'/></radialGradient></defs></svg>"),
+        linear-gradient(180deg, var(--colors-semantic-fills-mom-primary) 0%, var(--colors-brands-mom-500) 70%, color-mix(in srgb, var(--colors-brands-mom-500) 0%, transparent) 100%);
+      box-shadow: inset 0 4px 24px 0 color-mix(in srgb, var(--colors-brands-mom-300) 60%, transparent);
+    }
+
+    .scroll-tab-bubble.is-active::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      box-sizing: border-box;
+      width: 94px;
+      height: 94px;
+      transform: translate(-50%, -50%);
+      border: 3px solid var(--colors-brands-mom-500);
+      border-radius: 40px;
+      box-shadow: none;
+      pointer-events: none;
+    }
+
+    .nav-tab-host .scroll-tab-bubble.is-active::after {
+      display: none;
+    }
+
+    .scroll-tab-label {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      text-align: center;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .scroll-tab-label {
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 14px;
+    }
+
+    .phone.is-scrolled .nav-tab-host .scroll-tab-core {
+      grid-auto-rows: auto;
+      align-content: center;
+      gap: 0;
+    }
+
+    .phone.is-scrolled .nav-tab-host .scroll-tab-label {
+      align-self: center;
+      justify-self: center;
+    }
+
+    .phone.is-scrolled .nav-tab-host .scroll-tab-count {
+      display: none;
+    }
+
+    .scroll-tab-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      min-width: 0;
+      width: 100%;
+      color: inherit;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 18px;
+      letter-spacing: 0.02em;
+      text-align: center;
+    }
+
+    .scroll-tab-count-icon {
+      width: 12px;
+      height: 12px;
+      flex: 0 0 auto;
+      background: currentColor;
+      -webkit-mask: url("./assets/status-count-person-figma.svg") center / contain no-repeat;
+      mask: url("./assets/status-count-person-figma.svg") center / contain no-repeat;
+    }
+
+    .scroll-tab-count-number {
+      font: inherit;
+    }
+
+    .tag-expanded-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      display: grid;
+      place-items: center;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      background: color-mix(in srgb, var(--colors-backgrouds-primary) 90%, transparent);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      transition: opacity 220ms ease, visibility 0s linear 220ms;
+    }
+
+    .tag-expanded-overlay.is-open {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+      transition: opacity 220ms ease;
+    }
+
+    .tag-expanded-grid {
+      width: 296px;
+      display: grid;
+      grid-template-columns: repeat(3, 88px);
+      gap: 16px;
+      justify-content: center;
+      align-content: center;
+    }
+
+    .tag-expanded-bubble {
+      position: relative;
+      width: 88px;
+      height: 88px;
+      display: grid;
+      place-items: stretch;
+      padding: 0;
+      border: 0;
+      border-radius: 36px;
+      background: transparent;
+      color: var(--colors-semantic-fills-mom-primary);
+      cursor: pointer;
+    }
+
+    .tag-expanded-bubble.is-active::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      box-sizing: border-box;
+      width: 94px;
+      height: 94px;
+      transform: translate(-50%, -50%);
+      border: 3px solid var(--colors-brands-mom-500);
+      border-radius: 40px;
+      pointer-events: none;
+    }
+
+    .tag-expanded-close {
+      position: absolute;
+      left: 50%;
+      bottom: 121px;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      border: 0;
+      border-radius: 1000px;
+      background: color-mix(in srgb, var(--colors-grays-white) 50%, transparent);
+      color: var(--colors-text-color-text-primary);
+      transform: translateX(-50%);
+      cursor: pointer;
+      box-shadow: 0 0 0 0.5px color-mix(in srgb, var(--colors-backgrouds-primary) 90%, transparent);
+    }
+
+    .tag-expanded-close::before {
+      content: "";
+      position: absolute;
+      inset: -26px;
+      border-radius: inherit;
+      background: color-mix(in srgb, var(--colors-grays-black) 4%, transparent);
+      filter: blur(10px);
+      opacity: 0.67;
+      mix-blend-mode: hard-light;
+      pointer-events: none;
+    }
+
+    .tag-expanded-close svg {
+      position: relative;
+      z-index: 1;
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      transform: rotate(90deg);
+    }
+
+    .react-bubble {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 9;
+      width: 44px;
+      height: 44px;
+      display: none;
+      place-items: center;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background:
+        url("data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect x='0' y='0' height='100%' width='100%' fill='url(%23g1)' opacity='0.4'/><defs><radialGradient id='g1' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(-3 -0.6 0.6 -3 90 45)'><stop stop-color='rgba(255,255,255,1)' offset='0'/><stop stop-color='rgba(255,255,255,0)' offset='1'/></radialGradient></defs></svg>"),
+        url("data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect x='0' y='0' height='100%' width='100%' fill='url(%23g2)' opacity='0.4'/><defs><radialGradient id='g2' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(3.2 -1.35 1.35 3.2 -5 49)'><stop stop-color='rgba(255,255,255,1)' offset='0'/><stop stop-color='rgba(255,255,255,0)' offset='1'/></radialGradient></defs></svg>"),
+        linear-gradient(180deg, var(--colors-semantic-fills-mom-primary) 0%, var(--colors-brands-mom-500) 70%, color-mix(in srgb, var(--colors-brands-mom-500) 0%, transparent) 100%);
+      background-color: transparent;
+      box-shadow: inset 0 4px 24px 0 color-mix(in srgb, var(--colors-brands-mom-300) 60%, transparent), 0 8px 20px color-mix(in srgb, var(--colors-brands-mom-700) 12%, transparent);
+      color: var(--colors-grays-0);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 18px;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+      transform: translate3d(var(--rx, 175px), var(--ry, 8px), 0) scale(var(--react-scale, 1));
+      transition: transform 180ms cubic-bezier(.2, .9, .22, 1), box-shadow 180ms ease;
+      animation: react-breathe-y 2200ms ease-in-out infinite;
+      will-change: transform;
+    }
+
+    .react-bubble.is-consumed {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      animation: none;
+      transform: translate3d(var(--rx, 175px), var(--ry, 8px), 0) scale(0.42);
+      transition:
+        opacity 180ms ease,
+        visibility 0s linear 180ms,
+        transform 180ms cubic-bezier(.2, .9, .22, 1);
+    }
+
+    .react-bubble.is-dragging {
+      cursor: grabbing;
+      --react-scale: 1.08;
+      transition: none;
+      animation: none;
+      box-shadow: inset 0 4px 16px color-mix(in srgb, var(--colors-brands-mom-75) 64%, transparent), 0 14px 28px color-mix(in srgb, var(--colors-brands-mom-700) 22%, transparent);
+    }
+
+    .react-bubble.is-over-target {
+      --react-scale: 1.16;
+    }
+
+    .react-bubble.is-restoring {
+      animation: react-pop-in 360ms cubic-bezier(.18, .9, .2, 1.18) both;
+    }
+
+    @keyframes react-breathe-y {
+      0%, 100% {
+        transform: translate3d(var(--rx, 175px), var(--ry, 8px), 0) scale(var(--react-scale, 1));
+      }
+      50% {
+        transform: translate3d(var(--rx, 175px), calc(var(--ry, 8px) - 3px), 0) scale(var(--react-scale, 1));
+      }
+    }
+
+    @keyframes react-pop-in {
+      0% {
+        opacity: 0;
+        transform: translate3d(var(--rx, 175px), calc(var(--ry, 8px) + 8px), 0) scale(0.36);
+      }
+      72% {
+        opacity: 1;
+        transform: translate3d(var(--rx, 175px), calc(var(--ry, 8px) - 2px), 0) scale(1.08);
+      }
+      100% {
+        opacity: 1;
+        transform: translate3d(var(--rx, 175px), var(--ry, 8px), 0) scale(var(--react-scale, 1));
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .react-bubble {
+        animation: none;
+      }
+    }
+
+    .bubble {
+      position: absolute;
+      width: var(--bubble-w, var(--d));
+      height: var(--bubble-h, var(--d));
+      display: block;
+      padding: 0;
+      border: 0;
+      border-radius: var(--bubble-radius, 40px);
+      transform: translate3d(var(--x), var(--y), 0);
+      transform-origin: center;
+      transition:
+        width 360ms cubic-bezier(.2, .9, .22, 1),
+        height 360ms cubic-bezier(.2, .9, .22, 1),
+        border-radius 360ms cubic-bezier(.2, .9, .22, 1);
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
+      cursor: pointer;
+      will-change: transform, width, height;
+      background: transparent;
+      --hold-progress: 0;
+      --hold-progress-deg: 0deg;
+      --hold-ripple-size: 0%;
+      --hold-ripple-opacity: 0;
+      --bubble-state-scale: 1;
+    }
+
+    .bubble,
+    .bubble *,
+    .tag-wall .bubble-avatar {
+      -webkit-user-drag: none;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    .bubble::before {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      z-index: 2;
+      border-radius: calc(var(--bubble-radius, 40px) + 4px);
+      padding: 3px;
+      background: conic-gradient(var(--colors-brands-mom-500) var(--hold-progress-deg), color-mix(in srgb, var(--colors-brands-mom-500) 18%, transparent) 0deg);
+      opacity: 0;
+      transform: scale(0.98);
+      pointer-events: none;
+      transition: opacity 120ms ease, transform 160ms cubic-bezier(.2, .9, .22, 1);
+      -webkit-mask: linear-gradient(var(--colors-grays-black) 0 0) content-box, linear-gradient(var(--colors-grays-black) 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
+
+    .bubble.is-holding::before {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .bubble-core {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      grid-auto-rows: min-content;
+      align-content: center;
+      justify-items: center;
+      gap: 2px;
+      padding: 6px;
+      border-radius: inherit;
+      text-align: center;
+      transform: scale(var(--bubble-state-scale, 1));
+      transform-origin: center;
+      /* 未选中态：粉色渐变背景 */
+      background:
+        url("data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect x='0' y='0' height='100%' width='100%' fill='url(%23g1)' opacity='0.8'/><defs><radialGradient id='g1' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(-2.5 -0.2 0.2 -2.5 95 40)'><stop stop-color='rgba(255,255,255,1)' offset='0'/><stop stop-color='rgba(255,255,255,0)' offset='1'/></radialGradient></defs></svg>"),
+        url("data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect x='0' y='0' height='100%' width='100%' fill='url(%23g2)' opacity='0.8'/><defs><radialGradient id='g2' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(3 -1.8 1.8 3 0 48)'><stop stop-color='rgba(255,255,255,1)' offset='0'/><stop stop-color='rgba(255,255,255,0)' offset='1'/></radialGradient></defs></svg>"),
+        linear-gradient(180deg, var(--colors-brands-mom-300) 0%, var(--colors-brands-mom-100) 50%, color-mix(in srgb, var(--colors-brands-mom-100) 0%, transparent) 100%);
+      background-color: transparent;
+      color: var(--colors-semantic-fills-mom-primary);
+      box-shadow: inset 0 4px 16px 0 var(--colors-brands-mom-75);
+      transition:
+        transform 200ms ease,
+        background 200ms ease,
+        box-shadow 200ms ease,
+        color 200ms ease,
+        opacity 180ms ease;
+      will-change: transform;
+      overflow: hidden;
+    }
+
+    .bubble-core::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--colors-brands-mom-500) 90%, transparent) 0 var(--hold-ripple-size), color-mix(in srgb, var(--colors-brands-mom-500) 42%, transparent) calc(var(--hold-ripple-size) + 9%), color-mix(in srgb, var(--colors-brands-mom-500) 0%, transparent) calc(var(--hold-ripple-size) + 18%)),
+        linear-gradient(180deg, color-mix(in srgb, var(--colors-brands-mom-500) 50%, transparent) 0%, color-mix(in srgb, var(--colors-brands-mom-500) 28%, transparent) 70%, color-mix(in srgb, var(--colors-brands-mom-500) 0%, transparent) 100%);
+      filter: blur(3px);
+      opacity: var(--hold-ripple-opacity);
+      pointer-events: none;
+      transition: opacity 120ms ease;
+    }
+
+    .bubble-label,
+    .bubble-count {
+      position: relative;
+      z-index: 1;
+    }
+
+    .bubble.is-holding .bubble-core {
+      color: var(--colors-grays-0);
+    }
+
+    .bubble.is-spawning {
+      z-index: 8;
+      pointer-events: none;
+      --spawn-scale: 0.18;
+    }
+
+    .bubble.is-spawning {
+      --bubble-state-scale: var(--spawn-scale);
+    }
+
+    .phone.is-filter-active .bubble:not(.is-active) .bubble-core {
+      --bubble-state-scale: 0.86;
+    }
+
+    .bubble.is-removing {
+      z-index: 9;
+      pointer-events: none;
+    }
+
+    .bubble.is-removing .bubble-core {
+      --bubble-state-scale: 0.08;
+      opacity: 0;
+    }
+
+    .bubble.is-drop-target .bubble-core {
+      box-shadow: inset 0 4px 16px 0 var(--colors-brands-mom-75), 0 0 0 3px color-mix(in srgb, var(--colors-brands-mom-700) 22%, transparent);
+    }
+
+    .bubble-label {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      font-size: var(--label-size, 12px);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      line-height: var(--label-line-height, 16px);
+      text-align: center;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      text-wrap: balance;
+    }
+
+    .bubble-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      min-width: 0;
+      color: inherit;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 18px;
+      letter-spacing: 0.02em;
+      text-align: center;
+      transform: scale(var(--count-counter-scale, 1));
+      transform-origin: center;
+    }
+
+    .bubble-count[hidden] {
+      display: none;
+    }
+
+    .bubble-avatar-stack {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 0;
+      max-width: 100%;
+      flex: 0 0 auto;
+    }
+
+    .bubble-avatar {
+      position: relative;
+      width: var(--bubble-avatar-size, 16px);
+      height: var(--bubble-avatar-size, 16px);
+      margin-right: calc(var(--bubble-avatar-overlap, 5px) * -1);
+      flex: 0 0 auto;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 0 0.5px var(--colors-grays-0);
+    }
+
+    .bubble-avatar:last-child {
+      margin-right: 0;
+    }
+
+    .bubble-avatar:nth-child(1) {
+      z-index: 3;
+    }
+
+    .bubble-avatar:nth-child(2) {
+      z-index: 2;
+    }
+
+    .bubble-avatar:nth-child(3) {
+      z-index: 1;
+    }
+
+    .bubble-count-number {
+      font: inherit;
+    }
+
+    /* 选中态 */
+    .bubble.is-active {
+      z-index: 2;
+    }
+
+    .bubble.is-active::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: var(--selection-w, var(--selection-d, 140px));
+      height: var(--selection-h, var(--selection-d, 140px));
+      transform: translate(-50%, -50%);
+      border: 2px solid var(--colors-brands-mom-500);
+      border-radius: var(--selection-radius, 50px);
+      box-shadow: none;
+      pointer-events: none;
+    }
+
+    .bubble.is-active .bubble-core {
+      --bubble-state-scale: var(--active-scale, 1.5);
+    }
+
+    .bubble.is-reaction-pulse .bubble-core {
+      animation: bubble-reaction-pulse 420ms cubic-bezier(.2, .9, .22, 1);
+    }
+
+    @keyframes bubble-reaction-pulse {
+      0% {
+        transform: scale(var(--bubble-state-scale, 1)) scale(1);
+      }
+      42% {
+        transform: scale(var(--bubble-state-scale, 1)) scale(1.12);
+      }
+      72% {
+        transform: scale(var(--bubble-state-scale, 1)) scale(0.98);
+      }
+      100% {
+        transform: scale(var(--bubble-state-scale, 1)) scale(1);
+      }
+    }
+
+    .bubble.is-reacted .bubble-core {
+      color: var(--colors-grays-0);
+      background:
+        url("data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect x='0' y='0' height='100%' width='100%' fill='url(%23g1)' opacity='0.4'/><defs><radialGradient id='g1' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(-3 -0.6 0.6 -3 90 45)'><stop stop-color='rgba(255,255,255,1)' offset='0'/><stop stop-color='rgba(255,255,255,0)' offset='1'/></radialGradient></defs></svg>"),
+        url("data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect x='0' y='0' height='100%' width='100%' fill='url(%23g2)' opacity='0.4'/><defs><radialGradient id='g2' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(3.2 -1.35 1.35 3.2 -5 49)'><stop stop-color='rgba(255,255,255,1)' offset='0'/><stop stop-color='rgba(255,255,255,0)' offset='1'/></radialGradient></defs></svg>"),
+        linear-gradient(180deg, var(--colors-semantic-fills-mom-primary) 0%, var(--colors-brands-mom-500) 70%, color-mix(in srgb, var(--colors-brands-mom-500) 0%, transparent) 100%);
+      background-color: transparent;
+      box-shadow: inset 0 4px 24px 0 color-mix(in srgb, var(--colors-brands-mom-300) 60%, transparent);
+    }
+
+    .react-pop {
+      position: absolute;
+      z-index: 12;
+      left: 0;
+      top: 0;
+      color: var(--colors-semantic-fills-mom-primary);
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 22px;
+      pointer-events: none;
+      transform: translate3d(var(--pop-x), var(--pop-y), 0);
+      animation: react-pop 760ms cubic-bezier(.2, .9, .22, 1) forwards;
+    }
+
+    .bubble-sparkles {
+      position: absolute;
+      z-index: 11;
+      left: 0;
+      top: 0;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      color: var(--colors-brands-mom-700);
+      pointer-events: none;
+      transform: translate3d(var(--spark-x), var(--spark-y), 0);
+      animation: bubble-sparkles 760ms ease-out forwards;
+    }
+
+    @keyframes react-pop {
+      0% { opacity: 0; transform: translate3d(var(--pop-x), calc(var(--pop-y) + 8px), 0) scale(0.82); }
+      22% { opacity: 1; }
+      100% { opacity: 0; transform: translate3d(var(--pop-x), calc(var(--pop-y) - 38px), 0) scale(1.08); }
+    }
+
+    @keyframes bubble-sparkles {
+      0%, 20% {
+        opacity: 0;
+        box-shadow: var(--sparkles-start);
+      }
+      25% {
+        opacity: 1;
+        box-shadow: var(--sparkles-mid);
+      }
+      100% {
+        opacity: 0;
+        box-shadow: var(--sparkles-end);
+      }
+    }
+
+    /* Tab联动高亮 */
+    .bubble.is-tab-highlight .bubble-core {
+      box-shadow: inset 0 4px 16px 0 var(--colors-brands-mom-75), 0 0 0 2px color-mix(in srgb, var(--colors-brands-mom-700) 20%, transparent);
+    }
+
+    .bubble:focus {
+      outline: none;
+    }
+
+    .bubble:focus-visible .bubble-core {
+      box-shadow: inset 0 4px 16px 0 var(--colors-brands-mom-75), 0 0 0 3px color-mix(in srgb, var(--colors-brands-mom-500) 40%, transparent);
+    }
+
+    .add-status {
+      width: auto;
+      min-width: 88px;
+      height: 32px;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 7px 12px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--colors-grays-0);
+      color: var(--colors-semantic-fills-mom-pressed);
+      --fill-0: var(--colors-semantic-fills-mom-pressed);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 18px;
+      letter-spacing: 0.24px;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .add-status.is-ending {
+      min-width: 76px;
+      justify-content: center;
+    }
+
+    /* ─── Moments section ─────────────────────────────────── */
+    .moments {
+      position: relative;
+      width: 361px;
+      margin: 16px 0 0 16px;
+    }
+
+    .phone.is-scrolled .moments {
+      margin-top: 87.5px;
+    }
+
+    .moments-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 0;
+    }
+
+    .moments-title {
+      display: none;
+    }
+
+    .selected-status-summary {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      width: 347px;
+      margin: 0 auto;
+      padding: 0 0 16px;
+      color: var(--colors-text-color-text-primary);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0.28px;
+    }
+
+    .phone.is-scrolled .selected-status-summary:not([hidden]) {
+      display: flex;
+    }
+
+    .selected-status-avatars {
+      display: inline-flex;
+      align-items: center;
+      flex: 0 0 auto;
+    }
+
+    .selected-status-avatar {
+      position: relative;
+      display: block;
+      width: 24px;
+      height: 24px;
+      margin-right: -4px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 0 0.5px var(--colors-grays-0);
+    }
+
+    .selected-status-avatar:last-child {
+      margin-right: 0;
+    }
+
+    .selected-status-avatar:nth-child(1) {
+      z-index: 3;
+    }
+
+    .selected-status-avatar:nth-child(2) {
+      z-index: 2;
+    }
+
+    .selected-status-avatar:nth-child(3) {
+      z-index: 1;
+    }
+
+    .selected-status-copy {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* ─── Tab bar ──────────────────────────────────────────── */
+    .tab-bar-wrap {
+      display: none;
+      /* full bleed so it can scroll edge to edge */
+      width: 393px;
+      margin-left: -15px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* subtle right-edge fade */
+    .tab-bar-wrap::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 32px;
+      background: linear-gradient(90deg, color-mix(in srgb, var(--colors-backgrouds-primary) 0%, transparent) 0%, var(--colors-backgrouds-primary) 100%);
+      pointer-events: none;
+    }
+
+    .tab-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px 14px 16px;
+      overflow-x: auto;
+      overflow-y: visible;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tab-bar::-webkit-scrollbar { display: none; }
+
+    .tab-chip {
+      flex: 0 0 auto;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 20px;
+      background: color-mix(in srgb, var(--colors-grays-900) 6%, transparent);
+      color: var(--colors-text-color-text-primary);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0.28px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition:
+        background 180ms ease,
+        color 180ms ease,
+        font-weight 180ms ease,
+        transform 160ms cubic-bezier(.2,.9,.22,1);
+    }
+
+    .tab-chip:active {
+      transform: scale(0.96);
+    }
+
+    .tab-chip.is-active {
+      background: var(--colors-semantic-fills-mom-primary);
+      color: var(--colors-semantic-labels-mom-primary);
+      font-weight: 500;
+    }
+
+    /* ─── Posts ────────────────────────────────────────────── */
+    .posts-viewport {
+      position: relative;
+      width: 361px;
+      overflow: hidden;
+      touch-action: pan-y;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .posts-viewport img {
+      -webkit-user-drag: none;
+      user-select: none;
+    }
+
+    .phone.is-scrolled .posts-viewport {
+      cursor: grab;
+    }
+
+    .phone.is-scrolled .posts-viewport.is-swipe-dragging {
+      cursor: grabbing;
+    }
+
+    /* ── iOS-style page track: current + prev + next sit side-by-side ── */
+    .posts-track {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      width: 100%;
+      /* position driven by --track-x via JS */
+      transform: translate3d(var(--track-x, 0px), 0, 0);
+      will-change: transform;
+    }
+
+    /* smooth spring settle (committed swipe / tab tap) */
+    .posts-track.is-settling {
+      transition: transform 420ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* snap back when swipe cancelled */
+    .posts-track.is-snapping {
+      transition: transform 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .posts,
+    .posts-page {
+      flex: 0 0 361px;
+      width: 361px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: stretch;
+      /* pages that are off-screen are invisible for a11y but still laid out */
+    }
+
+    .posts-page.is-offscreen {
+      visibility: hidden;
+    }
+
+    /* legacy snapshot kept for tab-tap animation (non-swipe) */
+    .posts-snapshot {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 4;
+      width: 361px;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .posts-snapshot.is-page-exit-next {
+      animation: posts-exit-next 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    }
+
+    .posts-snapshot.is-page-exit-prev {
+      animation: posts-exit-prev 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    }
+
+    @keyframes posts-exit-next {
+      0%   { opacity: 1;    transform: translate3d(0, 0, 0); }
+      100% { opacity: 0;    transform: translate3d(-30%, 0, 0); }
+    }
+
+    @keyframes posts-exit-prev {
+      0%   { opacity: 1;    transform: translate3d(0, 0, 0); }
+      100% { opacity: 0;    transform: translate3d(30%, 0, 0); }
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--line);
+    }
+
+    /* post hidden by tab filter */
+    .post-wrap.is-hidden {
+      display: none;
+    }
+
+    /* empty state */
+    .empty-state {
+      display: none;
+      width: 361px;
+      min-height: 488px;
+      padding: 102px 0 28px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .empty-state.is-visible {
+      display: flex;
+    }
+
+    .empty-state-illustration {
+      width: 160px;
+      height: 160px;
+      display: block;
+      margin: 0 auto 14px;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .empty-state-title {
+      width: 361px;
+      margin: 0 auto;
+      color: color-mix(in srgb, var(--colors-grays-900) 44%, transparent);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 22px;
+      letter-spacing: 0.32px;
+    }
+
+    .empty-state-copy {
+      width: 361px;
+      margin: 0 auto;
+      color: color-mix(in srgb, var(--colors-grays-900) 44%, transparent);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 22px;
+      letter-spacing: 0.32px;
+    }
+
+    .empty-state-action {
+      min-width: 88px;
+      height: 32px;
+      margin-top: 14px;
+      padding: 0 22px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--colors-grays-0);
+      color: var(--colors-semantic-fills-mom-primary);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 16px;
+      letter-spacing: 0;
+      box-shadow: 0 8px 22px color-mix(in srgb, var(--colors-brands-mom-700) 8%, transparent);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .empty-state-action:active {
+      transform: scale(0.98);
+    }
+
+    .post {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 8px;
+      width: 361px;
+    }
+
+    .post-avatar {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--colors-brands-mom-700);
+      color: var(--colors-grays-0);
+      font-size: 14px;
+      font-weight: 510;
+    }
+
+    .post-detail {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .post-head {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .name-line {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      min-height: 17px;
+      min-width: 0;
+    }
+
+    .name-line strong {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 510;
+      white-space: nowrap;
+    }
+
+    .post-time {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.3;
+      white-space: nowrap;
+    }
+
+    .topic {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--primary);
+      font-size: 12px;
+      line-height: 1.3;
+      white-space: nowrap;
+    }
+
+    .topic svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    .topic-icon {
+      position: relative;
+      width: 16px;
+      height: 16px;
+      flex: 0 0 16px;
+      overflow: hidden;
+    }
+
+    .topic-icon img {
+      position: absolute;
+      left: 1px;
+      top: 1.5px;
+      width: 14px;
+      height: 14px;
+      display: block;
+    }
+
+    .post-copy {
+      display: -webkit-box;
+      margin: 0;
+      overflow: hidden;
+      color: var(--ink-soft);
+      font-size: 14px;
+      line-height: 20px;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+
+    .post-img {
+      width: 321px;
+      height: 194px;
+      margin-top: 4px;
+      overflow: hidden;
+      border-radius: 19.5px;
+      background: var(--colors-border-secondary);
+    }
+
+    .post-img img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .actions {
+      height: 28px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      margin-left: 0;
+    }
+
+    .action {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 2px 6px;
+      border: 0;
+      border-radius: 20px;
+      background: transparent;
+      color: var(--muted-2);
+      font-size: 14px;
+      line-height: 16px;
+      cursor: pointer;
+    }
+
+    .action img {
+      width: 24px;
+      height: 24px;
+      display: block;
+    }
+
+    .action img[src$="action-like-figma.svg"] {
+      width: 16.3px;
+      height: 15.9px;
+      margin: 4px;
+    }
+
+    .reply {
+      display: none;
+      width: 100%;
+      height: 34px;
+      align-items: center;
+      padding: 8px 16px;
+      border: 1px solid var(--line);
+      border-radius: 80px;
+      color: var(--colors-text-color-text-tertiary);
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
+    /* ─── Post button ──────────────────────────────────────── */
+    .post-button {
+      position: absolute;
+      z-index: 5;
+      left: 50%;
+      bottom: 39px;
+      width: 135px;
+      height: 44px;
+      transform: translateX(-50%);
+      border: 0;
+      border-radius: 100px;
+      background: var(--colors-semantic-fills-mom-primary);
+      box-shadow: 0 4px 24px var(--shadow);
+      color: var(--colors-semantic-labels-mom-primary);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.3;
+      cursor: pointer;
+      transition:
+        transform 240ms cubic-bezier(.2, .9, .22, 1),
+        opacity 180ms ease;
+      will-change: transform, opacity;
+    }
+
+    .phone.is-scroll-moving .post-button {
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, calc(100% + 56px));
+    }
+
+    /* ─── Join confirmation ───────────────────────────────── */
+    .join-confirm {
+      position: absolute;
+      inset: 0;
+      z-index: 21;
+      display: grid;
+      place-items: center;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .join-confirm.is-open {
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .join-confirm-backdrop {
+      position: absolute;
+      inset: 0;
+      background: color-mix(in srgb, var(--colors-grays-black) 30%, transparent);
+      opacity: 0;
+      transition: opacity 220ms ease;
+    }
+
+    .join-confirm.is-open .join-confirm-backdrop {
+      opacity: 1;
+    }
+
+    .join-confirm-sheet {
+      position: relative;
+      z-index: 1;
+      width: 298px;
+      margin: 0;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      border-radius: 34px;
+      background: color-mix(in srgb, var(--colors-backgrouds-primary) 90%, transparent);
+      box-shadow: 0 8px 40px color-mix(in srgb, var(--colors-grays-black) 12%, transparent);
+      transform: translateY(8px) scale(0.98);
+      opacity: 0;
+      transition: transform 240ms cubic-bezier(.2, .9, .22, 1), opacity 200ms ease;
+    }
+
+    .join-confirm.is-open .join-confirm-sheet {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .join-confirm-illustration {
+      width: 160px;
+      height: 160px;
+      margin: 8px auto 0;
+      display: block;
+      object-fit: contain;
+    }
+
+    .join-confirm-title {
+      margin: 0;
+      padding: 0 8px;
+      color: var(--colors-text-color-text-primary);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 22px;
+      letter-spacing: 0.32px;
+      text-align: left;
+    }
+
+    .join-confirm-copy {
+      margin: 0;
+      padding: 0 8px 12px;
+      color: var(--colors-text-color-text-primary);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0.28px;
+      text-align: left;
+    }
+
+    .join-confirm-copy p {
+      margin: 0;
+    }
+
+    .join-confirm-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 0;
+    }
+
+    .join-confirm-primary {
+      width: 100%;
+      height: 48px;
+      border: 0;
+      border-radius: 100px;
+      background: var(--colors-text-color-text-primary);
+      color: var(--colors-grays-0);
+      box-shadow: none;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 22px;
+      letter-spacing: 0.32px;
+      cursor: pointer;
+    }
+
+    /* ─── Leave group confirmation ────────────────────────── */
+    .leave-confirm {
+      position: absolute;
+      inset: 0;
+      z-index: 22;
+      display: grid;
+      place-items: center;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .leave-confirm.is-open {
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .leave-confirm-backdrop {
+      position: absolute;
+      inset: 0;
+      background: color-mix(in srgb, var(--colors-grays-black) 50%, transparent);
+      opacity: 0;
+      transition: opacity 220ms ease;
+    }
+
+    .leave-confirm.is-open .leave-confirm-backdrop {
+      opacity: 1;
+    }
+
+    .leave-confirm-sheet {
+      position: relative;
+      z-index: 1;
+      width: 298px;
+      margin: 0;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+      gap: 10px;
+      border: 0;
+      border-radius: 34px;
+      background: color-mix(in srgb, var(--colors-backgrouds-primary) 90%, transparent);
+      box-shadow: 0 8px 40px color-mix(in srgb, var(--colors-grays-black) 12%, transparent);
+      transform: translateY(8px) scale(0.98);
+      opacity: 0;
+      transition: transform 240ms cubic-bezier(.2, .9, .22, 1), opacity 200ms ease;
+    }
+
+    .leave-confirm.is-open .leave-confirm-sheet {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .leave-confirm-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      padding: 8px 8px 12px;
+      color: var(--colors-text-color-text-primary);
+      text-align: left;
+    }
+
+    .leave-confirm-title {
+      margin: 0;
+      color: var(--colors-text-color-text-primary);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 22px;
+      letter-spacing: 0.32px;
+    }
+
+    .leave-confirm-description {
+      margin: 0;
+      color: var(--colors-text-color-text-primary);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0.28px;
+    }
+
+    .leave-confirm-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .leave-confirm-button {
+      width: 100%;
+      height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 16px;
+      border: 0;
+      border-radius: 100px;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 22px;
+      letter-spacing: 0.32px;
+      cursor: pointer;
+    }
+
+    .leave-confirm-stay {
+      background: var(--colors-text-color-text-primary);
+      color: var(--colors-grays-0);
+    }
+
+    .leave-confirm-leave {
+      background: color-mix(in srgb, var(--colors-grays-900) 7%, transparent);
+      color: var(--colors-text-color-text-primary);
+    }
+
+    /* ─── Compose / Post view ──────────────────────────────── */
+    .post-view {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+      display: none;
+      overflow: hidden;
+      background: var(--colors-backgrouds-primary);
+    }
+
+    .phone.is-post .post-view {
+      display: block;
+    }
+
+    .post-view .status-bar {
+      width: 393px;
+      height: 62px;
+      padding-top: 21px;
+      position: relative;
+      top: auto;
+    }
+
+    .compose-toolbar {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      position: relative;
+      top: -46px;
+    }
+
+    /* 返回按钮：44×44 圆形毛玻璃 */
+    .compose-back {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      border: none;
+      border-radius: 296px;
+      background: color-mix(in srgb, var(--colors-grays-white) 50%, transparent);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      color: var(--colors-text-color-text-primary);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .compose-back::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: var(--colors-grays-0);
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+
+    .compose-back svg {
+      position: relative;
+      z-index: 1;
+      width: 20px;
+      height: 20px;
+      stroke: var(--colors-text-color-text-primary);
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    /* Post 提交按钮 */
+    .compose-submit {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 24px;
+      border: 0;
+      border-radius: 37px;
+      background: var(--colors-semantic-fills-mom-primary);
+      box-shadow: 0 4px 6px color-mix(in srgb, var(--colors-grays-black) 6%, transparent);
+      color: var(--colors-semantic-labels-mom-primary);
+      font-size: 16px;
+      font-weight: 590;
+      line-height: 1.3;
+      text-transform: capitalize;
+      opacity: 0.3;
+      cursor: default;
+      transition: opacity 180ms ease;
+    }
+
+    .compose-submit:not(:disabled) {
+      opacity: 1;
+      cursor: pointer;
+    }
+
+    /* Segmented control */
+    .compose-segmented {
+      position: absolute;
+      left: 16px;
+      top: 76px;
+      width: 361px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px;
+      border-radius: 100px;
+      background: color-mix(in srgb, var(--colors-grays-900) 6%, transparent);
+      overflow: hidden;
+    }
+
+    .compose-segmented button {
+      flex: 1 1 0;
+      height: 32px;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 6px;
+      border: 0;
+      border-radius: 20px;
+      background: transparent;
+      color: var(--colors-text-color-text-primary);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 18px;
+      letter-spacing: 0.24px;
+      cursor: pointer;
+    }
+
+    .compose-segmented button.is-active {
+      background: var(--colors-grays-0);
+      box-shadow: 0 4px 12px color-mix(in srgb, var(--colors-grays-black) 6%, transparent);
+      font-weight: 500;
+    }
+
+    /* 内容区 */
+    .compose-body {
+      position: absolute;
+      left: 16px;
+      top: 136px;
+      width: 361px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .compose-title {
+      margin: 0;
+      color: color-mix(in srgb, var(--colors-grays-900) 30%, transparent);
+      font-family: var(--font-sans);
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 29px;
+      letter-spacing: 0.48px;
+      white-space: nowrap;
+    }
+
+    .compose-input {
+      width: 361px;
+      height: 207px;
+      border: 0;
+      padding: 0;
+      resize: none;
+      outline: none;
+      background: transparent;
+      color: var(--colors-text-color-text-primary);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 22px;
+      letter-spacing: 0.32px;
+      font-family: var(--font-sans);
+    }
+
+    .compose-input::placeholder {
+      color: color-mix(in srgb, var(--colors-grays-900) 30%, transparent);
+      opacity: 1;
+    }
+
+    /* 设置卡片（Anonymously + Share to Community） */
+    .compose-options-card {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 42px;
+      width: 393px;
+      background: transparent;
+      border-radius: 24px;
+      box-shadow: none;
+      padding: 0 16px;
+    }
+
+    .compose-option-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      height: 52px;
+      padding: 0;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0.28px;
+      color: var(--colors-text-color-text-primary);
+    }
+
+    .compose-option-row + .compose-option-row {
+      border-top: 0.5px solid color-mix(in srgb, var(--colors-grays-900) 7%, transparent);
+    }
+
+    .compose-option-label {
+      flex: 1;
+    }
+
+    /* Toggle 开关 */
+    .compose-toggle {
+      flex-shrink: 0;
+      width: 48px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      padding: 2px;
+      border: 0;
+      border-radius: 75px;
+      cursor: pointer;
+      position: relative;
+      transition: background 200ms ease;
+    }
+
+    .compose-toggle[aria-pressed="false"] {
+      background: var(--colors-text-color-text-tertiary);
+    }
+
+    .compose-toggle[aria-pressed="false"]::before {
+      left: 2px;
+    }
+
+    .compose-toggle[aria-pressed="true"] {
+      background: var(--colors-semantic-fills-mom-primary);
+    }
+
+    .compose-toggle[aria-pressed="true"]::before {
+      right: 2px;
+    }
+
+    .compose-toggle::before {
+      content: "";
+      position: absolute;
+      width: 26px;
+      height: 20px;
+      border-radius: 75px;
+      background: var(--colors-grays-0);
+      box-shadow:
+        inset 0 -0.375px 0.75px color-mix(in srgb, var(--colors-grays-white) 30%, transparent),
+        inset 0.75px 1.125px 3px color-mix(in srgb, var(--colors-grays-black) 8%, transparent);
+      transition: left 200ms ease, right 200ms ease;
+    }
+
+    /* 底部工具栏：毛玻璃胶囊，固定距底部 */
+    .compose-bottom {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 154px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 18px;
+      border-radius: 296px;
+      background: var(--colors-backgrouds-primary);
+      box-shadow: 0 8px 40px color-mix(in srgb, var(--colors-grays-black) 12%, transparent);
+    }
+
+    .compose-tools {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .compose-tool {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      border-radius: 100px;
+      cursor: pointer;
+    }
+
+    .compose-tool img {
+      display: block;
+    }
+
+    .compose-tool--pic img {
+      width: 22px;
+      height: 20px;
+    }
+
+    .compose-tool--poll img {
+      width: 19.5px;
+      height: 19.5px;
+    }
+
+    .compose-tool--tag img {
+      width: 22px;
+      height: 22px;
+    }
+
+    .compose-tool--setting {
+      position: relative;
+    }
+
+    .compose-tool--setting::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 40px;
+      height: 40px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: url("./assets/post-setting-circle-figma.svg") center / 40px 40px no-repeat;
+      pointer-events: none;
+    }
+
+    .compose-tool--setting img {
+      position: relative;
+      width: 24px;
+      height: 24px;
+    }
+
+    .compose-home-indicator {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 34px;
+    }
+
+    .compose-home-indicator::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 9px;
+      width: 134px;
+      height: 5px;
+      transform: translateX(-50%);
+      border-radius: 100px;
+      background: var(--colors-grays-black);
+    }
+
+    .bottom-fade {
+      display: none;
+    }
+
+    /* ─── Tag picker sheet ─────────────────────────────────── */
+    .tag-picker {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .tag-picker.is-open {
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .tag-picker-backdrop {
+      position: absolute;
+      inset: 0;
+      background: color-mix(in srgb, var(--colors-grays-black) 30%, transparent);
+      opacity: 0;
+      transition: opacity 220ms ease;
+    }
+
+    .tag-picker.is-open .tag-picker-backdrop {
+      opacity: 1;
+    }
+
+    .tag-picker-sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 464px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      overflow: hidden;
+      border-radius: 38px 38px 0 0;
+      background: var(--colors-backgrouds-primary);
+      transform: translateY(100%);
+      transition: transform 260ms cubic-bezier(.2, .9, .22, 1);
+    }
+
+    .tag-picker.is-open .tag-picker-sheet {
+      transform: translateY(0);
+    }
+
+    .tag-picker-fab {
+      position: relative;
+      height: 60px;
+      flex: 0 0 60px;
+      background: linear-gradient(180deg, var(--colors-backgrouds-primary) 0%, color-mix(in srgb, var(--colors-backgrouds-primary) 0%, transparent) 100%);
+    }
+
+    .tag-picker-close {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 0.5px solid var(--colors-border-secondary);
+      border-radius: 999px;
+      background: var(--colors-grays-0);
+      color: var(--colors-semantic-fills-mom-pressed);
+      cursor: pointer;
+    }
+
+    .tag-picker-close svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      fill: none;
+    }
+
+    .tag-picker-header {
+      position: absolute;
+      left: 0;
+      top: 25px;
+      z-index: 1;
+      width: 393px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .tag-picker-header h2 {
+      width: 260px;
+      margin: 0;
+      color: var(--colors-semantic-fills-mom-pressed);
+      font-family: var(--font-brand);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 26px;
+      letter-spacing: 0;
+    }
+
+    .tag-picker-slot {
+      width: 393px;
+      height: 302px;
+      flex: 0 0 302px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      overflow: hidden;
+      padding: 16px 24px;
+      border-radius: 13px;
+    }
+
+    .tag-picker-content {
+      width: 345px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .tag-picker-copy {
+      width: 329px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin: 0;
+    }
+
+    .tag-picker-copy p {
+      margin: 0;
+      color: var(--colors-text-color-text-primary);
+      font-size: 16px;
+      line-height: 22px;
+      letter-spacing: 0.32px;
+    }
+
+    .tag-options {
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      align-items: flex-start;
+      gap: 8px;
+      width: 329px;
+      min-height: 32px;
+      overflow: visible;
+      padding: 0;
+    }
+
+    .tag-option {
+      flex: 0 0 auto;
+      height: 32px;
+      min-height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 6px 12px;
+      border: 0;
+      border-radius: 100px;
+      background: var(--colors-grays-0);
+      color: var(--colors-text-color-text-primary);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0.28px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition:
+        background 180ms ease,
+        border-color 180ms ease,
+        color 180ms ease,
+        transform 180ms ease;
+    }
+
+    .tag-option.is-selected {
+      background: var(--colors-semantic-fills-mom-primary);
+      color: var(--colors-semantic-labels-mom-primary);
+      transform: scale(1.03);
+    }
+
+    .tag-custom-input {
+      width: 345px;
+      height: 52px;
+      padding: 17px 16px;
+      border: 0;
+      border-radius: 24px;
+      background: var(--colors-grays-0);
+      color: var(--colors-text-color-text-primary);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.2;
+      outline: none;
+    }
+
+    .tag-custom-input::placeholder {
+      color: color-mix(in srgb, var(--colors-grays-900) 44%, transparent);
+      opacity: 0.5;
+    }
+
+    .tag-picker-action {
+      position: relative;
+      height: 102px;
+      flex: 1 0 102px;
+    }
+
+    .tag-picker-add {
+      position: absolute;
+      left: 23px;
+      top: 0;
+      width: 346px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      border: 0;
+      border-radius: 37px;
+      background: var(--colors-semantic-fills-mom-primary);
+      box-shadow: 0 4px 8px color-mix(in srgb, var(--colors-grays-black) 2%, transparent);
+      color: var(--colors-semantic-labels-mom-primary);
+      font-size: 16px;
+      font-weight: 590;
+      line-height: 1.3;
+      opacity: 0.3;
+      cursor: default;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .tag-picker-add.is-ready {
+      opacity: 1;
+      cursor: pointer;
+    }
+
+    .tag-picker-add.is-ready:active {
+      transform: scale(0.99);
+    }
+
+    .home-indicator {
+      position: absolute;
+      left: 50%;
+      bottom: 8px;
+      width: 144px;
+      height: 5px;
+      transform: translateX(-50%);
+      border-radius: 100px;
+      background: var(--colors-grays-black);
+    }
+
+    @media (max-width: 460px) {
+      .stage {
+        display: block;
+        min-height: 100vh;
+        padding: 0;
+      }
+
+      .phone {
+        width: 100vw;
+        height: 100vh;
+        min-height: 100vh;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .group-info,
+      .tag-wall {
+        width: 100vw;
+      }
+
+      .status-bar,
+      .top-nav,
+      .group-info {
+        max-width: 393px;
+        margin: 0 auto;
+      }
+
+      .group-info {
+        margin: 8px auto 0;
+      }
+
+      .status-heading,
+      .moments {
+        margin-left: max(16px, calc((100vw - 393px) / 2 + 16px));
+      }
+
+      .tag-wall {
+        margin-left: calc((100vw - 393px) / 2);
+      }
+      .tab-bar-wrap {
+        width: 100vw;
+        margin-left: calc((100vw - 393px) / 2 - 15px);
+      }
+    }
+
+
+    /* Figma 104:4283 "long press to choose status" bubble visuals */
+    :root {
+      --status-bubble-light-bg:
+        radial-gradient(46% 46% at 89.6% 17.5%, color-mix(in srgb, var(--colors-grays-white) 80%, transparent) 0%, color-mix(in srgb, var(--colors-grays-white) 0%, transparent) 100%),
+        radial-gradient(90% 90% at 50% 12.4%, var(--colors-brands-mom-75) 0%, var(--colors-brands-mom-100) 25.316%, var(--colors-brands-mom-300) 51.974%, var(--colors-brands-mom-300) 74.531%, var(--colors-brands-mom-75) 100%);
+      --status-bubble-light-shadow:
+        inset 0 -4px 6px 0 var(--colors-brands-mom-75),
+        inset 0 4px 6px 0 color-mix(in srgb, var(--colors-brands-mom-75) 80%, transparent);
+      --status-bubble-dark-bg:
+        radial-gradient(44% 44% at 78.5% 10.7%, color-mix(in srgb, var(--colors-grays-white) 20%, transparent) 0%, color-mix(in srgb, var(--colors-grays-white) 0%, transparent) 100%),
+        radial-gradient(90% 90% at 50% 11.2%, var(--colors-brands-mom-500) 0%, var(--colors-brands-mom-500) 25.481%, var(--colors-brands-mom-700) 51.974%, var(--colors-brands-mom-700) 74.531%, var(--colors-brands-mom-500) 100%);
+      --status-bubble-dark-shadow:
+        inset 0 -4px 12px 0 color-mix(in srgb, var(--colors-brands-mom-300) 80%, transparent),
+        inset 0 4px 8px 0 color-mix(in srgb, var(--colors-brands-mom-300) 80%, transparent);
+    }
+
+    :root.dark {
+      --status-bubble-light-bg:
+        radial-gradient(44% 44% at 82% 14%, color-mix(in srgb, var(--colors-grays-white) 8%, transparent) 0%, color-mix(in srgb, var(--colors-grays-white) 0%, transparent) 100%),
+        radial-gradient(90% 90% at 50% 12%, var(--colors-brands-mom-75) 0%, var(--colors-brands-mom-100) 36%, var(--colors-brands-mom-50) 72%, color-mix(in srgb, var(--colors-brands-mom-50) 86%, var(--colors-grays-black)) 100%);
+      --status-bubble-light-shadow:
+        inset 0 -4px 10px 0 color-mix(in srgb, var(--colors-brands-mom-300) 16%, transparent),
+        inset 0 3px 6px 0 color-mix(in srgb, var(--colors-brands-mom-300) 18%, transparent);
+    }
+
+    .bubble-core,
+    .scroll-tab-core {
+      background: var(--status-bubble-light-bg);
+      background-color: transparent;
+      box-shadow: var(--status-bubble-light-shadow);
+    }
+
+    :root.dark .bubble-core,
+    :root.dark .scroll-tab-core {
+      color: var(--colors-text-color-text-primary);
+    }
+
+    .bubble.is-holding .bubble-core,
+    .bubble.is-reacted .bubble-core,
+    .scroll-tab-bubble.is-reacted .scroll-tab-core,
+    .tag-expanded-bubble.is-reacted .scroll-tab-core,
+    .react-bubble {
+      color: var(--colors-brands-mom-75);
+      background: var(--status-bubble-dark-bg);
+      background-color: transparent;
+      box-shadow: var(--status-bubble-dark-shadow);
+    }
+
+    .bubble.is-drop-target .bubble-core,
+    .bubble.is-tab-highlight .bubble-core,
+    .bubble:focus-visible .bubble-core {
+      box-shadow:
+        var(--status-bubble-light-shadow),
+        0 0 0 2px color-mix(in srgb, var(--colors-brands-mom-700) 20%, transparent);
+    }
+
+    .phone.is-scrolled .bubble.is-active .bubble-core {
+      box-shadow:
+        var(--status-bubble-light-shadow),
+        0 8px 20px color-mix(in srgb, var(--colors-brands-mom-700) 12%, transparent);
+    }
+
+    /* Figma 185:7328 status picker sheet refinements */
+    .tag-picker-sheet {
+      height: auto;
+      border-radius: 38px 38px 0 0;
+      background: var(--colors-backgrouds-primary);
+    }
+
+    .tag-picker-fab {
+      height: 60px;
+      flex-basis: 60px;
+      background: transparent;
+    }
+
+    .tag-picker-close {
+      left: 16px;
+      top: 16px;
+      background: var(--colors-grays-0);
+      color: var(--colors-semantic-fills-mom-pressed);
+      border-color: transparent;
+    }
+
+    .tag-picker-header {
+      left: 0;
+      top: 60px;
+      width: 393px;
+      height: 29px;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .tag-picker-header h2 {
+      width: auto;
+      color: var(--colors-semantic-fills-mom-primary);
+      font-family: var(--font-brand);
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 29px;
+    }
+
+    .tag-picker-slot {
+      width: 393px;
+      height: auto;
+      flex: 0 0 auto;
+      justify-content: flex-start;
+      padding: 53px 24px 32px;
+      border-radius: 0;
+      overflow: visible;
+    }
+
+    .tag-picker-content {
+      width: 345px;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    .tag-picker-copy {
+      width: 345px;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .tag-picker-copy p {
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    .tag-picker-subtitle {
+      color: var(--colors-text-color-text-primary);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 22px;
+    }
+
+    .tag-picker-note {
+      width: 345px;
+      color: color-mix(in srgb, var(--colors-grays-900) 44%, transparent);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 18px;
+    }
+
+    .tag-picker .tag-picker-copy > .tag-picker-note {
+      color: color-mix(in srgb, var(--colors-grays-900) 44%, transparent) !important;
+      font-size: 12px !important;
+      font-weight: 400 !important;
+      line-height: 18px !important;
+      letter-spacing: 0 !important;
+    }
+
+    .tag-options {
+      width: 345px;
+      max-height: 260px;
+      margin-top: 8px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      gap: 8px;
+      padding: 0 4px 4px;
+      margin-left: -4px;
+      box-sizing: border-box;
+      scrollbar-width: none;
+    }
+
+    .tag-options::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tag-option {
+      background: var(--colors-grays-0);
+      color: var(--colors-text-color-text-primary);
+    }
+
+    .tag-option.is-selected {
+      background: var(--colors-semantic-fills-mom-primary);
+      color: var(--colors-semantic-labels-mom-primary);
+    }
+
+    .tag-custom-input {
+      width: 345px;
+      height: 52px;
+      margin: 0;
+      background: var(--colors-grays-0);
+    }
+
+    .tag-picker-action {
+      height: 102px;
+      flex: 0 0 102px;
+    }
+
+    .tag-picker-add {
+      left: 23px;
+      top: 0;
+      width: 346px;
+      background: var(--colors-semantic-fills-mom-primary);
+      color: var(--colors-semantic-labels-mom-primary);
+      font-weight: 500;
+    }
+
+  </style>
+  <link rel="stylesheet" href="./moment-map.css?v=ds11">
+  <link rel="stylesheet" href="./example-theme.css">
+</head>
+<body>
+  <main class="stage">
+    <section class="phone" aria-label="Pumping moms community">
+      <div class="scroll">
+        <div class="status-bar" aria-hidden="true">
+          <div class="time">9:41</div>
+          <div class="levels">
+            <div class="cellular"><svg width="20" height="13" viewBox="0 0 20 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.2 1.14623C19.2 0.513183 18.7224 0 18.1333 0H17.0667C16.4776 0 16 0.513183 16 1.14623V11.0802C16 11.7132 16.4776 12.2264 17.0667 12.2264H18.1333C18.7224 12.2264 19.2 11.7132 19.2 11.0802V1.14623ZM11.7659 2.44528H12.8326C13.4217 2.44528 13.8992 2.97078 13.8992 3.61902V11.0527C13.8992 11.7009 13.4217 12.2264 12.8326 12.2264H11.7659C11.1768 12.2264 10.6992 11.7009 10.6992 11.0527V3.61902C10.6992 2.97078 11.1768 2.44528 11.7659 2.44528ZM7.43411 5.09433H6.36745C5.77834 5.09433 5.30078 5.62652 5.30078 6.28301V11.0377C5.30078 11.6942 5.77834 12.2264 6.36745 12.2264H7.43411C8.02322 12.2264 8.50078 11.6942 8.50078 11.0377V6.28301C8.50078 5.62652 8.02322 5.09433 7.43411 5.09433ZM2.13333 7.53962H1.06667C0.477563 7.53962 0 8.06421 0 8.71132V11.0547C0 11.7018 0.477563 12.2264 1.06667 12.2264H2.13333C2.72244 12.2264 3.2 11.7018 3.2 11.0547V8.71132C3.2 8.06421 2.72244 7.53962 2.13333 7.53962Z" fill="currentColor"/></svg></div>
+            <div class="wifi"><svg width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.5713 2.46628C11.0584 2.46639 13.4504 3.38847 15.2529 5.04195C15.3887 5.1696 15.6056 5.16799 15.7393 5.03834L17.0368 3.77487C17.1045 3.70911 17.1422 3.62004 17.1417 3.52735C17.1411 3.43467 17.1023 3.34603 17.0338 3.28104C12.3028 -1.09368 4.83907 -1.09368 0.108056 3.28104C0.039524 3.34598 0.000639766 3.4346 7.82398e-06 3.52728C-0.000624118 3.61996 0.0370483 3.70906 0.104689 3.77487L1.40255 5.03834C1.53615 5.16819 1.75327 5.1698 1.88893 5.04195C3.69167 3.38836 6.08395 2.46628 8.5713 2.46628ZM8.56795 6.68656C9.92527 6.68647 11.2341 7.19821 12.2403 8.12234C12.3763 8.2535 12.5907 8.25065 12.7234 8.11593L14.0106 6.79663C14.0784 6.72742 14.1161 6.63355 14.1151 6.536C14.1141 6.43844 14.0746 6.34536 14.0054 6.27757C10.9416 3.38672 6.19688 3.38672 3.13305 6.27757C3.06384 6.34536 3.02435 6.43849 3.02345 6.53607C3.02254 6.63366 3.06028 6.72752 3.12822 6.79663L4.41513 8.11593C4.54778 8.25065 4.76215 8.2535 4.89823 8.12234C5.90368 7.19882 7.21152 6.68713 8.56795 6.68656ZM11.0924 9.48011C11.0943 9.58546 11.0572 9.68703 10.9899 9.76084L8.81327 12.2156C8.74946 12.2877 8.66247 12.3283 8.5717 12.3283C8.48093 12.3283 8.39394 12.2877 8.33013 12.2156L6.1531 9.76084C6.08585 9.68697 6.04886 9.58537 6.05085 9.48002C6.05284 9.37467 6.09365 9.27491 6.16364 9.20429C7.55374 7.8904 9.58966 7.8904 10.9798 9.20429C11.0497 9.27497 11.0904 9.37476 11.0924 9.48011Z" fill="currentColor"/></svg></div>
+            <div class="battery"></div>
+          </div>
+        </div>
+
+        <nav class="top-nav" aria-label="Group navigation">
+          <button class="round-icon" aria-label="Back">
+            <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <div class="nav-tab-host" aria-hidden="false">
+            <div class="nav-tab-selection-ring" aria-hidden="true"></div>
+            <div class="scroll-bubble-tabs" id="scrollBubbleTabs" aria-label="Filter moments by status"></div>
+          </div>
+          <button class="round-icon nav-more" type="button" aria-label="Show group details">
+            <span class="nav-more-icon" aria-hidden="true"></span>
+          </button>
+        </nav>
+
+        <header class="group-info">
+          <div class="group-row">
+            <div class="group-main">
+              <h1>Pumping moms</h1>
+              <div class="active-row">
+                <div class="avatar-stack" aria-hidden="true">
+                  <span class="mini-avatar" style="background:var(--colors-brands-mom-500)">A</span>
+                  <span class="mini-avatar" style="background:var(--colors-brands-parenting-700)">M</span>
+                  <span class="mini-avatar" style="background:var(--colors-brands-care-700)">S</span>
+                </div>
+                <span class="meta">128 moms active today</span>
+              </div>
+            </div>
+            <button class="join" type="button" aria-pressed="false">Join</button>
+          </div>
+          <p class="description">A soft place for pump timers, bottle warmers, and tiny wins while the house is asleep.</p>
+        </header>
+
+        <div class="status-heading">
+          <h2 class="status-title">I'm currently...</h2>
+          <button class="add-status" id="addStatus" aria-label="Add status">
+            <span>Add Status</span>
+          </button>
+        </div>
+        <section class="tag-wall" id="tagWall" aria-label="Current status tag wall">
+          <button class="react-bubble" id="reactBubble" type="button" aria-hidden="true" tabindex="-1" hidden>+1</button>
+          <div class="bubble-status-banner" id="bubbleStatusBanner" role="status" aria-live="polite" aria-hidden="true">
+            <span class="bubble-status-banner-title" id="bubbleStatusBannerTitle">Connect with moms who get it</span>
+            <button class="bubble-status-banner-action" id="bubbleStatusBannerAction" type="button">Say something</button>
+          </div>
+          <span class="row-scroll-spacer" aria-hidden="true"></span>
+        </section>
+
+        <section class="moments" aria-label="Moments feed">
+          <h2 class="moments-title">Moments</h2>
+
+          <!-- Tab bar: one chip per tag, dynamically generated -->
+          <div class="tab-bar-wrap" role="tablist" aria-label="Filter moments by status">
+            <div class="tab-bar" id="tabBar"></div>
+          </div>
+
+          <div class="selected-status-summary" id="selectedStatusSummary" hidden>
+            <span class="selected-status-avatars" aria-hidden="true"></span>
+            <span class="selected-status-copy"></span>
+          </div>
+
+          <div class="posts-viewport" id="postsViewport">
+          <div class="posts" id="postsList">
+
+            <div class="post-wrap" data-tag="pumping">
+              <article class="post">
+                <div class="post-avatar">A</div>
+                <div class="post-detail">
+                  <header class="post-head">
+                    <div class="name-line">
+                      <strong>Anonymous</strong>
+                      <span class="post-time">· 15 mins ago</span>
+                    </div>
+                    <span class="topic">
+                        <span class="topic-icon" aria-hidden="true"><img src="./assets/bubbles-solid-rounded-figma.svg" alt="" /></span>
+                        Pumping
+                    </span>
+                  </header>
+                  <p class="post-copy">Second letdown is taking its sweet time. I put one tiny lamp on and I am pretending this corner is a little room with all of you.</p>
+                  <div class="post-img"><img src="./assets/pumping-moment-1.jpg" alt="Warm bedside pumping setup" /></div>
+                  <div class="actions" aria-label="Post actions">
+                    <button class="action" aria-label="Like post">
+                      <img src="./assets/action-like-figma.svg" alt="" aria-hidden="true" />
+                      0
+                    </button>
+                    <button class="action" aria-label="Favorite post">
+                      <img src="./assets/action-save-figma.svg" alt="" aria-hidden="true" />
+                      20
+                    </button>
+                    <button class="action" aria-label="Comments">
+                      <img src="./assets/action-comment-figma.svg" alt="" aria-hidden="true" />
+                      3
+                    </button>
+                  </div>
+                  <div class="reply">Write a Reply</div>
+                </div>
+              </article>
+            </div>
+
+            <div class="divider" data-divider></div>
+
+            <div class="post-wrap" data-tag="baby sleeping">
+              <article class="post">
+                <div class="post-avatar">A</div>
+                <div class="post-detail">
+                  <header class="post-head">
+                    <div class="name-line">
+                      <strong>Anonymous</strong>
+                      <span class="post-time">· 23 mins ago</span>
+                    </div>
+                    <span class="topic">
+                        <span class="topic-icon" aria-hidden="true"><img src="./assets/bubbles-solid-rounded-figma.svg" alt="" /></span>
+                        Baby sleeping
+                    </span>
+                  </header>
+                  <p class="post-copy">The baby monitor is brighter than the moon right now. She is finally asleep, so I am sitting completely still and celebrating quietly.</p>
+                  <div class="post-img"><img src="./assets/pumping-moment-2.jpg" alt="Baby sleeping in a crib" /></div>
+                  <div class="actions" aria-label="Post actions">
+                    <button class="action" aria-label="Like post">
+                      <img src="./assets/action-like-figma.svg" alt="" aria-hidden="true" />
+                      0
+                    </button>
+                    <button class="action" aria-label="Favorite post">
+                      <img src="./assets/action-save-figma.svg" alt="" aria-hidden="true" />
+                      20
+                    </button>
+                    <button class="action" aria-label="Comments">
+                      <img src="./assets/action-comment-figma.svg" alt="" aria-hidden="true" />
+                      3
+                    </button>
+                  </div>
+                  <div class="reply">Write a Reply</div>
+                </div>
+              </article>
+            </div>
+
+            <div class="divider" data-divider></div>
+
+            <div class="post-wrap" data-tag="tired">
+              <article class="post">
+                <div class="post-avatar">A</div>
+                <div class="post-detail">
+                  <header class="post-head">
+                    <div class="name-line">
+                      <strong>Anonymous</strong>
+                      <span class="post-time">· 30 mins ago</span>
+                    </div>
+                    <span class="topic">
+                        <span class="topic-icon" aria-hidden="true"><img src="./assets/bubbles-solid-rounded-figma.svg" alt="" /></span>
+                        Tired
+                    </span>
+                  </header>
+                  <p class="post-copy">Bottle is ready, pump parts are drying, and I just found yesterday's burp cloth in my hoodie pocket. Calling it a win.</p>
+                  <div class="post-img"><img src="./assets/pumping-moment-3.jpg" alt="Nightstand with pumping supplies" /></div>
+                  <div class="actions" aria-label="Post actions">
+                    <button class="action" aria-label="Like post">
+                      <img src="./assets/action-like-figma.svg" alt="" aria-hidden="true" />
+                      0
+                    </button>
+                    <button class="action" aria-label="Favorite post">
+                      <img src="./assets/action-save-figma.svg" alt="" aria-hidden="true" />
+                      20
+                    </button>
+                    <button class="action" aria-label="Comments">
+                      <img src="./assets/action-comment-figma.svg" alt="" aria-hidden="true" />
+                      3
+                    </button>
+                  </div>
+                  <div class="reply">Write a Reply</div>
+                </div>
+              </article>
+            </div>
+
+            <div class="divider" data-divider></div>
+
+            <div class="post-wrap" data-tag="need company">
+              <article class="post">
+                <div class="post-avatar">A</div>
+                <div class="post-detail">
+                  <header class="post-head">
+                    <div class="name-line">
+                      <strong>Anonymous</strong>
+                      <span class="post-time">· 41 mins ago</span>
+                    </div>
+                    <span class="topic">
+                        <span class="topic-icon" aria-hidden="true"><img src="./assets/bubbles-solid-rounded-figma.svg" alt="" /></span>
+                        Need company
+                    </span>
+                  </header>
+                  <p class="post-copy">Up again at 2am and the whole house is asleep. Just needed somewhere to say hello. Hi everyone.</p>
+                  <div class="post-img"><img src="./assets/pumping-moment-1.jpg" alt="Quiet nighttime scene" /></div>
+                  <div class="actions" aria-label="Post actions">
+                    <button class="action" aria-label="Like post">
+                      <img src="./assets/action-like-figma.svg" alt="" aria-hidden="true" />
+                      12
+                    </button>
+                    <button class="action" aria-label="Favorite post">
+                      <img src="./assets/action-save-figma.svg" alt="" aria-hidden="true" />
+                      8
+                    </button>
+                    <button class="action" aria-label="Comments">
+                      <img src="./assets/action-comment-figma.svg" alt="" aria-hidden="true" />
+                      7
+                    </button>
+                  </div>
+                  <div class="reply">Write a Reply</div>
+                </div>
+              </article>
+            </div>
+
+            <div class="divider" data-divider></div>
+
+            <div class="post-wrap" data-tag="can't sleep">
+              <article class="post">
+                <div class="post-avatar">A</div>
+                <div class="post-detail">
+                  <header class="post-head">
+                    <div class="name-line">
+                      <strong>Anonymous</strong>
+                      <span class="post-time">· 52 mins ago</span>
+                    </div>
+                    <span class="topic">
+                        <span class="topic-icon" aria-hidden="true"><img src="./assets/bubbles-solid-rounded-figma.svg" alt="" /></span>
+                        Can't sleep
+                    </span>
+                  </header>
+                  <p class="post-copy">Baby is finally down but now my brain won't shut off. Staring at the ceiling, listening to the white noise machine.</p>
+                  <div class="post-img"><img src="./assets/pumping-moment-2.jpg" alt="Quiet bedroom at night" /></div>
+                  <div class="actions" aria-label="Post actions">
+                    <button class="action" aria-label="Like post">
+                      <img src="./assets/action-like-figma.svg" alt="" aria-hidden="true" />
+                      5
+                    </button>
+                    <button class="action" aria-label="Favorite post">
+                      <img src="./assets/action-save-figma.svg" alt="" aria-hidden="true" />
+                      4
+                    </button>
+                    <button class="action" aria-label="Comments">
+                      <img src="./assets/action-comment-figma.svg" alt="" aria-hidden="true" />
+                      2
+                    </button>
+                  </div>
+                  <div class="reply">Write a Reply</div>
+                </div>
+              </article>
+            </div>
+
+            <div class="divider" data-divider></div>
+
+            <div class="post-wrap" data-tag="hands full">
+              <article class="post">
+                <div class="post-avatar">A</div>
+                <div class="post-detail">
+                  <header class="post-head">
+                    <div class="name-line">
+                      <strong>Anonymous</strong>
+                      <span class="post-time">· 1 hr ago</span>
+                    </div>
+                    <span class="topic">
+                        <span class="topic-icon" aria-hidden="true"><img src="./assets/bubbles-solid-rounded-figma.svg" alt="" /></span>
+                        Hands full
+                    </span>
+                  </header>
+                  <p class="post-copy">Somehow holding a baby, a bottle, and my phone all at once. Level unlocked: octopus mom.</p>
+                  <div class="post-img"><img src="./assets/pumping-moment-3.jpg" alt="Mom multitasking with baby" /></div>
+                  <div class="actions" aria-label="Post actions">
+                    <button class="action" aria-label="Like post">
+                      <img src="./assets/action-like-figma.svg" alt="" aria-hidden="true" />
+                      18
+                    </button>
+                    <button class="action" aria-label="Favorite post">
+                      <img src="./assets/action-save-figma.svg" alt="" aria-hidden="true" />
+                      6
+                    </button>
+                    <button class="action" aria-label="Comments">
+                      <img src="./assets/action-comment-figma.svg" alt="" aria-hidden="true" />
+                      9
+                    </button>
+                  </div>
+                  <div class="reply">Write a Reply</div>
+                </div>
+              </article>
+            </div>
+
+          </div><!-- /posts -->
+          </div><!-- /posts-viewport -->
+
+          <div class="empty-state" id="emptyState" aria-live="polite" aria-hidden="true">
+            <img class="empty-state-illustration" src="./assets/ImgEmpty.svg" alt="" aria-hidden="true" />
+            <p class="empty-state-title">No posts yet for this status</p>
+            <p class="empty-state-copy">See what other moms are talking about.</p>
+            <button class="empty-state-action" id="emptyStateAction" type="button">See All</button>
+          </div>
+
+        </section>
+      </div><!-- /scroll -->
+
+      <div class="bottom-fade"></div>
+      <button class="post-button" id="homePostButton">Join &amp; Post</button>
+      <div class="join-confirm" id="joinConfirm" aria-hidden="true">
+        <div class="join-confirm-backdrop" data-close-join-confirm></div>
+        <section class="join-confirm-sheet" role="dialog" aria-modal="true" aria-labelledby="joinConfirmTitle" aria-describedby="joinConfirmCopy">
+          <img class="join-confirm-illustration" src="assets/Youarein.png" alt="" aria-hidden="true" />
+          <h2 class="join-confirm-title" id="joinConfirmTitle">Welcome to Pumping Moms Club</h2>
+          <div class="join-confirm-copy" id="joinConfirmCopy">
+            <p>· Share how you're doing right now</p>
+            <p>· Talk to moms who get it</p>
+            <p>· Feel less alone, day or night</p>
+          </div>
+          <div class="join-confirm-actions">
+            <button class="join-confirm-primary" id="joinConfirmPost" type="button">Got it</button>
+          </div>
+        </section>
+      </div>
+      <div class="leave-confirm" id="leaveConfirm" aria-hidden="true">
+        <div class="leave-confirm-backdrop" data-close-leave-confirm></div>
+        <section class="leave-confirm-sheet" role="dialog" aria-modal="true" aria-labelledby="leaveConfirmTitle" aria-describedby="leaveConfirmDescription">
+          <div class="leave-confirm-copy">
+            <h2 class="leave-confirm-title" id="leaveConfirmTitle">Leave Pumping moms ?</h2>
+            <p class="leave-confirm-description" id="leaveConfirmDescription">You won't be able to post or interact with the group.</p>
+          </div>
+          <div class="leave-confirm-actions">
+            <button class="leave-confirm-button leave-confirm-stay" id="leaveConfirmStay" type="button">Stay</button>
+            <button class="leave-confirm-button leave-confirm-leave" id="leaveConfirmLeave" type="button">Leave Group</button>
+          </div>
+        </section>
+      </div>
+      <div class="tag-picker" id="tagPicker" aria-hidden="true">
+        <div class="tag-picker-backdrop" data-close-picker></div>
+        <section class="tag-picker-sheet" role="dialog" aria-modal="true" aria-labelledby="tagPickerTitle">
+          <div class="tag-picker-fab">
+            <button class="tag-picker-close" id="tagPickerClose" type="button" aria-label="Close pick tag">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"/></svg>
+            </button>
+          </div>
+          <header class="tag-picker-header">
+            <h2 id="tagPickerTitle">How are you feeling now?</h2>
+          </header>
+          <div class="tag-picker-slot">
+            <div class="tag-picker-content">
+              <div class="tag-picker-copy">
+                <p class="tag-picker-subtitle">Pick one or add your own</p>
+                <p class="tag-picker-note">Peer support only. Not medical, mental health, or professional advice.</p>
+                <div class="tag-options" id="tagOptions" aria-label="Pick a status tag"></div>
+              </div>
+              <input class="tag-custom-input" id="tagCustomInput" type="text" maxlength="20" placeholder="Add your own" aria-label="Add your own status tag" />
+            </div>
+          </div>
+          <div class="tag-picker-action">
+            <button class="tag-picker-add" id="tagPickerAdd" type="button" disabled>Add</button>
+            <div class="home-indicator" aria-hidden="true"></div>
+          </div>
+        </section>
+      </div>
+      <section class="tag-expanded-overlay" id="tagExpandedOverlay" aria-hidden="true" aria-label="Choose status">
+        <div class="tag-expanded-grid" id="tagExpandedGrid" aria-label="All status filters"></div>
+        <button class="tag-expanded-close" id="tagExpandedClose" type="button" aria-label="Collapse status filters">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+      </section>
+      <section class="post-view" id="postView" aria-label="Create post" aria-hidden="true">
+        <div class="status-bar" aria-hidden="true">
+          <div class="time">9:41</div>
+          <div class="levels">
+            <div class="cellular"><svg width="20" height="13" viewBox="0 0 20 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.2 1.14623C19.2 0.513183 18.7224 0 18.1333 0H17.0667C16.4776 0 16 0.513183 16 1.14623V11.0802C16 11.7132 16.4776 12.2264 17.0667 12.2264H18.1333C18.7224 12.2264 19.2 11.7132 19.2 11.0802V1.14623ZM11.7659 2.44528H12.8326C13.4217 2.44528 13.8992 2.97078 13.8992 3.61902V11.0527C13.8992 11.7009 13.4217 12.2264 12.8326 12.2264H11.7659C11.1768 12.2264 10.6992 11.7009 10.6992 11.0527V3.61902C10.6992 2.97078 11.1768 2.44528 11.7659 2.44528ZM7.43411 5.09433H6.36745C5.77834 5.09433 5.30078 5.62652 5.30078 6.28301V11.0377C5.30078 11.6942 5.77834 12.2264 6.36745 12.2264H7.43411C8.02322 12.2264 8.50078 11.6942 8.50078 11.0377V6.28301C8.50078 5.62652 8.02322 5.09433 7.43411 5.09433ZM2.13333 7.53962H1.06667C0.477563 7.53962 0 8.06421 0 8.71132V11.0547C0 11.7018 0.477563 12.2264 1.06667 12.2264H2.13333C2.72244 12.2264 3.2 11.7018 3.2 11.0547V8.71132C3.2 8.06421 2.72244 7.53962 2.13333 7.53962Z" fill="currentColor"/></svg></div>
+            <div class="wifi"><svg width="18" height="13" viewBox="0 0 18 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.5713 2.46628C11.0584 2.46639 13.4504 3.38847 15.2529 5.04195C15.3887 5.1696 15.6056 5.16799 15.7393 5.03834L17.0368 3.77487C17.1045 3.70911 17.1422 3.62004 17.1417 3.52735C17.1411 3.43467 17.1023 3.34603 17.0338 3.28104C12.3028 -1.09368 4.83907 -1.09368 0.108056 3.28104C0.039524 3.34598 0.000639766 3.4346 7.82398e-06 3.52728C-0.000624118 3.61996 0.0370483 3.70906 0.104689 3.77487L1.40255 5.03834C1.53615 5.16819 1.75327 5.1698 1.88893 5.04195C3.69167 3.38836 6.08395 2.46628 8.5713 2.46628ZM8.56795 6.68656C9.92527 6.68647 11.2341 7.19821 12.2403 8.12234C12.3763 8.2535 12.5907 8.25065 12.7234 8.11593L14.0106 6.79663C14.0784 6.72742 14.1161 6.63355 14.1151 6.536C14.1141 6.43844 14.0746 6.34536 14.0054 6.27757C10.9416 3.38672 6.19688 3.38672 3.13305 6.27757C3.06384 6.34536 3.02435 6.43849 3.02345 6.53607C3.02254 6.63366 3.06028 6.72752 3.12822 6.79663L4.41513 8.11593C4.54778 8.25065 4.76215 8.2535 4.89823 8.12234C5.90368 7.19882 7.21152 6.68713 8.56795 6.68656ZM11.0924 9.48011C11.0943 9.58546 11.0572 9.68703 10.9899 9.76084L8.81327 12.2156C8.74946 12.2877 8.66247 12.3283 8.5717 12.3283C8.48093 12.3283 8.39394 12.2877 8.33013 12.2156L6.1531 9.76084C6.08585 9.68697 6.04886 9.58537 6.05085 9.48002C6.05284 9.37467 6.09365 9.27491 6.16364 9.20429C7.55374 7.8904 9.58966 7.8904 10.9798 9.20429C11.0497 9.27497 11.0904 9.37476 11.0924 9.48011Z" fill="currentColor"/></svg></div>
+            <div class="battery"></div>
+          </div>
+        </div>
+        <nav class="compose-toolbar" aria-label="Post navigation">
+          <button class="compose-back" id="postBackButton" type="button" aria-label="Back to pumping moms">
+            <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button class="compose-submit" id="composeSubmit" type="button" disabled>Post</button>
+        </nav>
+        <div class="compose-segmented" role="tablist" aria-label="Post type">
+          <button class="is-active" type="button" role="tab" aria-selected="true">Share a Post</button>
+          <button type="button" role="tab" aria-selected="false">Ask a Question</button>
+        </div>
+        <section class="compose-body" aria-label="Post content">
+          <h1 class="compose-title">Share a Moment</h1>
+          <textarea class="compose-input" aria-label="Post content" placeholder="What's on your mind today?"></textarea>
+        </section>
+        <div class="compose-options-card">
+          <div class="compose-option-row">
+            <span class="compose-option-label">Anonymously</span>
+            <button class="compose-toggle" type="button" aria-label="Post anonymously" aria-pressed="false"></button>
+          </div>
+          <div class="compose-option-row">
+            <span class="compose-option-label">Share to Community</span>
+            <button class="compose-toggle" type="button" aria-label="Share to community" aria-pressed="true"></button>
+          </div>
+        </div>
+        <div class="compose-bottom" aria-label="Post tools">
+          <div class="compose-tools">
+            <button class="compose-tool compose-tool--pic" type="button" aria-label="Add picture"><img src="./assets/post-icon-pic.svg" alt="" aria-hidden="true" /></button>
+            <button class="compose-tool compose-tool--poll" type="button" aria-label="Add poll"><img src="./assets/post-icon-poll.svg" alt="" aria-hidden="true" /></button>
+            <button class="compose-tool compose-tool--tag" type="button" aria-label="Add tag"><img src="./assets/post-icon-tag.svg" alt="" aria-hidden="true" /></button>
+            <button class="compose-tool compose-tool--setting" type="button" aria-label="Post settings"><img src="./assets/post-icon-setting-figma.svg" alt="" aria-hidden="true" /></button>
+          </div>
+        </div>
+        <div class="compose-home-indicator" aria-hidden="true"></div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    /* ── DOM refs ──────────────────────────────────────────── */
+    const tagWall        = document.getElementById('tagWall');
+    const rowScrollSpacer = tagWall.querySelector('.row-scroll-spacer');
+    const scrollBubbleTabs = document.getElementById('scrollBubbleTabs');
+    const reactBubble    = document.getElementById('reactBubble');
+    const bubbleStatusBanner = document.getElementById('bubbleStatusBanner');
+    const bubbleStatusBannerTitle = document.getElementById('bubbleStatusBannerTitle');
+    const bubbleStatusBannerAction = document.getElementById('bubbleStatusBannerAction');
+    const phone          = document.querySelector('.phone');
+    const scroll         = document.querySelector('.scroll');
+    const navMore        = document.querySelector('.nav-more');
+    const statusTitle    = document.querySelector('.status-title');
+    const addStatus      = document.getElementById('addStatus');
+    const homePostButton = document.getElementById('homePostButton');
+    const joinConfirm    = document.getElementById('joinConfirm');
+    const joinConfirmTitle = document.getElementById('joinConfirmTitle');
+    const joinConfirmCopy = document.getElementById('joinConfirmCopy');
+    const joinConfirmPost = document.getElementById('joinConfirmPost');
+    const leaveConfirm    = document.getElementById('leaveConfirm');
+    const leaveConfirmStay = document.getElementById('leaveConfirmStay');
+    const leaveConfirmLeave = document.getElementById('leaveConfirmLeave');
+    const postView       = document.getElementById('postView');
+    const postBackButton = document.getElementById('postBackButton');
+    const composeInput   = document.querySelector('.compose-input');
+    const composeSubmit  = document.getElementById('composeSubmit');
+    const tagPicker      = document.getElementById('tagPicker');
+    const tagOptions     = document.getElementById('tagOptions');
+    const tagPickerClose = document.getElementById('tagPickerClose');
+    const tagPickerAdd   = document.getElementById('tagPickerAdd');
+    const tagCustomInput = document.getElementById('tagCustomInput');
+    const tabBar         = document.getElementById('tabBar');
+    const moments        = document.querySelector('.moments');
+    const postsViewport  = document.getElementById('postsViewport');
+    const selectedStatusSummary = document.getElementById('selectedStatusSummary');
+    const selectedStatusAvatars = selectedStatusSummary?.querySelector('.selected-status-avatars');
+    const selectedStatusCopy = selectedStatusSummary?.querySelector('.selected-status-copy');
+    const postsList      = document.getElementById('postsList');
+    const emptyState     = document.getElementById('emptyState');
+    const emptyStateAction = document.getElementById('emptyStateAction');
+    const tagExpandedOverlay = document.getElementById('tagExpandedOverlay');
+    const tagExpandedGrid = document.getElementById('tagExpandedGrid');
+    const tagExpandedClose = document.getElementById('tagExpandedClose');
+
+    /* ── Config ────────────────────────────────────────────── */
+    const allowsMultipleSelection = false;
+    const customTagLimit = 20;
+    const magneticConfig = {
+      fieldStrength: 16,
+      activeAnchorStrength: 48,
+      damping: 4.2,
+      selectedScale: 1.52,
+      collisionPadding: 4,
+      dragImpulse: 0.78,
+      bounce: 0.34
+    };
+
+    /* ── Tag data ──────────────────────────────────────────── */
+    const tags = [
+      { label: 'pumping',         count: 19, x: 148, y: 24 },
+      { label: 'tired',           count: 14, x: 266, y: 24 },
+      { label: "can't sleep",     count: 11, x: 30,  y: 138 },
+      { label: 'need company',    count: 7,  x: 148, y: 138 },
+      { label: 'baby sleeping',   count: 6,  x: 266, y: 138 },
+      { label: 'hands full',      count: 4,  x: 30,  y: 252 },
+      { label: 'music on',        count: 3,  x: 148, y: 252 },
+      { label: 'cluster feeding', count: 1,  x: 266, y: 252 }
+    ];
+
+    /* ── Tab state ─────────────────────────────────────────── */
+    // null = "All"  |  string = a specific tag label
+    let activeTab = null;
+    let allFilterTag = null;
+
+    /* ── Helpers ───────────────────────────────────────────── */
+    const bubbleWallScale = 1.2;
+    const sizeForCount = count => Math.round(Math.max(60, Math.min(112, Math.round(52 + Math.sqrt(count) * 7.8))) * bubbleWallScale);
+    const statusAvatarSources = [
+      './assets/activeavatara.png',
+      './assets/activeavatarb.png',
+      './assets/activeavatarc.png',
+      './assets/activeavatard.png'
+    ];
+    const currentUserAvatarSource = './assets/profilepicture.png';
+    const rowSizeFor = tag => tag?.active ? 88 : 68;
+    const visualScaleFor = tag => tag.active ? magneticConfig.selectedScale : 1;
+    const collisionRadiusFor = tag => {
+      const spawnScale = Number(tag.el?.style.getPropertyValue('--spawn-scale')) || 1;
+      return (tag.size * visualScaleFor(tag) * spawnScale) / 2 + magneticConfig.collisionPadding;
+    };
+    const fieldCenter = () => ({ x: tagWall.clientWidth / 2, y: tagWall.clientHeight / 2 });
+    const activeAnchor = () => ({ x: tagWall.clientWidth / 2, y: tagWall.clientHeight - 34 });
+    const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+    const addButtonObstacle = () => null;
+    const bubbleHoldDelay = 520;
+    let lastFrame  = performance.now();
+    let dragState  = null;
+    let reactState = null;
+    let bubbleHoldState = null;
+    let currentStatusTag = null;
+    let pickerSelection = null;
+    let hasJoinedGroup = false;
+    let joinConfirmMode = 'joined';
+    let joinConfirmReturnFocus = homePostButton;
+    let leaveConfirmReturnFocus = null;
+    let joinAfterBubbleTimer = null;
+    let postButtonScrollTimer = null;
+    let bubbleStatusBannerTimer = null;
+    let pendingBubbleBannerTag = null;
+
+    /* ── Post / compose helpers ────────────────────────────── */
+    function syncJoinedState(joined) {
+      hasJoinedGroup = joined;
+      homePostButton.textContent = joined ? 'Post' : 'Join & Post';
+      homePostButton.setAttribute('aria-label', joined ? 'Post' : 'Join & Post');
+      document.querySelectorAll('.join').forEach(btn => {
+        btn.classList.toggle('is-joined', joined);
+        btn.setAttribute('aria-pressed', joined ? 'true' : 'false');
+        btn.textContent = joined ? 'Joined' : 'Join';
+      });
+    }
+
+    function setJoinConfirmMode(mode) {
+      joinConfirmMode = mode;
+      joinConfirm.dataset.mode = mode;
+      joinConfirmTitle.textContent = 'Welcome to Pumping Moms Club';
+      if (mode === 'post') {
+        joinConfirmCopy.innerHTML = '<p>Share how you\'re doing right now</p><p>Talk to moms who get it</p><p>Feel less alone, day or night</p>';
+        joinConfirmPost.textContent = 'Post Now';
+        return;
+      }
+      joinConfirmCopy.innerHTML = '<p>· Share how you\'re doing right now</p><p>· Talk to moms who get it</p><p>· Feel less alone, day or night</p>';
+      joinConfirmPost.textContent = 'Got it';
+    }
+
+    function openJoinConfirm(mode = 'joined', returnFocus = homePostButton) {
+      closeTagPicker();
+      setJoinConfirmMode(mode);
+      joinConfirmReturnFocus = returnFocus;
+      joinConfirm.classList.add('is-open');
+      joinConfirm.setAttribute('aria-hidden', 'false');
+      joinConfirmPost.focus({ preventScroll: true });
+    }
+
+    function closeJoinConfirm() {
+      joinConfirm.classList.remove('is-open');
+      joinConfirm.setAttribute('aria-hidden', 'true');
+      joinConfirmReturnFocus?.focus?.({ preventScroll: true });
+    }
+
+    function dismissJoinConfirm() {
+      pendingBubbleBannerTag = null;
+      closeJoinConfirm();
+    }
+
+    function openLeaveConfirm(returnFocus = document.querySelector('.join.is-joined')) {
+      closeTagPicker();
+      dismissJoinConfirm();
+      leaveConfirmReturnFocus = returnFocus;
+      leaveConfirm.classList.add('is-open');
+      leaveConfirm.setAttribute('aria-hidden', 'false');
+      leaveConfirmStay.focus({ preventScroll: true });
+    }
+
+    function closeLeaveConfirm() {
+      leaveConfirm.classList.remove('is-open');
+      leaveConfirm.setAttribute('aria-hidden', 'true');
+      leaveConfirmReturnFocus?.focus?.({ preventScroll: true });
+    }
+
+    function hideBubbleStatusBanner() {
+      if (!bubbleStatusBanner) return;
+      bubbleStatusBanner.classList.remove('is-visible');
+      bubbleStatusBanner.setAttribute('aria-hidden', 'true');
+      window.clearTimeout(bubbleStatusBannerTimer);
+    }
+
+    function showBubbleStatusBanner(tag = currentStatusTag) {
+      if (!bubbleStatusBanner) return;
+      bubbleStatusBannerTitle.textContent = 'Connect with moms who get it';
+      window.clearTimeout(bubbleStatusBannerTimer);
+      bubbleStatusBanner.classList.remove('is-visible');
+      void bubbleStatusBanner.offsetWidth;
+      bubbleStatusBanner.setAttribute('aria-hidden', 'false');
+      bubbleStatusBanner.classList.add('is-visible');
+      bubbleStatusBannerTimer = window.setTimeout(hideBubbleStatusBanner, 3000);
+    }
+
+    function showJoinPromptAfterBubbleReaction(returnFocus = homePostButton, tag = currentStatusTag) {
+      if (hasJoinedGroup) return;
+      pendingBubbleBannerTag = tag;
+      window.clearTimeout(joinAfterBubbleTimer);
+      joinAfterBubbleTimer = window.setTimeout(() => {
+        if (hasJoinedGroup || phone.classList.contains('is-post')) {
+          pendingBubbleBannerTag = null;
+          return;
+        }
+        syncJoinedState(true);
+        openJoinConfirm('joined', returnFocus);
+      }, 820);
+    }
+
+    function openPostView() {
+      closeJoinConfirm();
+      closeTagPicker();
+      phone.classList.add('is-post');
+      postView.setAttribute('aria-hidden', 'false');
+      composeInput.focus({ preventScroll: true });
+    }
+
+    function handleHomePostClick() {
+      if (!hasJoinedGroup) {
+        openJoinConfirm('post', homePostButton);
+        return;
+      }
+      openPostView();
+    }
+
+    function closePostView() {
+      phone.classList.remove('is-post');
+      postView.setAttribute('aria-hidden', 'true');
+      homePostButton.focus({ preventScroll: true });
+    }
+
+    function updateComposeSubmit() {
+      const hasText = composeInput.value.trim().length > 0;
+      composeSubmit.disabled = !hasText;
+      composeSubmit.style.opacity = hasText ? '1' : '0.3';
+    }
+
+    /* ── Tab bar ───────────────────────────────────────────── */
+    /**
+     * Build the tab bar from the tags array.
+     * Called once on init and again when a new tag is added.
+     */
+    function buildTabBar() {
+      tabBar.innerHTML = '';
+
+      // "All" chip (always first)
+      const allChip = document.createElement('button');
+      allChip.type = 'button';
+      allChip.className = `tab-chip${activeTab === null ? ' is-active' : ''}`;
+      allChip.textContent = 'All';
+      allChip.setAttribute('role', 'tab');
+      allChip.setAttribute('aria-selected', activeTab === null ? 'true' : 'false');
+      allChip.dataset.tab = '__all__';
+      tabBar.appendChild(allChip);
+
+      // One chip per tag
+      tags.forEach(tag => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        const isActive = activeTab === tag.label;
+        chip.className = `tab-chip${isActive ? ' is-active' : ''}`;
+        // Capitalise first letter for display
+        chip.textContent = tag.label.charAt(0).toUpperCase() + tag.label.slice(1);
+        chip.setAttribute('role', 'tab');
+        chip.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        chip.dataset.tab = tag.label;
+        tabBar.appendChild(chip);
+      });
+    }
+
+    function displayTagLabel(label) {
+      return label.charAt(0).toUpperCase() + label.slice(1);
+    }
+
+    function updateStatusHeading() {
+      const tag = currentStatusTag;
+      statusTitle.textContent = tag ? `You + ${tag.count} moms are ${tag.label}` : "I'm currently...";
+      addStatus.classList.toggle('is-ending', Boolean(tag));
+      addStatus.setAttribute('aria-label', tag ? 'End current status' : 'Add status');
+      addStatus.querySelector('span').textContent = tag ? 'End Status' : 'Add Status';
+    }
+
+    function selectedSummaryTag() {
+      return activeTab === null ? null : tags.find(tag => tag.label === activeTab);
+    }
+
+    function renderSelectedStatusAvatars(tag, isMine) {
+      if (!selectedStatusAvatars) return;
+      selectedStatusAvatars.textContent = '';
+      const avatarTotal = Math.min(Math.max(tag.count, 0), 3);
+      const sources = isMine
+        ? [currentUserAvatarSource, ...statusAvatarSources]
+        : statusAvatarSources;
+
+      for (let i = 0; i < avatarTotal; i++) {
+        const avatar = document.createElement('img');
+        avatar.className = 'selected-status-avatar';
+        avatar.src = sources[i % sources.length];
+        avatar.alt = '';
+        avatar.setAttribute('aria-hidden', 'true');
+        selectedStatusAvatars.appendChild(avatar);
+      }
+    }
+
+    function updateSelectedStatusSummary() {
+      if (!selectedStatusSummary || !selectedStatusCopy) return;
+      const tag = selectedSummaryTag();
+      const isVisible = Boolean(tag) && phone.classList.contains('is-scrolled');
+      selectedStatusSummary.hidden = !isVisible;
+      if (!isVisible) {
+        if (selectedStatusAvatars) selectedStatusAvatars.textContent = '';
+        selectedStatusCopy.textContent = '';
+        return;
+      }
+
+      const isMine = currentStatusTag === tag || Boolean(tag.reactedAt);
+      renderSelectedStatusAvatars(tag, isMine);
+      selectedStatusCopy.textContent = isMine
+        ? `You + ${Math.max(tag.count - 1, 0)} moms are ${tag.label}`
+        : `${tag.count} moms are ${tag.label}`;
+    }
+
+    function updatePostCloneContent(card, tag, index) {
+      card.dataset.tag = tag.label;
+      card.dataset.generated = 'true';
+      card.dataset.generatedIndex = String(index);
+
+      const topic = card.querySelector('.topic');
+      if (topic) {
+        const icon = topic.querySelector('.topic-icon');
+        topic.textContent = '';
+        if (icon) topic.appendChild(icon);
+        topic.append(` ${displayTagLabel(tag.label)}`);
+      }
+
+      const time = card.querySelector('.post-time');
+      if (time) time.textContent = index < 6 ? `· ${15 + index * 8} mins ago` : `· ${Math.ceil(index / 3)} hrs ago`;
+
+      const copy = card.querySelector('.post-copy');
+      if (copy) copy.textContent = `${displayTagLabel(tag.label)} check-in #${index + 1}. A small moment from another mom in this status, keeping the feed long enough to browse.`;
+
+      const actions = card.querySelectorAll('.action');
+      actions.forEach((action, actionIndex) => {
+        const img = action.querySelector('img');
+        action.textContent = '';
+        if (img) action.appendChild(img);
+        action.append(` ${Math.max(0, tag.count - index + actionIndex)}`);
+      });
+    }
+
+    function ensurePostCounts() {
+      const fallbackTemplate = postsList.querySelector('.post-wrap');
+      if (!fallbackTemplate) return;
+
+      tags.forEach(tag => {
+        if (tag.isCustom) return;
+        let posts = Array.from(postsList.querySelectorAll('.post-wrap')).filter(post => post.dataset.tag === tag.label);
+        const template = posts[0] || fallbackTemplate;
+        while (posts.length < tag.count) {
+          const clone = template.cloneNode(true);
+          clone.classList.remove('is-hidden');
+          updatePostCloneContent(clone, tag, posts.length);
+          postsList.appendChild(clone);
+          posts.push(clone);
+        }
+      });
+    }
+
+    /**
+     * Apply the current activeTab to the post list and bubble wall.
+     */
+    function applyTabFilter() {
+      ensurePostCounts();
+      const postWraps  = postsList.querySelectorAll('.post-wrap');
+      const dividers   = postsList.querySelectorAll('[data-divider]');
+      phone.classList.toggle('is-filter-mode', Boolean(activeTag()) && !phone.classList.contains('is-scrolled'));
+      phone.classList.toggle('is-filter-active', Boolean(activeTag()));
+
+      // Hide/show posts
+      postWraps.forEach(wrap => {
+        const tag = wrap.dataset.tag;
+        const visible = activeTab === null || tag === activeTab;
+        wrap.classList.toggle('is-hidden', !visible);
+      });
+
+      // Update dividers: show only when both neighboring posts are visible.
+      const nodes = Array.from(postsList.children);
+      nodes.forEach(node => {
+        if (node.dataset.divider !== undefined) {
+          // Divider: show only if there's a visible post on both sides
+          node.style.display = '';
+        }
+      });
+      // Hide leading / trailing / consecutive dividers
+      for (let i = 0; i < nodes.length; i++) {
+        const node = nodes[i];
+        if (node.dataset.divider !== undefined) {
+          // Find prev and next non-divider
+          let prevVisible = false, nextVisible = false;
+          for (let j = i - 1; j >= 0; j--) {
+            if (nodes[j].dataset.divider === undefined) {
+              prevVisible = !nodes[j].classList.contains('is-hidden');
+              break;
+            }
+          }
+          for (let j = i + 1; j < nodes.length; j++) {
+            if (nodes[j].dataset.divider === undefined) {
+              nextVisible = !nodes[j].classList.contains('is-hidden');
+              break;
+            }
+          }
+          node.style.display = (prevVisible && nextVisible) ? '' : 'none';
+        }
+      }
+
+      // Show/hide empty state
+      const anyVisible = Array.from(postWraps).some(w => !w.classList.contains('is-hidden'));
+      emptyState.classList.toggle('is-visible', !anyVisible);
+      emptyState.setAttribute('aria-hidden', anyVisible ? 'true' : 'false');
+
+      tags.forEach(tag => {
+        if (tag.el) {
+          tag.el.classList.toggle('is-tab-highlight', false);
+        }
+      });
+    }
+
+    /**
+     * Switch the active tab and scroll chip into view.
+     */
+    function applySelectedTab(label) {
+      activeTab = label === '__all__' ? null : label;
+      tags.forEach(tag => { tag.active = tag.label === activeTab; });
+      buildTabBar();
+      applyTabFilter();
+      updateSelectedStatusSummary();
+    }
+
+    function scrollToPostContentTop(behavior = 'auto') {
+      holdScrolledAtPostTop = true;
+      scroll.scrollTo({ top: scrolledPinnedTop, behavior });
+    }
+
+    function settleScrolledPostTop(duration = 180) {
+      holdScrolledAtPostTop = true;
+      forceScrolledTabs = true;
+      allowBubbleWallReturn = false;
+      lockScrolledUntil = performance.now() + duration;
+      scrollToPostContentTop('auto');
+      requestAnimationFrame(() => scrollToPostContentTop('auto'));
+      window.setTimeout(() => {
+        if (!phone.classList.contains('is-scrolled') || allowBubbleWallReturn) return;
+        if (scroll.scrollTop > scrolledPinnedTop) scrollToPostContentTop('auto');
+        forceScrolledTabs = false;
+        lockScrolledUntil = 0;
+      }, duration);
+    }
+
+    function selectScrolledTab(label, { center = true, behavior = 'smooth' } = {}) {
+      forceScrolledTabs = true;
+      holdScrolledAtPostTop = false;
+      allowBubbleWallReturn = false;
+      lockScrolledUntil = performance.now() + 420;
+      phone.classList.add('is-scrolled');
+      phone.classList.remove('is-filter-mode');
+      applySelectedTab(label);
+      renderScrollBubbleTabs({ centerActive: center, behavior });
+      scrollToPostContentTop('auto');
+      requestAnimationFrame(() => {
+        phone.classList.add('is-scrolled');
+        phone.classList.remove('is-filter-mode');
+        scrollToPostContentTop('auto');
+        if (scroll.scrollTop >= scrolledPinnedTop) forceScrolledTabs = false;
+      });
+    }
+
+    let postSwipeState = null;
+    let postPageAnimating = false;
+
+    function postTabItems() {
+      return rowTagData();
+    }
+
+    function postTabIndex(key = activeRowKey()) {
+      return Math.max(0, postTabItems().findIndex(item => item.key === key));
+    }
+
+    function adjacentPostTab(direction) {
+      const items = postTabItems();
+      const nextIndex = clamp(postTabIndex() + direction, 0, items.length - 1);
+      return items[nextIndex]?.key || activeRowKey();
+    }
+
+    function animatePostPageSwitch(nextKey, direction) {
+      if (!nextKey || nextKey === activeRowKey() || postPageAnimating) return;
+      postPageAnimating = true;
+      const snapshot = postsList.cloneNode(true);
+      snapshot.removeAttribute('id');
+      snapshot.setAttribute('aria-hidden', 'true');
+      snapshot.className = `posts posts-snapshot is-page-exit-${direction > 0 ? 'next' : 'prev'}`;
+      postsViewport.appendChild(snapshot);
+      postsList.classList.remove('is-page-enter-next', 'is-page-enter-prev', 'is-swipe-dragging');
+      postsList.style.removeProperty('--swipe-x');
+      selectScrolledTab(nextKey, { center: true, behavior: 'smooth' });
+      postsList.classList.add(`is-page-enter-${direction > 0 ? 'next' : 'prev'}`);
+
+      window.setTimeout(() => {
+        snapshot.remove();
+        postsList.classList.remove('is-page-enter-next', 'is-page-enter-prev');
+        postPageAnimating = false;
+      }, 380);
+    }
+
+    function beginPostSwipe(clientX, clientY, pointerId = null) {
+      if (postSwipeState) return false;
+      if (!phone.classList.contains('is-scrolled') || postPageAnimating || tagExpandedOverlay.classList.contains('is-open')) return false;
+      postSwipeState = {
+        pointerId,
+        startX: clientX,
+        startY: clientY,
+        dx: 0,
+        dy: 0,
+        locked: false
+      };
+      return true;
+    }
+
+    function movePostSwipe(clientX, clientY) {
+      if (!postSwipeState) return false;
+      const dx = clientX - postSwipeState.startX;
+      const dy = clientY - postSwipeState.startY;
+      postSwipeState.dx = dx;
+      postSwipeState.dy = dy;
+      if (!postSwipeState.locked) {
+        if (Math.abs(dy) > 14 && Math.abs(dy) > Math.abs(dx) * 1.05) {
+          endPostSwipe({ commit: false });
+          return false;
+        }
+        if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(dy) * 1.05) return false;
+        postSwipeState.locked = true;
+        postsViewport.classList.add('is-swipe-dragging');
+        postsList.classList.add('is-swipe-dragging');
+      }
+      const resistance = adjacentPostTab(dx < 0 ? 1 : -1) === activeRowKey() ? 0.18 : 0.46;
+      postsList.style.setProperty('--swipe-x', `${dx * resistance}px`);
+      return true;
+    }
+
+    function endPostSwipe({ commit = true } = {}) {
+      if (!postSwipeState) return;
+      const { dx, dy } = postSwipeState;
+      const direction = dx < 0 ? 1 : -1;
+      const nextKey = adjacentPostTab(direction);
+      if (postSwipeState.pointerId !== null) postsViewport.releasePointerCapture?.(postSwipeState.pointerId);
+      postsViewport.classList.remove('is-swipe-dragging');
+      postsList.classList.remove('is-swipe-dragging');
+      postsList.style.removeProperty('--swipe-x');
+      const shouldSwitch = commit && postSwipeState.locked && Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.05 && nextKey !== activeRowKey();
+      postSwipeState = null;
+      if (shouldSwitch) animatePostPageSwitch(nextKey, direction);
+    }
+
+    function selectTab(label) {
+      applySelectedTab(label);
+      if (phone.classList.contains('is-scrolled')) {
+        renderScrollBubbleTabs({ centerActive: true, behavior: 'smooth' });
+        return;
+      }
+
+      // Scroll the selected chip into view within the tab bar
+      const chip = tabBar.querySelector('.tab-chip.is-active');
+      if (chip) {
+        chip.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+      }
+    }
+
+    /* Click delegation on tab bar */
+    tabBar.addEventListener('click', e => {
+      const chip = e.target.closest('.tab-chip');
+      if (!chip) return;
+      selectTab(chip.dataset.tab);
+    });
+
+    /* ── Bubble wall helpers ───────────────────────────────── */
+    function avatarCountForBubble(tag) {
+      if (tag.isAll || !tag.count) return 0;
+      if (tag.count > 20) return 3;
+      if (tag.count > 10) return 2;
+      return 1;
+    }
+
+    function syncBubbleAvatars(tag) {
+      const stack = tag.el.querySelector('.bubble-avatar-stack');
+      if (!stack) return;
+
+      stack.textContent = '';
+      const count = avatarCountForBubble(tag);
+      const sources = tag.reactedAt
+        ? [currentUserAvatarSource, ...statusAvatarSources]
+        : statusAvatarSources;
+
+      for (let i = 0; i < count; i++) {
+        const avatar = document.createElement('img');
+        avatar.className = 'bubble-avatar';
+        avatar.src = sources[i % sources.length];
+        avatar.alt = '';
+        avatar.setAttribute('aria-hidden', 'true');
+        stack.appendChild(avatar);
+      }
+
+      tag.el.style.setProperty('--bubble-avatar-size', tag.size < 66 ? '14px' : '16px');
+      tag.el.style.setProperty('--bubble-avatar-overlap', tag.size < 66 ? '5px' : '5.333px');
+    }
+
+    function makeTag(tag) {
+      const el = document.createElement('button');
+      el.type = 'button';
+      el.className = `bubble${tag.active ? ' is-active' : ''}`;
+      el.innerHTML = `<span class="bubble-core"><span class="bubble-label"></span><span class="bubble-count"><span class="bubble-avatar-stack" aria-hidden="true"></span><span class="bubble-count-number"></span></span></span>`;
+      tag.el = el;
+      tag.vx = 0;
+      tag.vy = 0;
+      tag.size = sizeForCount(tag.count);
+      tag.cx = tag.x + tag.size / 2;
+      tag.cy = tag.y + tag.size / 2;
+      tagWall.appendChild(el);
+      syncTag(tag);
+      return tag;
+    }
+
+    function renderTag(tag) {
+      tag.x = tag.cx - tag.size / 2;
+      tag.y = tag.cy - tag.size / 2;
+      tag.el.style.setProperty('--x', `${tag.x}px`);
+      tag.el.style.setProperty('--y', `${tag.y}px`);
+    }
+
+    function syncTag(tag) {
+      const isRowMode = phone.classList.contains('is-scrolled');
+      const isActive = tag.isAll ? activeTab === null && isRowMode : Boolean(tag.active);
+      tag.active = isActive;
+      tag.size = isRowMode ? rowSizeFor(tag) : (tag.isAll ? sizeForCount(6) : sizeForCount(tag.count));
+      const labelLength = Array.from(tag.label).length;
+      const isSmallBubble = tag.size < 70;
+      const isLongLabel = labelLength > 14;
+      const bubbleRadius = Math.min(50, Math.round(tag.size * 0.46));
+      const selectionScale = isRowMode ? 1 : magneticConfig.selectedScale;
+      const selectionSize = Math.round(tag.size * selectionScale + 8);
+      const selectionRadius = Math.min(selectionSize / 2, Math.round(bubbleRadius * selectionScale + 4));
+      tag.el.classList.toggle('is-active', isActive);
+      tag.el.classList.toggle('is-all-filter', Boolean(tag.isAll));
+      tag.el.classList.toggle('is-reacted', Boolean(tag.reactedAt));
+      tag.el.style.setProperty('--d', `${tag.size}px`);
+      tag.el.style.setProperty('--bubble-w', `${tag.size}px`);
+      tag.el.style.setProperty('--bubble-h', `${tag.size}px`);
+      tag.el.style.setProperty('--bubble-radius', `${bubbleRadius}px`);
+      tag.el.style.setProperty('--active-scale', `${isRowMode ? 1 : magneticConfig.selectedScale}`);
+      tag.el.style.setProperty('--selection-d', `${selectionSize}px`);
+      tag.el.style.setProperty('--selection-w', `${selectionSize}px`);
+      tag.el.style.setProperty('--selection-h', `${selectionSize}px`);
+      tag.el.style.setProperty('--selection-radius', `${selectionRadius}px`);
+      tag.el.style.setProperty('--label-size', isLongLabel ? (isSmallBubble ? '9px' : '10px') : (isSmallBubble ? '11px' : '12px'));
+      tag.el.style.setProperty('--label-line-height', isLongLabel ? (isSmallBubble ? '10px' : '12px') : (isSmallBubble ? '14px' : '16px'));
+      tag.el.style.setProperty('--count-counter-scale', isActive && !isRowMode ? `${1 / magneticConfig.selectedScale}` : '1');
+      tag.el.querySelector('.bubble-label').textContent = tag.label;
+      const countEl = tag.el.querySelector('.bubble-count');
+      const countNumber = tag.el.querySelector('.bubble-count-number');
+      if (countEl) countEl.hidden = Boolean(tag.isAll);
+      if (countNumber) countNumber.textContent = tag.isAll ? '' : tag.count;
+      syncBubbleAvatars(tag);
+      tag.el.setAttribute('aria-label', tag.isAll ? 'All moments' : `${tag.label}, ${tag.count}`);
+      tag.el.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      renderTag(tag);
+    }
+
+    function makeAllFilterTag() {
+      const tag = { label: 'All', count: 0, x: 30, y: 24, isAll: true, active: false };
+      const el = document.createElement('button');
+      el.type = 'button';
+      el.className = 'bubble is-all-filter';
+      el.innerHTML = `<span class="bubble-core"><span class="bubble-label"></span><span class="bubble-count"><span class="bubble-avatar-stack" aria-hidden="true"></span><span class="bubble-count-number"></span></span></span>`;
+      tag.el = el;
+      tag.vx = 0;
+      tag.vy = 0;
+      tag.size = sizeForCount(6);
+      tag.cx = tag.x + tag.size / 2;
+      tag.cy = tag.y + tag.size / 2;
+      tagWall.appendChild(el);
+      syncTag(tag);
+      return tag;
+    }
+
+    function scrolledRowItems() {
+      return allFilterTag ? [allFilterTag, ...tags] : tags;
+    }
+
+    function activeRowTag() {
+      if (activeTab === null) return allFilterTag;
+      return tags.find(tag => tag.label === activeTab) || allFilterTag;
+    }
+
+    let centeringRow = false;
+    let rowScrollTimer = 0;
+    let lockScrolledUntil = 0;
+    let forceScrolledTabs = false;
+    const scrolledThreshold = 48;
+    const scrolledPinnedTop = 49;
+    const topPullReleaseDistance = 24;
+    let holdScrolledAtPostTop = false;
+    let allowBubbleWallReturn = false;
+    let scrollTouchStartY = null;
+    let scrollTouchStartedAtTop = false;
+
+    function rowTagData() {
+      return [
+        { label: 'All', count: '', key: '__all__', isAll: true, reactedAt: false },
+        ...tags.map(tag => ({
+          label: tag.label,
+          count: tag.count,
+          key: tag.label,
+          isAll: false,
+          reactedAt: tag.reactedAt
+        }))
+      ];
+    }
+
+    function activeRowKey() {
+      return activeTab === null ? '__all__' : activeTab;
+    }
+
+    const scrollTabArc = {
+      radius: 480,
+      step: 108,
+      baseTop: 46.5
+    };
+
+    function scrollTabArcTopFromDx(dx) {
+      const drop = scrollTabArc.radius - Math.sqrt(Math.max(0, scrollTabArc.radius ** 2 - dx ** 2));
+      return Math.max(0, scrollTabArc.baseTop - drop);
+    }
+
+    function scrollTabArcTop(index, activeIndex) {
+      return scrollTabArcTopFromDx((index - activeIndex) * scrollTabArc.step);
+    }
+
+    function updateScrollTabArcPositions() {
+      if (!scrollBubbleTabs) return;
+      const centerX = scrollBubbleTabs.scrollLeft + scrollBubbleTabs.clientWidth / 2;
+      scrollBubbleTabs.querySelectorAll('.scroll-tab-bubble').forEach(tab => {
+        const tabCenter = tab.offsetLeft + tab.offsetWidth / 2;
+        tab.style.setProperty('--arc-y', `${scrollTabArcTopFromDx(tabCenter - centerX)}px`);
+      });
+    }
+
+    function centerScrollTab(key = activeRowKey(), behavior = 'smooth') {
+      if (!phone.classList.contains('is-scrolled')) return;
+      const tab = Array.from(scrollBubbleTabs.querySelectorAll('.scroll-tab-bubble')).find(item => item.dataset.tab === key);
+      if (!tab) return;
+      const target = tab.offsetLeft + tab.offsetWidth / 2 - scrollBubbleTabs.clientWidth / 2;
+      const maxScroll = Math.max(0, scrollBubbleTabs.scrollWidth - scrollBubbleTabs.clientWidth);
+      centeringRow = true;
+      scrollBubbleTabs.scrollTo({ left: clamp(target, 0, maxScroll), behavior });
+      updateScrollTabArcPositions();
+      window.setTimeout(() => { centeringRow = false; }, behavior === 'auto' ? 0 : 260);
+    }
+
+    function nearestScrollTabKey() {
+      const centerX = scrollBubbleTabs.scrollLeft + scrollBubbleTabs.clientWidth / 2;
+      const tabs = Array.from(scrollBubbleTabs.querySelectorAll('.scroll-tab-bubble'));
+      const nearest = tabs.reduce((best, tab) => {
+        if (!best) return tab;
+        const tabCenter = tab.offsetLeft + tab.offsetWidth / 2;
+        const bestCenter = best.offsetLeft + best.offsetWidth / 2;
+        return Math.abs(tabCenter - centerX) < Math.abs(bestCenter - centerX) ? tab : best;
+      }, null);
+      return nearest?.dataset.tab || '__all__';
+    }
+
+    function renderScrollBubbleTabs({ centerActive = false, behavior = 'auto' } = {}) {
+      const activeKey = activeRowKey();
+      const items = rowTagData();
+      const activeIndex = Math.max(0, items.findIndex(item => item.key === activeKey));
+      scrollBubbleTabs.textContent = '';
+      items.forEach((item, index) => {
+        const isActive = item.key === activeKey;
+        const button = document.createElement('button');
+        const core = document.createElement('span');
+        const label = document.createElement('span');
+        button.type = 'button';
+        button.className = `scroll-tab-bubble${isActive ? ' is-active' : ''}${item.reactedAt ? ' is-reacted' : ''}`;
+        button.dataset.tab = item.key;
+        button.style.setProperty('--arc-y', `${scrollTabArcTop(index, activeIndex)}px`);
+        button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        button.setAttribute('aria-label', item.isAll ? 'All moments' : `${item.label}, ${item.count}`);
+        core.className = 'scroll-tab-core';
+        label.className = 'scroll-tab-label';
+        label.textContent = item.label;
+        core.appendChild(label);
+        if (!item.isAll) {
+          const count = document.createElement('span');
+          const icon = document.createElement('span');
+          const number = document.createElement('span');
+          count.className = 'scroll-tab-count';
+          icon.className = 'scroll-tab-count-icon';
+          icon.setAttribute('aria-hidden', 'true');
+          number.className = 'scroll-tab-count-number';
+          number.textContent = item.count;
+          count.append(icon, number);
+          core.appendChild(count);
+        }
+        button.appendChild(core);
+        scrollBubbleTabs.appendChild(button);
+      });
+      updateScrollTabArcPositions();
+      if (centerActive) centerScrollTab(activeKey, behavior);
+    }
+
+    function expandedTagData() {
+      const items = rowTagData();
+      const all = items.find(item => item.isAll);
+      return [all, ...items.filter(item => !item.isAll)].filter(Boolean);
+    }
+
+    function makeStatusBubbleButton(item, className) {
+      const isActive = item.key === activeRowKey();
+      const button = document.createElement('button');
+      const core = document.createElement('span');
+      const label = document.createElement('span');
+      button.type = 'button';
+      button.className = `${className}${isActive ? ' is-active' : ''}${item.reactedAt ? ' is-reacted' : ''}`;
+      button.dataset.tab = item.key;
+      button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      button.setAttribute('aria-label', item.isAll ? 'All moments' : `${item.label}, ${item.count}`);
+      core.className = 'scroll-tab-core';
+      label.className = 'scroll-tab-label';
+      label.textContent = item.label;
+      core.appendChild(label);
+      if (!item.isAll && className !== 'tag-expanded-bubble') {
+        const count = document.createElement('span');
+        const icon = document.createElement('span');
+        const number = document.createElement('span');
+        count.className = 'scroll-tab-count';
+        icon.className = 'scroll-tab-count-icon';
+        icon.setAttribute('aria-hidden', 'true');
+        number.className = 'scroll-tab-count-number';
+        number.textContent = item.count;
+        count.append(icon, number);
+        core.appendChild(count);
+      }
+      button.appendChild(core);
+      return button;
+    }
+
+    function renderExpandedTags() {
+      tagExpandedGrid.textContent = '';
+      expandedTagData().forEach(item => {
+        tagExpandedGrid.appendChild(makeStatusBubbleButton(item, 'tag-expanded-bubble'));
+      });
+    }
+
+    function openExpandedTags() {
+      if (!phone.classList.contains('is-scrolled')) return;
+      renderExpandedTags();
+      tagExpandedOverlay.classList.add('is-open');
+      tagExpandedOverlay.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeExpandedTags() {
+      tagExpandedOverlay.classList.remove('is-open');
+      tagExpandedOverlay.setAttribute('aria-hidden', 'true');
+    }
+
+    function centerRowTag(tag, behavior = 'smooth') {
+      if (!tag || !phone.classList.contains('is-scrolled')) return;
+      centerScrollTab(tag.isAll ? '__all__' : tag.label, behavior);
+    }
+
+    function nearestRowTagToCenter() {
+      const centerX = tagWall.scrollLeft + tagWall.clientWidth / 2;
+      return scrolledRowItems().reduce((best, tag) => {
+        if (!best) return tag;
+        return Math.abs(tag.cx - centerX) < Math.abs(best.cx - centerX) ? tag : best;
+      }, null);
+    }
+
+    function rowHasVisibleBubble() {
+      const left = tagWall.scrollLeft;
+      const right = left + tagWall.clientWidth;
+      return scrolledRowItems().some(tag => {
+        const radius = tag.size / 2;
+        return tag.cx + radius > left && tag.cx - radius < right;
+      });
+    }
+
+    function layoutScrolledRow({ centerActive = false, behavior = 'auto' } = {}) {
+      tags.forEach(tag => {
+        tag.active = activeTab === tag.label;
+        syncTag(tag);
+      });
+      if (allFilterTag) syncTag(allFilterTag);
+      renderScrollBubbleTabs({ centerActive, behavior });
+    }
+
+    function selectScrolledTag(tag, { center = true, behavior = 'smooth' } = {}) {
+      if (!tag) return;
+      activeTab = tag.isAll ? null : tag.label;
+      tags.forEach(item => { item.active = item.label === activeTab; });
+      buildTabBar();
+      applyTabFilter();
+      layoutScrolledRow({ centerActive: center, behavior });
+      updateSelectedStatusSummary();
+    }
+
+    function restoreBubbleWall() {
+      closeExpandedTags();
+      forceScrolledTabs = false;
+      holdScrolledAtPostTop = false;
+      allowBubbleWallReturn = true;
+      lockScrolledUntil = 0;
+      centeringRow = false;
+      dragState = null;
+      activeTab = null;
+      tags.forEach(tag => { tag.active = false; });
+      tagWall.classList.remove('is-row-dragging');
+      scrollBubbleTabs.classList.remove('is-row-dragging');
+      phone.classList.remove('is-scrolled');
+      if (scroll.scrollTop > 0) scroll.scrollTop = 0;
+      buildTabBar();
+      applyTabFilter();
+      if (allFilterTag) syncTag(allFilterTag);
+      tags.forEach(syncTag);
+      resolveCollisions(10);
+      tags.forEach(renderTag);
+      updateSelectedStatusSummary();
+    }
+
+    function updateScrolledState() {
+      const wasScrolled = phone.classList.contains('is-scrolled');
+      if (wasScrolled && performance.now() < lockScrolledUntil && !allowBubbleWallReturn) {
+        holdScrolledAtPostTop = true;
+        forceScrolledTabs = true;
+      } else if (wasScrolled && scroll.scrollTop <= scrolledThreshold && !allowBubbleWallReturn) {
+        holdScrolledAtPostTop = true;
+        forceScrolledTabs = true;
+        if (scroll.scrollTop < scrolledPinnedTop) scroll.scrollTop = scrolledPinnedTop;
+      } else if (scroll.scrollTop > scrolledPinnedTop) {
+        holdScrolledAtPostTop = false;
+        allowBubbleWallReturn = false;
+        forceScrolledTabs = false;
+      }
+
+      const shouldScroll = !allowBubbleWallReturn && (forceScrolledTabs || holdScrolledAtPostTop || scroll.scrollTop > scrolledThreshold || performance.now() < lockScrolledUntil);
+      if (shouldScroll === wasScrolled) return;
+      phone.classList.toggle('is-scrolled', shouldScroll);
+      if (shouldScroll) {
+        phone.classList.remove('is-filter-mode');
+        resetReactBubble();
+        selectScrolledTag(activeRowTag() || allFilterTag, { center: true, behavior: 'auto' });
+        settleScrolledPostTop();
+      } else {
+        restoreBubbleWall();
+        return;
+      }
+      updateSelectedStatusSummary();
+    }
+
+    function handleScroll() {
+      updateScrolledState();
+      if (phone.classList.contains('is-post')) return;
+      phone.classList.add('is-scroll-moving');
+      window.clearTimeout(postButtonScrollTimer);
+      postButtonScrollTimer = window.setTimeout(() => {
+        phone.classList.remove('is-scroll-moving');
+      }, 180);
+    }
+
+    function beginTopPull(e) {
+      if (e.touches.length !== 1) return;
+      scrollTouchStartY = e.touches[0].clientY;
+      scrollTouchStartedAtTop = phone.classList.contains('is-scrolled') && holdScrolledAtPostTop && scroll.scrollTop <= scrolledPinnedTop;
+      allowBubbleWallReturn = false;
+    }
+
+    function trackTopPull(e) {
+      if (!scrollTouchStartedAtTop || e.touches.length !== 1 || scrollTouchStartY === null) return;
+      if (e.touches[0].clientY - scrollTouchStartY > topPullReleaseDistance) {
+        allowBubbleWallReturn = true;
+        forceScrolledTabs = false;
+        holdScrolledAtPostTop = false;
+        updateScrolledState();
+      }
+    }
+
+    function endTopPull() {
+      scrollTouchStartY = null;
+      scrollTouchStartedAtTop = false;
+    }
+
+    function handleTopWheel(e) {
+      if (!phone.classList.contains('is-scrolled') || !holdScrolledAtPostTop || scroll.scrollTop > scrolledPinnedTop || e.deltaY >= 0) return;
+      allowBubbleWallReturn = true;
+      forceScrolledTabs = false;
+      holdScrolledAtPostTop = false;
+      updateScrolledState();
+    }
+
+    function handleRowScroll() {
+      if (!phone.classList.contains('is-scrolled')) return;
+      updateScrollTabArcPositions();
+      if (centeringRow || dragState?.rowMode) return;
+      window.clearTimeout(rowScrollTimer);
+      rowScrollTimer = window.setTimeout(() => {
+        selectScrolledTab(nearestScrollTabKey());
+      }, 120);
+    }
+
+    function setCountFromCenter(tag, nextCount) {
+      tag.count = Math.max(0, nextCount);
+      tag.size = sizeForCount(tag.count);
+    }
+
+    function reactHome() {
+      return { x: tagWall.clientWidth / 2 - 22, y: 8 };
+    }
+
+    function reactObstacle() {
+      return null;
+    }
+
+    function setReactPosition(x, y) {
+      reactBubble.style.setProperty('--rx', `${x}px`);
+      reactBubble.style.setProperty('--ry', `${y}px`);
+    }
+
+    function playReactRestoreAnimation() {
+      reactBubble.classList.remove('is-restoring');
+      void reactBubble.offsetWidth;
+      reactBubble.classList.add('is-restoring');
+      window.setTimeout(() => {
+        reactBubble.classList.remove('is-restoring');
+      }, 380);
+    }
+
+    function resetReactBubble({ animate = false } = {}) {
+      if (currentStatusTag) {
+        consumeReactBubble();
+        return;
+      }
+      const home = reactHome();
+      reactBubble.classList.remove('is-dragging', 'is-over-target', 'is-consumed');
+      setReactPosition(home.x, home.y);
+      tags.forEach(tag => tag.el?.classList.remove('is-drop-target'));
+      reactState = null;
+      if (animate) playReactRestoreAnimation();
+    }
+
+    function consumeReactBubble() {
+      reactBubble.classList.remove('is-dragging', 'is-over-target');
+      reactBubble.classList.add('is-consumed');
+      tags.forEach(tag => tag.el?.classList.remove('is-drop-target'));
+      reactState = null;
+    }
+
+    function tagAtPoint(point, extraRadius = 8) {
+      let winner = null;
+      let bestDistance = Infinity;
+      tags.forEach(tag => {
+        const radius = collisionRadiusFor(tag) + extraRadius;
+        const distance = Math.hypot(point.x - tag.cx, point.y - tag.cy);
+        if (distance < radius && distance < bestDistance) {
+          winner = tag;
+          bestDistance = distance;
+        }
+      });
+      return winner;
+    }
+
+    function reactionTargetAt(point) {
+      let winner = null;
+      let bestOverlap = -Infinity;
+      tags.forEach(tag => {
+        const radius = collisionRadiusFor(tag);
+        const distance = Math.hypot(point.x - tag.cx, point.y - tag.cy);
+        const overlap = radius + 22 - distance;
+        if (overlap > 0 && overlap > bestOverlap) {
+          winner = tag;
+          bestOverlap = overlap;
+        }
+      });
+      return winner || tagAtPoint(point, 34);
+    }
+
+    function markDropTarget(target) {
+      tags.forEach(tag => tag.el?.classList.toggle('is-drop-target', tag === target));
+      reactBubble.classList.toggle('is-over-target', Boolean(target));
+      if (reactState) reactState.target = target;
+    }
+
+    function bubbleVisualMetrics(tag) {
+      const wallRect = tagWall.getBoundingClientRect();
+      const bubbleRect = tag.el.getBoundingClientRect();
+      const visualScale = visualScaleFor(tag);
+
+      return {
+        x: bubbleRect.left - wallRect.left + bubbleRect.width / 2,
+        y: bubbleRect.top - wallRect.top + bubbleRect.height / 2,
+        radius: (tag.size * visualScale) / 2
+      };
+    }
+
+    function sparkleShadowList(radius, spreadProgress) {
+      const groupCount = 7;
+      const sparklesPerGroup = 2;
+      const groupDistance = (1 + spreadProgress * 0.25) * radius;
+      const sparkleDistance = 6;
+      const sparkleRadius = 3;
+      const spread = -spreadProgress * sparkleRadius;
+      const shadows = [];
+
+      for (let i = 0; i < groupCount; i++) {
+        const groupAngle = i * (Math.PI * 2 / groupCount) - Math.PI / 2;
+        const groupX = groupDistance * Math.cos(groupAngle);
+        const groupY = groupDistance * Math.sin(groupAngle);
+
+        for (let j = 0; j < sparklesPerGroup; j++) {
+          const sparkleAngle = groupAngle + Math.PI / 3 + j * Math.PI;
+          const x = groupX + sparkleDistance * Math.cos(sparkleAngle);
+          const y = groupY + sparkleDistance * Math.sin(sparkleAngle);
+          shadows.push(`${x.toFixed(1)}px ${y.toFixed(1)}px 0 ${spread.toFixed(1)}px var(--colors-brands-mom-700)`);
+        }
+      }
+
+      return shadows.join(', ');
+    }
+
+    function playBubbleSparkles(tag) {
+      if (!tag?.el) return;
+      const metrics = bubbleVisualMetrics(tag);
+      const sparkles = document.createElement('span');
+      sparkles.className = 'bubble-sparkles';
+      sparkles.setAttribute('aria-hidden', 'true');
+      sparkles.style.setProperty('--spark-x', `${metrics.x - 3}px`);
+      sparkles.style.setProperty('--spark-y', `${metrics.y - 3}px`);
+      sparkles.style.setProperty('--sparkles-start', sparkleShadowList(metrics.radius, 0));
+      sparkles.style.setProperty('--sparkles-mid', sparkleShadowList(metrics.radius, 0));
+      sparkles.style.setProperty('--sparkles-end', sparkleShadowList(metrics.radius, 1));
+      tagWall.appendChild(sparkles);
+      window.setTimeout(() => sparkles.remove(), 820);
+    }
+
+    function playReactPop(tag) {
+      const pop = document.createElement('span');
+      pop.className = 'react-pop';
+      pop.textContent = '+1';
+      pop.style.setProperty('--pop-x', `${tag.cx - 10}px`);
+      pop.style.setProperty('--pop-y', `${tag.cy - collisionRadiusFor(tag) - 8}px`);
+      tagWall.appendChild(pop);
+      playBubbleSparkles(tag);
+      window.setTimeout(() => pop.remove(), 820);
+    }
+
+    function playBubbleReactionPulse(tag) {
+      if (!tag?.el) return;
+      tag.el.classList.remove('is-reaction-pulse');
+      void tag.el.offsetWidth;
+      tag.el.classList.add('is-reaction-pulse');
+      tag.el.addEventListener('animationend', () => {
+        tag.el?.classList.remove('is-reaction-pulse');
+      }, { once: true });
+    }
+
+    function addReactionToTag(tag) {
+      const shouldPromptJoin = !hasJoinedGroup;
+      setCountFromCenter(tag, tag.count + 1);
+      tag.reactedAt = performance.now();
+      tag.vy -= 80;
+      tag.vx += tag.cx < fieldCenter().x ? 38 : -38;
+      currentStatusTag = tag;
+      consumeReactBubble();
+      syncTag(tag);
+      updateStatusHeading();
+      updateSelectedStatusSummary();
+      playReactPop(tag);
+      resolveCollisions(8);
+      pinActiveTag();
+      tags.forEach(renderTag);
+      playBubbleReactionPulse(tag);
+      if (shouldPromptJoin) {
+        showJoinPromptAfterBubbleReaction(tag.el || homePostButton, tag);
+      } else {
+        showBubbleStatusBanner(tag);
+      }
+    }
+
+    function endCurrentStatus() {
+      const tag = currentStatusTag;
+      if (!tag) return;
+      setCountFromCenter(tag, tag.count - 1);
+      tag.reactedAt = false;
+      currentStatusTag = null;
+      if (removeTagWhenEmpty(tag)) {
+        updateStatusHeading();
+        updateSelectedStatusSummary();
+        resetReactBubble({ animate: true });
+        return;
+      }
+      syncTag(tag);
+      updateStatusHeading();
+      updateSelectedStatusSummary();
+      resetReactBubble({ animate: true });
+      buildTabBar();
+      applyTabFilter();
+      if (phone.classList.contains('is-scrolled')) {
+        renderScrollBubbleTabs({ centerActive: true, behavior: 'auto' });
+      }
+      updateSelectedStatusSummary();
+      resolveCollisions(8);
+      pinActiveTag();
+      tags.forEach(renderTag);
+    }
+
+    function toggleReactionForTag(tag) {
+      if (!tag || tag.isAll) return;
+      if (currentStatusTag === tag) {
+        endCurrentStatus();
+        return;
+      }
+      if (currentStatusTag) endCurrentStatus();
+      addReactionToTag(tag);
+    }
+
+    function handleStatusAction() {
+      if (currentStatusTag) {
+        endCurrentStatus();
+      } else {
+        openTagPicker();
+      }
+    }
+
+    function activeTag() {
+      return tags.find(item => item.active);
+    }
+
+    function pinActiveTag() {
+      const tag = activeTag();
+      if (!tag) return;
+      const radius = collisionRadiusFor(tag);
+      const target = activeAnchor();
+      tag.cx = clamp(target.x, radius + 8, tagWall.clientWidth - radius - 8);
+      tag.cy = clamp(target.y, radius + 10, tagWall.clientHeight - radius - 10);
+      tag.vx = 0;
+      tag.vy = 0;
+    }
+
+    function addButtonCenterInWall() {
+      const wallRect   = tagWall.getBoundingClientRect();
+      const buttonRect = addStatus.getBoundingClientRect();
+      return {
+        x: buttonRect.left + buttonRect.width / 2 - wallRect.left,
+        y: buttonRect.top  + buttonRect.height / 2 - wallRect.top
+      };
+    }
+
+    const bubbleSpawnDuration = 200;
+    const bubbleSparkleAfterSpawnDelay = bubbleSpawnDuration + 220;
+    const bubbleCenterSpawnHoldDuration = bubbleSparkleAfterSpawnDelay + 820;
+
+    function playBubbleSpawn(tag, { centerLocked = false } = {}) {
+      tag.el.classList.add("is-spawning");
+      tag.el.style.setProperty("--spawn-scale", "0.18");
+      tag.spawnStart = performance.now();
+      tag.centerSpawnUntil = centerLocked ? tag.spawnStart + bubbleCenterSpawnHoldDuration : 0;
+      window.setTimeout(() => {
+        tag.el.classList.remove("is-spawning");
+        tag.el.style.removeProperty("--spawn-scale");
+        tag.spawnStart = null;
+      }, bubbleSpawnDuration);
+    }
+
+    function removeTagWhenEmpty(tag) {
+      if (!tag || tag.count > 0) return false;
+      const index = tags.indexOf(tag);
+      if (index === -1) return false;
+      if (currentStatusTag === tag) currentStatusTag = null;
+      if (activeTab === tag.label) activeTab = null;
+      pickerSelection = pickerSelection === tag.label ? null : pickerSelection;
+      tag.active = false;
+      tag.el?.classList.add("is-removing");
+      window.setTimeout(() => tag.el?.remove(), 260);
+      tags.splice(index, 1);
+      buildTabBar();
+      applyTabFilter();
+      renderPickerTags();
+      if (phone.classList.contains("is-scrolled")) {
+        renderScrollBubbleTabs({ centerActive: true, behavior: "auto" });
+      }
+      return true;
+    }
+
+    function pickTag(tag) {
+      const previous = activeTag();
+      if (previous === tag) {
+        selectScrolledTab('__all__', { center: true, behavior: 'auto' });
+        return;
+      }
+
+      if (!allowsMultipleSelection && previous) {
+        previous.active = false;
+        syncTag(previous);
+      }
+
+      selectScrolledTab(tag.label, { center: true, behavior: 'auto' });
+    }
+
+    /* ── Physics ───────────────────────────────────────────── */
+    function collide(a, b) {
+      const ar = collisionRadiusFor(a);
+      const br = collisionRadiusFor(b);
+      const dx = b.cx - a.cx;
+      const dy = b.cy - a.cy;
+      const distance = Math.hypot(dx, dy) || 0.001;
+      const target = ar + br;
+      if (distance >= target) return;
+      const push = (target - distance) * 0.5;
+      const aSpawning = a.el?.classList.contains('is-spawning');
+      const bSpawning = b.el?.classList.contains('is-spawning');
+      const aShare = aSpawning && !bSpawning ? 0.35 : bSpawning && !aSpawning ? 0.65 : 0.5;
+      const bShare = 1 - aShare;
+      const ux = dx / distance;
+      const uy = dy / distance;
+      a.cx -= ux * push * aShare * 2;
+      a.cy -= uy * push * aShare * 2;
+      b.cx += ux * push * bShare * 2;
+      b.cy += uy * push * bShare * 2;
+      const relativeVelocity = (b.vx - a.vx) * ux + (b.vy - a.vy) * uy;
+      if (relativeVelocity < 0) {
+        const impulse = relativeVelocity * -0.22;
+        a.vx -= impulse * ux;
+        a.vy -= impulse * uy;
+        b.vx += impulse * ux;
+        b.vy += impulse * uy;
+      }
+    }
+
+    function collideWithAddButton(tag) {
+      const obstacle = addButtonObstacle();
+      if (!obstacle) return;
+      const radius = collisionRadiusFor(tag);
+      const isSpawning = tag.el?.classList.contains('is-spawning');
+      const spawnScale = Number(tag.el?.style.getPropertyValue('--spawn-scale')) || 1;
+      const obstacleRadius = isSpawning
+        ? obstacle.radius * clamp((spawnScale - 0.18) / 0.82, 0.2, 1)
+        : obstacle.radius;
+      const dx = tag.cx - obstacle.x;
+      const dy = tag.cy - obstacle.y;
+      const distance = Math.hypot(dx, dy) || 0.001;
+      const target = radius + obstacleRadius;
+      if (distance >= target) return;
+      const ux = dx / distance;
+      const uy = dy / distance;
+      const push = target - distance;
+      tag.cx += ux * push;
+      tag.cy += uy * push;
+      const inwardVelocity = tag.vx * ux + tag.vy * uy;
+      if (inwardVelocity < 0) {
+        tag.vx -= inwardVelocity * ux * 0.38;
+        tag.vy -= inwardVelocity * uy * 0.38;
+      }
+    }
+
+    function collideWithReactBubble(tag) {
+      const obstacle = reactObstacle();
+      if (!obstacle) return;
+      const radius = collisionRadiusFor(tag);
+      const dx = tag.cx - obstacle.x;
+      const dy = tag.cy - obstacle.y;
+      const distance = Math.hypot(dx, dy) || 0.001;
+      const target = radius + obstacle.radius;
+      if (distance >= target) return;
+      const ux = dx / distance;
+      const uy = dy / distance;
+      const push = target - distance;
+      tag.cx += ux * push;
+      tag.cy += uy * push;
+      const inwardVelocity = tag.vx * ux + tag.vy * uy;
+      if (inwardVelocity < 0) {
+        tag.vx -= inwardVelocity * ux * 0.44;
+        tag.vy -= inwardVelocity * uy * 0.44;
+      }
+    }
+
+    function constrainToBounds(tag) {
+      const radius = collisionRadiusFor(tag);
+      const minX = radius + 8;
+      const maxX = tagWall.clientWidth - radius - 8;
+      const minY = radius + 10;
+      const maxY = tagWall.clientHeight - radius - 10;
+      if (tag.cx < minX) { tag.cx = minX; tag.vx = Math.abs(tag.vx) * magneticConfig.bounce; }
+      else if (tag.cx > maxX) { tag.cx = maxX; tag.vx = -Math.abs(tag.vx) * magneticConfig.bounce; }
+      if (tag.cy < minY) { tag.cy = minY; tag.vy = Math.abs(tag.vy) * magneticConfig.bounce; }
+      else if (tag.cy > maxY) { tag.cy = maxY; tag.vy = -Math.abs(tag.vy) * magneticConfig.bounce; }
+    }
+
+    function resolveCollisions(iterations = 2) {
+      for (let step = 0; step < iterations; step++) {
+        for (let i = 0; i < tags.length; i++)
+          for (let j = i + 1; j < tags.length; j++) collide(tags[i], tags[j]);
+        tags.forEach(collideWithAddButton);
+        tags.forEach(collideWithReactBubble);
+        tags.forEach(constrainToBounds);
+      }
+    }
+
+    /* ── Picker ────────────────────────────────────────────── */
+    function renderPickerTags() {
+      tagOptions.innerHTML = '';
+      tags.forEach(tag => {
+        const option = document.createElement('button');
+        const isSelected = pickerSelection === tag.label;
+        option.type = 'button';
+        option.className = `tag-option${isSelected ? ' is-selected' : ''}`;
+        option.dataset.label = tag.label;
+        option.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+        const label = document.createElement('span');
+        const dot   = document.createElement('span');
+        const count = document.createElement('span');
+        label.textContent = tag.label;
+        dot.textContent   = '·';
+        count.textContent = tag.count;
+        option.append(label, dot, count);
+        tagOptions.appendChild(option);
+      });
+    }
+
+    function normalizedCustomTag() {
+      return tagCustomInput.value.trim().replace(/\s+/g, ' ');
+    }
+
+    function enforceCustomTagLimit() {
+      const chars = Array.from(tagCustomInput.value);
+      if (chars.length > customTagLimit) tagCustomInput.value = chars.slice(0, customTagLimit).join('');
+    }
+
+    function updatePickerAction() {
+      const canAdd = Boolean(pickerSelection || normalizedCustomTag());
+      tagPickerAdd.disabled = !canAdd;
+      tagPickerAdd.classList.toggle('is-ready', canAdd);
+    }
+
+    function openTagPicker() {
+      pickerSelection = null;
+      tagCustomInput.value = '';
+      renderPickerTags();
+      updatePickerAction();
+      tagPicker.classList.add('is-open');
+      tagPicker.setAttribute('aria-hidden', 'false');
+      tagPickerClose.focus({ preventScroll: true });
+    }
+
+    function closeTagPicker() {
+      tagPicker.classList.remove('is-open');
+      tagPicker.setAttribute('aria-hidden', 'true');
+      addStatus.focus({ preventScroll: true });
+    }
+
+    function activateTagFromPicker(tag) {
+      const previous = activeTag();
+      if (!allowsMultipleSelection && previous && previous !== tag) {
+        previous.active = false;
+        syncTag(previous);
+      }
+      tag.active = true;
+      activeTab = tag.label;
+      syncTag(tag);
+      applyTabFilter();
+      pinActiveTag();
+      resolveCollisions(8);
+      pinActiveTag();
+      tags.forEach(renderTag);
+    }
+
+    function addCustomTag(label) {
+      const existing = tags.find(t => t.label.toLowerCase() === label.toLowerCase());
+      if (existing) {
+        return { tag: existing, isFresh: false };
+      }
+      const previous = activeTag();
+      if (!allowsMultipleSelection && previous) {
+        previous.active = false;
+        syncTag(previous);
+      }
+      const freshSize = sizeForCount(1);
+      const startX = tagWall.clientWidth / 2;
+      const startY = tagWall.clientHeight / 2;
+      const fresh = { label, count: 1, x: startX - freshSize / 2, y: startY - freshSize / 2, active: false, isCustom: true };
+      tags.push(makeTag(fresh));
+      activeTab = null;
+      fresh.cx = startX;
+      fresh.cy = startY;
+      fresh.vx = 0;
+      fresh.vy = 0;
+      syncTag(fresh);
+      renderTag(fresh);
+      playBubbleSpawn(fresh, { centerLocked: true });
+      applyTabFilter();
+      resolveCollisions(2);
+      tags.forEach(renderTag);
+
+      // Rebuild tab bar to include the new tag
+      buildTabBar();
+      return { tag: fresh, isFresh: true };
+    }
+
+    function applyPickerSelection() {
+      const custom = normalizedCustomTag();
+      let freshCustomTag = null;
+      let reactionAfterCloseTag = null;
+      if (custom) {
+        const result = addCustomTag(custom);
+        if (result?.tag) {
+          if (result.isFresh) {
+            currentStatusTag = result.tag;
+            result.tag.reactedAt = performance.now();
+            consumeReactBubble();
+            syncTag(result.tag);
+            updateStatusHeading();
+            updateSelectedStatusSummary();
+            freshCustomTag = result.tag;
+          } else {
+            reactionAfterCloseTag = result.tag;
+          }
+        }
+      }
+      else if (pickerSelection) {
+        const picked = tags.find(t => t.label === pickerSelection);
+        if (picked) {
+          reactionAfterCloseTag = picked;
+        }
+      }
+      closeTagPicker();
+      if (reactionAfterCloseTag) {
+        requestAnimationFrame(() => toggleReactionForTag(reactionAfterCloseTag));
+      }
+      if (freshCustomTag) {
+        window.setTimeout(() => {
+          requestAnimationFrame(() => playBubbleSparkles(freshCustomTag));
+        }, bubbleSparkleAfterSpawnDelay);
+      }
+    }
+
+    /* ── Drag / pointer ────────────────────────────────────── */
+    function wallPoint(event) {
+      const rect = tagWall.getBoundingClientRect();
+      return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+    }
+
+    function tagFromElement(element) {
+      const bubble = element?.closest?.('.bubble');
+      if (allFilterTag?.el === bubble) return allFilterTag;
+      return tags.find(t => t.el === bubble);
+    }
+
+    function moveNodes(location, previous) {
+      const dx = location.x - previous.x;
+      const dy = location.y - previous.y;
+      if (dx === 0 && dy === 0) return;
+      tags.forEach(tag => {
+        const distance = Math.hypot(tag.cx - location.x, tag.cy - location.y);
+        const acceleration = 3 * Math.sqrt(Math.max(1, distance));
+        tag.vx += dx * acceleration * magneticConfig.dragImpulse;
+        tag.vy += dy * acceleration * magneticConfig.dragImpulse;
+      });
+    }
+
+    function setBubbleHoldProgress(tag, progress) {
+      if (!tag?.el) return;
+      const holdProgress = clamp(progress, 0, 1);
+      const rippleProgress = Math.pow(holdProgress, 1.75);
+      tag.el.style.setProperty('--hold-progress', `${progress}`);
+      tag.el.style.setProperty('--hold-progress-deg', `${Math.round(progress * 360)}deg`);
+      tag.el.style.setProperty('--hold-ripple-size', `${Math.round(rippleProgress * 86)}%`);
+      tag.el.style.setProperty('--hold-ripple-opacity', `${Math.min(0.92, progress * 1.08)}`);
+      tag.el.classList.toggle('is-holding', progress > 0 && progress < 1);
+    }
+
+    function clearBubbleHoldVisual(tag) {
+      if (!tag?.el) return;
+      tag.el.classList.remove('is-holding');
+      tag.el.style.setProperty('--hold-progress', '0');
+      tag.el.style.setProperty('--hold-progress-deg', '0deg');
+      tag.el.style.setProperty('--hold-ripple-size', '0%');
+      tag.el.style.setProperty('--hold-ripple-opacity', '0');
+    }
+
+    function tickBubbleHold() {
+      if (!bubbleHoldState) return;
+      const progress = clamp((performance.now() - bubbleHoldState.startedAt) / bubbleHoldDelay, 0, 1);
+      setBubbleHoldProgress(bubbleHoldState.tag, progress);
+      if (progress < 1) {
+        bubbleHoldState.raf = requestAnimationFrame(tickBubbleHold);
+      }
+    }
+
+    function cancelBubbleHold(pointerId = null) {
+      if (!bubbleHoldState) return;
+      if (pointerId !== null && bubbleHoldState.pointerId !== pointerId) return;
+      window.clearTimeout(bubbleHoldState.timer);
+      cancelAnimationFrame(bubbleHoldState.raf);
+      clearBubbleHoldVisual(bubbleHoldState.tag);
+      bubbleHoldState = null;
+    }
+
+    function beginBubbleHold(tag, pointerId, point) {
+      if (!tag || tag.isAll || phone.classList.contains('is-scrolled')) return;
+      cancelBubbleHold();
+      bubbleHoldState = {
+        tag,
+        pointerId,
+        startX: point.x,
+        startY: point.y,
+        startedAt: performance.now(),
+        raf: requestAnimationFrame(tickBubbleHold),
+        timer: window.setTimeout(() => {
+          if (!bubbleHoldState || bubbleHoldState.pointerId !== pointerId || bubbleHoldState.tag !== tag) return;
+          cancelAnimationFrame(bubbleHoldState.raf);
+          setBubbleHoldProgress(tag, 1);
+          if (dragState?.pointerId === pointerId) {
+            dragState.moved = true;
+            dragState.longPressFired = true;
+          }
+          bubbleHoldState = null;
+          toggleReactionForTag(tag);
+          window.setTimeout(() => clearBubbleHoldVisual(tag), 140);
+        }, bubbleHoldDelay)
+      };
+      setBubbleHoldProgress(tag, 0.01);
+    }
+
+    function trackBubbleHold(pointerId, point) {
+      if (!bubbleHoldState || bubbleHoldState.pointerId !== pointerId) return;
+      if (Math.hypot(point.x - bubbleHoldState.startX, point.y - bubbleHoldState.startY) > 8) {
+        cancelBubbleHold(pointerId);
+      }
+    }
+
+    ['selectstart', 'dragstart', 'contextmenu'].forEach(eventName => {
+      tagWall.addEventListener(eventName, e => {
+        if (!e.target.closest?.('.bubble')) return;
+        e.preventDefault();
+      });
+    });
+
+    tagWall.addEventListener('pointerdown', e => {
+      if (e.target.closest?.('.react-bubble')) return;
+      if (e.target.closest?.('.scroll-bubble-tabs')) return;
+      if (phone.classList.contains('is-scrolled')) {
+        const rowTag = tagFromElement(e.target);
+        window.clearTimeout(rowScrollTimer);
+        centeringRow = false;
+        dragState = {
+          pointerId: e.pointerId,
+          rowMode: true,
+          rowTag,
+          startX: e.clientX,
+          startY: e.clientY,
+          startScrollLeft: tagWall.scrollLeft,
+          moved: false
+        };
+        tagWall.setPointerCapture?.(e.pointerId);
+        return;
+      }
+      const point = wallPoint(e);
+      dragState = { pointerId: e.pointerId, startX: point.x, startY: point.y,
+                    lastX: point.x, lastY: point.y, moved: false, target: tagFromElement(e.target) };
+      if (dragState.target) e.preventDefault();
+      beginBubbleHold(dragState.target, e.pointerId, point);
+      tagWall.setPointerCapture?.(e.pointerId);
+    });
+
+    tagWall.addEventListener('pointermove', e => {
+      if (!dragState || dragState.pointerId !== e.pointerId) return;
+      if (phone.classList.contains('is-scrolled')) {
+        const dx = e.clientX - dragState.startX;
+        if (Math.abs(dx) > 3 || Math.abs(e.clientY - dragState.startY) > 8) {
+          dragState.moved = true;
+          tagWall.classList.add('is-row-dragging');
+          tagWall.scrollLeft = dragState.startScrollLeft - dx;
+          e.preventDefault();
+        }
+        return;
+      }
+      if (dragState.longPressFired) {
+        e.preventDefault();
+        return;
+      }
+      const point = wallPoint(e);
+      trackBubbleHold(e.pointerId, point);
+      if (Math.hypot(point.x - dragState.startX, point.y - dragState.startY) > 4) {
+        dragState.moved = true;
+        cancelBubbleHold(e.pointerId);
+      }
+      moveNodes(point, { x: dragState.lastX, y: dragState.lastY });
+      dragState.lastX = point.x;
+      dragState.lastY = point.y;
+    });
+
+    tagWall.addEventListener('pointerup', e => {
+      if (!dragState || dragState.pointerId !== e.pointerId) return;
+      if (phone.classList.contains('is-scrolled')) {
+        tagWall.releasePointerCapture?.(e.pointerId);
+        tagWall.classList.remove('is-row-dragging');
+        if (dragState.moved) {
+          selectScrolledTag(nearestRowTagToCenter(), { center: true, behavior: 'smooth' });
+        } else if (dragState.rowTag) {
+          selectScrolledTag(dragState.rowTag);
+        }
+        dragState = null;
+        return;
+      }
+      tagWall.releasePointerCapture?.(e.pointerId);
+      cancelBubbleHold(e.pointerId);
+      if (!dragState.moved && dragState.target) pickTag(dragState.target);
+      dragState = null;
+    });
+
+    tagWall.addEventListener('pointercancel', e => {
+      if (dragState?.pointerId === e.pointerId) tagWall.releasePointerCapture?.(e.pointerId);
+      cancelBubbleHold(e.pointerId);
+      tagWall.classList.remove('is-row-dragging');
+      dragState = null;
+    });
+
+    scrollBubbleTabs.addEventListener('pointerdown', e => {
+      if (!phone.classList.contains('is-scrolled')) return;
+      e.stopPropagation();
+      const tab = e.target.closest?.('.scroll-tab-bubble');
+      window.clearTimeout(rowScrollTimer);
+      centeringRow = false;
+      dragState = {
+        pointerId: e.pointerId,
+        rowMode: true,
+        rowKey: tab?.dataset.tab || null,
+        startX: e.clientX,
+        startY: e.clientY,
+        startScrollLeft: scrollBubbleTabs.scrollLeft,
+        moved: false
+      };
+      scrollBubbleTabs.setPointerCapture?.(e.pointerId);
+    });
+
+    scrollBubbleTabs.addEventListener('pointermove', e => {
+      if (!dragState?.rowMode || dragState.pointerId !== e.pointerId) return;
+      e.stopPropagation();
+      const dx = e.clientX - dragState.startX;
+      if (Math.abs(dx) > 3 || Math.abs(e.clientY - dragState.startY) > 8) {
+        dragState.moved = true;
+        scrollBubbleTabs.classList.add('is-row-dragging');
+        scrollBubbleTabs.scrollLeft = dragState.startScrollLeft - dx;
+        updateScrollTabArcPositions();
+        e.preventDefault();
+      }
+    });
+
+    scrollBubbleTabs.addEventListener('pointerup', e => {
+      if (!dragState?.rowMode || dragState.pointerId !== e.pointerId) return;
+      e.stopPropagation();
+      scrollBubbleTabs.releasePointerCapture?.(e.pointerId);
+      scrollBubbleTabs.classList.remove('is-row-dragging');
+      if (dragState.moved) {
+        selectScrolledTab(nearestScrollTabKey());
+      } else if (dragState.rowKey) {
+        selectScrolledTab(dragState.rowKey);
+      }
+      dragState = null;
+    });
+
+    scrollBubbleTabs.addEventListener('pointercancel', e => {
+      e.stopPropagation();
+      if (dragState?.pointerId === e.pointerId) scrollBubbleTabs.releasePointerCapture?.(e.pointerId);
+      scrollBubbleTabs.classList.remove('is-row-dragging');
+      dragState = null;
+    });
+
+    scrollBubbleTabs.addEventListener('click', e => {
+      if (!phone.classList.contains('is-scrolled')) return;
+      const tab = e.target.closest?.('.scroll-tab-bubble');
+      if (!tab) return;
+      e.preventDefault();
+      e.stopPropagation();
+      selectScrolledTab(tab.dataset.tab);
+    });
+
+    postsViewport.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      if (!beginPostSwipe(e.clientX, e.clientY, e.pointerId)) return;
+      postsViewport.setPointerCapture?.(e.pointerId);
+    }, { capture: true });
+
+    document.addEventListener('pointermove', e => {
+      if (!postSwipeState || postSwipeState.pointerId !== e.pointerId) return;
+      if (movePostSwipe(e.clientX, e.clientY)) e.preventDefault();
+    }, { capture: true });
+
+    document.addEventListener('pointerup', e => {
+      if (!postSwipeState || postSwipeState.pointerId !== e.pointerId) return;
+      endPostSwipe({ commit: true });
+    }, { capture: true });
+
+    document.addEventListener('pointercancel', e => {
+      if (!postSwipeState || postSwipeState.pointerId !== e.pointerId) return;
+      endPostSwipe({ commit: false });
+    }, { capture: true });
+
+    postsViewport.addEventListener('touchstart', e => {
+      if (e.touches.length !== 1) return;
+      const touch = e.touches[0];
+      beginPostSwipe(touch.clientX, touch.clientY);
+    }, { passive: true, capture: true });
+
+    document.addEventListener('touchmove', e => {
+      if (!postSwipeState || e.touches.length !== 1 || postSwipeState.pointerId !== null) return;
+      const touch = e.touches[0];
+      if (movePostSwipe(touch.clientX, touch.clientY)) e.preventDefault();
+    }, { passive: false, capture: true });
+
+    document.addEventListener('touchend', () => {
+      if (!postSwipeState || postSwipeState.pointerId !== null) return;
+      endPostSwipe({ commit: true });
+    }, { capture: true });
+
+    document.addEventListener('touchcancel', () => {
+      if (!postSwipeState || postSwipeState.pointerId !== null) return;
+      endPostSwipe({ commit: false });
+    }, { capture: true });
+
+    /* ── RAF loop ──────────────────────────────────────────── */
+    function tick(now) {
+      const dt = Math.min(0.033, (now - lastFrame) / 1000 || 0.016);
+      lastFrame = now;
+      if (phone.classList.contains('is-scrolled')) {
+        requestAnimationFrame(tick);
+        return;
+      }
+      const center = fieldCenter();
+      const damping = Math.exp(-magneticConfig.damping * dt);
+      tags.forEach(tag => {
+        const isSpawning = tag.el?.classList.contains('is-spawning');
+        const isCenterSpawning = tag.centerSpawnUntil && now < tag.centerSpawnUntil;
+        if (isSpawning && tag.spawnStart) {
+          const progress = clamp((now - tag.spawnStart) / bubbleSpawnDuration, 0, 1);
+          const c1 = 1.42;
+          const c3 = c1 + 1;
+          const eased = 1 + c3 * Math.pow(progress - 1, 3) + c1 * Math.pow(progress - 1, 2);
+          tag.el.style.setProperty('--spawn-scale', `${0.18 + eased * 0.82}`);
+        }
+        if (isCenterSpawning) {
+          tag.cx = center.x;
+          tag.cy = center.y;
+          tag.vx = 0;
+          tag.vy = 0;
+          constrainToBounds(tag);
+          return;
+        }
+        const target = tag.active ? activeAnchor() : center;
+        const strength = tag.active ? magneticConfig.activeAnchorStrength : magneticConfig.fieldStrength;
+        const dx = target.x - tag.cx;
+        const dy = target.y - tag.cy;
+        tag.vx += dx * strength * dt;
+        tag.vy += dy * strength * dt;
+        if (isSpawning) {
+          tag.vy -= 180 * dt;
+          tag.vx += (tag.cx < center.x ? -70 : 70) * dt;
+        }
+        tag.vx *= damping;
+        tag.vy *= damping;
+        tag.cx += tag.vx * dt;
+        tag.cy += tag.vy * dt;
+        constrainToBounds(tag);
+      });
+      resolveCollisions(3);
+      tags.forEach(tag => {
+        if (tag.centerSpawnUntil && now < tag.centerSpawnUntil) {
+          tag.cx = center.x;
+          tag.cy = center.y;
+          tag.vx = 0;
+          tag.vy = 0;
+        }
+      });
+      pinActiveTag();
+      tags.forEach(renderTag);
+      requestAnimationFrame(tick);
+    }
+
+    /* ── Init ──────────────────────────────────────────────── */
+    allFilterTag = makeAllFilterTag();
+    tags.forEach(makeTag);
+    resetReactBubble();
+    resolveCollisions(12);
+    tags.forEach(renderTag);
+
+    buildTabBar();
+    applyTabFilter();
+    updateScrolledState();
+    updateSelectedStatusSummary();
+
+    addStatus.addEventListener('click', handleStatusAction);
+    navMore.addEventListener('click', openExpandedTags);
+    tagExpandedClose.addEventListener('click', closeExpandedTags);
+    tagExpandedGrid.addEventListener('click', e => {
+      const bubble = e.target.closest?.('.tag-expanded-bubble');
+      if (!bubble) return;
+      selectScrolledTab(bubble.dataset.tab, { center: true, behavior: 'smooth' });
+      closeExpandedTags();
+    });
+    scroll.addEventListener('scroll', handleScroll, { passive: true });
+    scroll.addEventListener('touchstart', beginTopPull, { passive: true });
+    scroll.addEventListener('touchmove', trackTopPull, { passive: true });
+    scroll.addEventListener('touchend', endTopPull, { passive: true });
+    scroll.addEventListener('touchcancel', endTopPull, { passive: true });
+    scroll.addEventListener('wheel', handleTopWheel, { passive: true });
+    scrollBubbleTabs.addEventListener('scroll', handleRowScroll, { passive: true });
+    homePostButton.addEventListener('click', handleHomePostClick);
+    emptyStateAction.addEventListener('click', () => {
+      if (phone.classList.contains('is-scrolled')) {
+        selectScrolledTab('__all__', { center: true, behavior: 'smooth' });
+      } else {
+        selectTab('__all__');
+      }
+    });
+    bubbleStatusBannerAction.addEventListener('pointerdown', e => {
+      e.stopPropagation();
+    });
+    bubbleStatusBannerAction.addEventListener('click', e => {
+      e.stopPropagation();
+      hideBubbleStatusBanner();
+      syncJoinedState(true);
+      openPostView();
+    });
+    joinConfirmPost.addEventListener('click', () => {
+      if (joinConfirmMode === 'post') {
+        pendingBubbleBannerTag = null;
+        syncJoinedState(true);
+        openPostView();
+        return;
+      }
+      const bannerTag = pendingBubbleBannerTag;
+      pendingBubbleBannerTag = null;
+      closeJoinConfirm();
+      if (bannerTag) showBubbleStatusBanner(bannerTag);
+    });
+    joinConfirm.querySelector('[data-close-join-confirm]').addEventListener('click', dismissJoinConfirm);
+    leaveConfirmStay.addEventListener('click', closeLeaveConfirm);
+    leaveConfirm.querySelector('[data-close-leave-confirm]').addEventListener('click', closeLeaveConfirm);
+    leaveConfirmLeave.addEventListener('click', () => {
+      closeLeaveConfirm();
+      syncJoinedState(false);
+    });
+    postBackButton.addEventListener('click', closePostView);
+    composeInput.addEventListener('input', updateComposeSubmit);
+    tagPickerClose.addEventListener('click', closeTagPicker);
+    tagPicker.querySelector('[data-close-picker]').addEventListener('click', closeTagPicker);
+
+    tagOptions.addEventListener('click', e => {
+      const option = e.target.closest('.tag-option');
+      if (!option) return;
+      pickerSelection = pickerSelection === option.dataset.label ? null : option.dataset.label;
+      tagCustomInput.value = '';
+      renderPickerTags();
+      updatePickerAction();
+    });
+
+    tagCustomInput.addEventListener('input', () => {
+      enforceCustomTagLimit();
+      if (tagCustomInput.value.length > 0) { pickerSelection = null; renderPickerTags(); }
+      updatePickerAction();
+    });
+
+    tagPickerAdd.addEventListener('click', () => {
+      if (!tagPickerAdd.disabled) applyPickerSelection();
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && leaveConfirm.classList.contains('is-open')) closeLeaveConfirm();
+      else if (e.key === 'Escape' && joinConfirm.classList.contains('is-open')) dismissJoinConfirm();
+      else if (e.key === 'Escape' && tagExpandedOverlay.classList.contains('is-open')) closeExpandedTags();
+      else if (e.key === 'Escape' && tagPicker.classList.contains('is-open')) closeTagPicker();
+      else if (e.key === 'Escape' && phone.classList.contains('is-post')) closePostView();
+    });
+
+    updateComposeSubmit();
+
+    // Toggle 按钮交互
+    document.querySelectorAll('.join').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (hasJoinedGroup) {
+          openLeaveConfirm(btn);
+          return;
+        }
+        syncJoinedState(true);
+        openJoinConfirm('joined', btn);
+      });
+    });
+
+    document.querySelectorAll('.compose-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pressed = btn.getAttribute('aria-pressed') === 'true';
+        btn.setAttribute('aria-pressed', pressed ? 'false' : 'true');
+      });
+    });
+
+    requestAnimationFrame(tick);
+
+    // ── Preview navigation ──────────────────────────────────
+    // In the boss-preview flow, every group variant returns to the program entry.
+    const backBtn = document.querySelector('.round-icon[aria-label="Back"]');
+    if (backBtn) {
+      backBtn.addEventListener('click', () => {
+        if (phone.classList.contains('is-scrolled')) {
+          restoreBubbleWall();
+          return;
+        }
+        if (window.parent !== window) {
+          window.parent.postMessage('group:back', '*');
+          return;
+        }
+        window.top.location.href = './index.html';
+      });
+    }
+
+    // ── iframe layout: strip outer stage/phone shell ─────────
+    // When running inside the postpartum home iframe, collapse
+    // the `.stage` padding and make `.phone` fill the frame.
+    if (window.parent !== window) {
+      const stage = document.querySelector('.stage');
+      const phone = document.querySelector('.phone');
+      if (stage) {
+        stage.style.cssText = 'display:block;padding:0;min-height:100vh;';
+      }
+      if (phone) {
+        phone.style.cssText = [
+          'width:100%',
+          'height:100vh',
+          'min-height:100vh',
+          'border:none',
+          'border-radius:0',
+          'box-shadow:none',
+        ].join(';');
+      }
+    }
+  </script>
+  <script>
+    /* The Now Map — pumping moms group: status islands connect back to the feed filters */
+    window.MMAP_CONFIG = {
+      mode: 'group',
+      avatarRatio: 0.1,
+      avatarSize: 13,
+      autoOpen: false
+    };
+  </script>
+  <script src="./moment-map.js?v=ds11"></script>
+  <script src="./theme-bridge.js"></script>
+</body>
+</html>

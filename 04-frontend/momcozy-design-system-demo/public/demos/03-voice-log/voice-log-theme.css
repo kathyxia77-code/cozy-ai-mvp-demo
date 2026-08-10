@@ -1,0 +1,468 @@
+html {
+  color-scheme: light;
+  font-family: var(--font-sans);
+  background: var(--colors-backgrouds-primary);
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  color: var(--colors-text-color-text-primary);
+  background: var(--colors-backgrouds-primary);
+}
+
+.standalone-theme-toggle {
+  position: fixed;
+  z-index: 100;
+  top: var(--space-6);
+  right: var(--space-6);
+  display: inline-grid;
+  width: var(--space-12);
+  height: var(--space-12);
+  place-items: center;
+  overflow: hidden;
+  border: var(--colors-border-width-primary) solid
+    color-mix(
+      in srgb,
+      var(--colors-border-primary) var(--opacity-opacity-45),
+      transparent
+    );
+  border-radius: var(--radius-full);
+  color: var(--colors-text-color-text-primary);
+  background: color-mix(
+    in srgb,
+    var(--colors-backgrouds-secondary) var(--opacity-opacity-75),
+    transparent
+  );
+  backdrop-filter: blur(var(--tokens-6));
+  -webkit-backdrop-filter: blur(var(--tokens-6));
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.is-embedded .standalone-theme-toggle {
+  display: none;
+}
+
+.standalone-theme-toggle:active {
+  transform: scale(0.95);
+}
+
+.standalone-theme-toggle:focus-visible {
+  outline: var(--colors-border-width-primary) solid var(--ring);
+  outline-offset: var(--space-0-5);
+}
+
+.standalone-theme-icon {
+  position: absolute;
+  width: var(--space-5);
+  height: var(--space-5);
+  transition:
+    opacity 180ms ease,
+    transform 220ms ease;
+}
+
+.standalone-theme-icon--moon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+.standalone-theme-icon--moon path,
+.standalone-theme-icon--sun circle,
+.standalone-theme-icon--sun path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.standalone-theme-icon--sun {
+  opacity: 0;
+  transform: rotate(-45deg) scale(0.8);
+}
+
+.dark .standalone-theme-icon--moon {
+  opacity: 0;
+  transform: rotate(45deg) scale(0.8);
+}
+
+.dark .standalone-theme-icon--sun {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+.demo {
+  color: var(--colors-text-color-text-primary);
+}
+
+.screen,
+.page {
+  background: var(--colors-backgrouds-primary);
+}
+
+.home-header-avatar {
+  display: none;
+}
+
+.asset-link:focus-visible {
+  outline: var(--tokens-2) solid var(--ring) !important;
+  outline-offset: var(--tokens-2);
+  box-shadow: none !important;
+}
+
+.top-glass {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--colors-backgrouds-primary) 72%, transparent) 0%,
+    color-mix(in srgb, var(--colors-backgrouds-primary) 60%, transparent) 54.4%,
+    color-mix(in srgb, var(--colors-backgrouds-primary) 28%, transparent) 74.1%,
+    transparent 92.2%,
+    transparent 100%
+  );
+}
+
+.flow-scrim {
+  background: color-mix(
+    in srgb,
+    var(--colors-grays-black) 49%,
+    transparent
+  );
+}
+
+.voice-sheet,
+.agreement-sheet {
+  color: var(--colors-text-color-text-primary);
+  background: var(--colors-backgrouds-secondary);
+  box-shadow: 0 calc(var(--tokens-1) * -1) 0 var(--colors-border-secondary);
+}
+
+.suggestion-panel,
+.recording-status,
+.agreement-page-title,
+.agreement-document,
+.value-copy,
+.agreement-control,
+.post-recording,
+.transcript-bubble,
+.record-fields,
+.all-recorded-message {
+  color: var(--colors-text-color-text-primary);
+}
+
+.suggestion-title {
+  color: var(--colors-text-color-text-primary);
+}
+
+.suggestion-chip {
+  border: var(--tokens-1) solid var(--colors-border-secondary);
+  color: var(--colors-text-color-text-primary);
+  background: color-mix(
+    in srgb,
+    var(--colors-backgrouds-secondary) 80%,
+    var(--colors-grays-200)
+  );
+}
+
+.sheet-gradient {
+  background: var(--colors-backgrouds-secondary);
+}
+
+.sheet-gradient::after {
+  background: linear-gradient(
+    180deg,
+    var(--colors-brands-mom-100) 0%,
+    var(--colors-brands-care-100) 100%
+  );
+  box-shadow: 0 0 49.75cqi
+    color-mix(in srgb, var(--colors-brands-care-100) 78%, transparent);
+}
+
+.sheet-close {
+  border-color: color-mix(
+    in srgb,
+    var(--colors-border-primary) 76%,
+    transparent
+  );
+  background: color-mix(
+    in srgb,
+    var(--colors-backgrouds-secondary) 82%,
+    transparent
+  );
+  box-shadow:
+    0 var(--tokens-5) var(--tokens-18)
+      color-mix(in srgb, var(--colors-grays-900) 8%, transparent),
+    inset 0 0 0 var(--tokens-1)
+      color-mix(in srgb, var(--colors-grays-0) 48%, transparent);
+}
+
+.sheet-close::before,
+.sheet-close::after {
+  background: var(--colors-text-color-text-primary);
+}
+
+.home-indicator {
+  background: var(--colors-text-color-text-primary);
+}
+
+.sheet-drag-handle::after {
+  background: var(--colors-border-primary);
+}
+
+.agreement-footer {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--colors-backgrouds-secondary) 26%
+  );
+}
+
+.agreement-check {
+  border-color: var(--colors-semantic-labels-mom-secondary);
+  background: var(--colors-semantic-fills-mom-secondary);
+}
+
+.agreement-control input:checked + .agreement-check,
+.primary-action,
+.settings-action-primary,
+.state-switch input:checked + .switch-track,
+.permission-option input:checked + span {
+  color: var(--colors-semantic-labels-mom-primary);
+  background: var(--colors-semantic-fills-mom-primary);
+}
+
+.primary-action:active {
+  background: var(--colors-semantic-fills-mom-pressed);
+}
+
+.permission-layer,
+.settings-guide-layer {
+  background: color-mix(
+    in srgb,
+    var(--colors-grays-900) 22%,
+    transparent
+  );
+}
+
+.permission-dialog {
+  border-color: var(--colors-border-primary);
+  color: var(--colors-text-color-text-primary);
+  background: color-mix(
+    in srgb,
+    var(--colors-backgrouds-secondary) 94%,
+    transparent
+  );
+  box-shadow: 0 var(--tokens-24) var(--tokens-48)
+    color-mix(in srgb, var(--colors-grays-900) 18%, transparent);
+}
+
+.permission-action {
+  color: var(--colors-text-color-text-primary);
+  background: var(--colors-grays-200);
+}
+
+.permission-action:active {
+  background: var(--colors-grays-300);
+}
+
+.scenario-controls {
+  border-color: var(--colors-border-primary);
+  background: color-mix(
+    in srgb,
+    var(--colors-backgrouds-secondary) 88%,
+    transparent
+  );
+  box-shadow: 0 var(--tokens-12) var(--tokens-32)
+    color-mix(in srgb, var(--colors-grays-900) 12%, transparent);
+}
+
+.controls-heading h2,
+.control-title,
+.permission-legend {
+  color: var(--colors-text-color-text-primary);
+}
+
+.control-card {
+  background: var(--colors-grays-100);
+}
+
+.switch-track {
+  background: var(--colors-grays-300);
+}
+
+.switch-track::after {
+  background: var(--colors-grays-0);
+  box-shadow: 0 var(--tokens-2) var(--tokens-6)
+    color-mix(in srgb, var(--colors-grays-900) 22%, transparent);
+}
+
+.permission-option span {
+  color: var(--colors-text-color-text-secondary);
+}
+
+.recording-ending-notice,
+.review-recording-countdown,
+.calendar-message-link {
+  color: var(--colors-semantic-labels-mom-secondary);
+}
+
+.conversation-recording-overlay {
+  background:
+    radial-gradient(
+      circle at 50% 108%,
+      color-mix(in srgb, var(--colors-brands-care-100) 72%, transparent) 0%,
+      color-mix(in srgb, var(--colors-brands-mom-100) 48%, transparent) 38%,
+      transparent 70%
+    ),
+    linear-gradient(
+      180deg,
+      transparent 0%,
+      color-mix(
+          in srgb,
+          var(--colors-backgrouds-secondary) 50%,
+          transparent
+        )
+        6%,
+      var(--colors-backgrouds-secondary) 12%,
+      color-mix(
+          in srgb,
+          var(--colors-backgrouds-secondary) 88%,
+          var(--colors-brands-mom-100)
+        )
+        54%,
+      var(--colors-brands-mom-100) 100%
+    );
+}
+
+.wave-bar {
+  background: var(--colors-brands-mom-500);
+}
+
+.transcript-bubble,
+.record-list,
+.all-recorded-message {
+  border-color: var(--colors-border-primary);
+  background: var(--colors-backgrouds-secondary);
+  box-shadow: 0 var(--tokens-4) var(--tokens-24)
+    color-mix(in srgb, var(--colors-grays-900) 4%, transparent);
+}
+
+.transcript-bubble.is-processing,
+.recorded-count,
+.record-category {
+  color: var(--colors-text-color-text-secondary);
+}
+
+.loading-spinner {
+  border-color: color-mix(
+    in srgb,
+    var(--colors-brands-mom-700) 16%,
+    transparent
+  );
+  border-top-color: var(--colors-brands-mom-700);
+}
+
+.thinking-dots span {
+  background: var(--colors-semantic-fills-mom-primary);
+}
+
+.record-item {
+  --record-accent: var(--colors-brands-mom-700);
+  border-bottom-color: var(--colors-border-secondary);
+}
+
+.record-item.is-recorded .record-delete {
+  color: var(--colors-semantic-labels-mom-primary);
+  background: var(--colors-semantic-fills-mom-primary);
+}
+
+.record-item[data-type="feeding"] {
+  --record-accent: var(--colors-brands-family-700);
+}
+
+.record-item[data-type="diaper"] {
+  --record-accent: var(--colors-brands-parenting-700);
+}
+
+.record-item[data-type="sleep"] {
+  --record-accent: var(--colors-brands-care-700);
+}
+
+.record-icon-shell {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--colors-brands-parenting-300) 10%, transparent),
+    var(--colors-backgrouds-secondary)
+  );
+  box-shadow: inset 0 var(--tokens-4) var(--tokens-12)
+    var(--colors-backgrouds-secondary);
+}
+
+.record-tip.tip-check {
+  color: var(--status-danger-base);
+  background: var(--status-danger-25);
+}
+
+.record-tip.tip-info {
+  color: var(--status-success-base);
+  background: var(--status-success-25);
+}
+
+.record-tip.tip-error {
+  color: var(--status-discovery-base);
+  background: var(--status-discovery-25);
+}
+
+.save-records {
+  color: var(--colors-semantic-labels-mom-secondary);
+  background: var(--colors-semantic-fills-mom-secondary);
+}
+
+.all-recorded-message {
+  color: var(--colors-text-color-text-primary);
+}
+
+.dark .home-header-fixed,
+.dark .status-bar,
+.dark .bottom-navigation,
+.dark section[aria-label="Postpartum overview"] .module-image,
+.dark section[aria-label="Daily care brief"] .module-image,
+.dark section[aria-label="Daily check-ins"] img,
+.dark section[aria-label="Reminders"] .module-image,
+.dark .section-header {
+  filter:
+    invert(0.88)
+    hue-rotate(180deg)
+    saturate(0.92)
+    brightness(0.94)
+    contrast(1.06);
+}
+
+.dark .home-header-avatar {
+  position: absolute;
+  z-index: 4;
+  top: 15.78cqi;
+  left: 0;
+  display: block;
+  width: 100%;
+  max-width: none;
+  clip-path: circle(3.7cqi at 27.3% 50%);
+  pointer-events: none;
+}
+
+.dark section[aria-label="Daily care brief"] .module-image,
+.dark section[aria-label="Daily check-ins"] img,
+.dark section[aria-label="Reminders"] .module-image {
+  border-radius: inherit;
+  box-shadow: 0 var(--tokens-2) var(--tokens-8)
+    color-mix(in srgb, var(--colors-grays-1000) 14%, transparent);
+}
+
+.dark .header-glow {
+  opacity: 0.72;
+}

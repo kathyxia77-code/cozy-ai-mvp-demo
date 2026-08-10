@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Momcozy Community</title>
+  <link rel="stylesheet" href="../01-user-guide/momcozy-theme.css">
+  <link rel="stylesheet" href="./example-theme.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--colors-backgrouds-primary);
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      color: var(--colors-text-color-text-primary);
+      font-family: var(--font-sans);
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    .community {
+      width: min(100%, 393px);
+      min-height: 100svh;
+      padding: var(--space-4) var(--space-4) 112px;
+      overflow-x: hidden;
+      background: var(--colors-backgrouds-primary);
+    }
+
+    .app-header {
+      min-height: var(--tokens-48);
+      display: grid;
+      grid-template-columns: var(--tokens-40) 1fr var(--tokens-40);
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .profile-avatar,
+    .avatar {
+      display: block;
+      object-fit: cover;
+      border-radius: var(--radius-full);
+    }
+
+    .profile-avatar {
+      width: var(--tokens-40);
+      height: var(--tokens-40);
+      border: var(--colors-border-width-primary) solid var(--colors-border-primary);
+    }
+
+    .mode-tabs {
+      height: var(--tokens-40);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding: var(--space-1);
+      border: var(--colors-border-width-primary) solid var(--colors-border-secondary);
+      border-radius: var(--radius-full);
+      background: var(--colors-grays-100);
+    }
+
+    .mode-tabs button {
+      min-width: 0;
+      border: 0;
+      border-radius: var(--radius-full);
+      color: var(--colors-text-color-text-secondary);
+      background: transparent;
+      font-size: var(--type-body-s-medium-font-size);
+      font-weight: var(--type-body-s-medium-font-weight);
+      letter-spacing: 0;
+      line-height: var(--type-body-s-medium-line-height);
+    }
+
+    .mode-tabs .is-active {
+      color: var(--colors-text-color-text-primary);
+      background: var(--colors-backgrouds-secondary);
+      box-shadow: 0 var(--tokens-2) var(--tokens-8)
+        color-mix(in srgb, var(--colors-grays-900) 8%, transparent);
+    }
+
+    .header-spacer {
+      width: var(--tokens-40);
+      height: var(--tokens-40);
+    }
+
+    .campaign {
+      height: 152px;
+      position: relative;
+      margin-top: var(--space-4);
+      overflow: hidden;
+      border-radius: var(--radius-2xl);
+      background: var(--colors-brands-mom-100);
+    }
+
+    .campaign img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transform: translateY(-64px);
+    }
+
+    .section {
+      margin-top: var(--space-8);
+    }
+
+    .section-heading {
+      min-height: var(--tokens-32);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--space-3);
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: var(--type-title-m-medium-font-size);
+      font-weight: var(--type-title-m-medium-font-weight-emphasized);
+      letter-spacing: 0;
+      line-height: var(--type-title-m-medium-line-height);
+    }
+
+    .section-more {
+      min-width: var(--tokens-32);
+      min-height: var(--tokens-32);
+      display: inline-grid;
+      place-items: center;
+      border: 0;
+      color: var(--colors-text-color-text-tertiary);
+      background: transparent;
+      text-decoration: none;
+      font-size: var(--type-title-l-medium-font-size);
+    }
+
+    .group-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-4);
+    }
+
+    .group-card {
+      min-width: 0;
+      min-height: 192px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-4);
+      border: var(--colors-border-width-primary) solid var(--colors-border-primary);
+      border-radius: var(--radius-2xl);
+      color: var(--colors-text-color-text-primary);
+      background: var(--colors-backgrouds-secondary);
+      text-align: center;
+      text-decoration: none;
+      box-shadow: 0 var(--tokens-4) var(--tokens-16)
+        color-mix(in srgb, var(--colors-grays-900) 5%, transparent);
+      transition:
+        border-color 180ms ease,
+        transform 180ms ease;
+    }
+
+    .group-card:hover {
+      border-color: var(--colors-brands-mom-300);
+    }
+
+    .group-card:active {
+      transform: translateY(var(--tokens-1));
+    }
+
+    .group-visual {
+      width: var(--tokens-72);
+      height: var(--tokens-72);
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-2xl);
+      background: var(--colors-brands-mom-50);
+    }
+
+    .group-visual img {
+      width: var(--tokens-192);
+      max-width: none;
+      position: absolute;
+      top: calc(var(--space-6) * -1);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .group-card h3 {
+      margin: var(--space-3) 0 0;
+      font-size: var(--type-title-m-medium-font-size);
+      font-weight: var(--type-title-m-medium-font-weight-emphasized);
+      letter-spacing: 0;
+      line-height: var(--type-title-m-medium-line-height);
+    }
+
+    .group-meta {
+      margin: var(--space-1) 0 0;
+      color: var(--colors-text-color-text-secondary);
+      font-size: var(--type-caption-m-regular-font-size);
+      line-height: var(--type-caption-m-regular-line-height);
+      letter-spacing: 0;
+    }
+
+    .group-cta {
+      min-width: var(--tokens-80);
+      min-height: var(--tokens-32);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: var(--space-3);
+      padding: 0 var(--space-4);
+      border-radius: var(--radius-full);
+      color: var(--colors-semantic-labels-mom-primary);
+      background: var(--colors-semantic-fills-mom-primary);
+      font-size: var(--type-body-s-medium-font-size);
+      font-weight: var(--type-body-s-medium-font-weight);
+      line-height: var(--type-body-s-medium-line-height);
+      letter-spacing: 0;
+    }
+
+    .topics {
+      display: flex;
+      gap: var(--space-2);
+      padding-bottom: var(--space-1);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .topics::-webkit-scrollbar,
+    .featured-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    .topic-chip {
+      flex: 0 0 auto;
+      min-height: var(--tokens-32);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: 0 var(--space-3);
+      border: var(--colors-border-width-primary) solid var(--colors-border-primary);
+      border-radius: var(--radius-full);
+      color: var(--colors-text-color-text-primary);
+      background: var(--colors-backgrouds-secondary);
+      font-size: var(--type-body-s-regular-font-size);
+      line-height: var(--type-body-s-regular-line-height);
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .topic-chip em {
+      padding: 0 var(--space-1);
+      border-radius: var(--radius-full);
+      color: var(--colors-semantic-labels-mom-secondary);
+      background: var(--colors-brands-mom-100);
+      font-size: var(--type-caption-m-regular-font-size);
+      font-style: normal;
+    }
+
+    .featured-list {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 82%;
+      gap: var(--space-3);
+      overflow-x: auto;
+      scrollbar-width: none;
+      scroll-snap-type: x mandatory;
+    }
+
+    .featured-card,
+    .feed-card {
+      border: var(--colors-border-width-primary) solid var(--colors-border-primary);
+      border-radius: var(--radius-2xl);
+      color: var(--colors-text-color-text-primary);
+      background: var(--colors-backgrouds-secondary);
+      box-shadow: 0 var(--tokens-4) var(--tokens-16)
+        color-mix(in srgb, var(--colors-grays-900) 5%, transparent);
+    }
+
+    .featured-card {
+      min-height: 176px;
+      padding: var(--space-4);
+      scroll-snap-align: start;
+    }
+
+    .author-row {
+      display: grid;
+      grid-template-columns: var(--tokens-32) minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .avatar {
+      width: var(--tokens-32);
+      height: var(--tokens-32);
+    }
+
+    .author-row strong {
+      min-width: 0;
+      overflow: hidden;
+      font-size: var(--type-body-m-medium-font-size);
+      font-weight: var(--type-body-m-medium-font-weight-emphasized);
+      line-height: var(--type-body-m-medium-line-height);
+      letter-spacing: 0;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .author-row time,
+    .meta-copy {
+      color: var(--colors-text-color-text-secondary);
+      font-size: var(--type-caption-m-regular-font-size);
+      line-height: var(--type-caption-m-regular-line-height);
+      letter-spacing: 0;
+    }
+
+    .featured-card h3,
+    .feed-card h3 {
+      margin: var(--space-3) 0 var(--space-1);
+      font-size: var(--type-title-m-medium-font-size);
+      font-weight: var(--type-title-m-medium-font-weight-emphasized);
+      letter-spacing: 0;
+      line-height: var(--type-title-m-medium-line-height);
+    }
+
+    .featured-card p,
+    .feed-card p {
+      display: -webkit-box;
+      margin: 0;
+      overflow: hidden;
+      color: var(--colors-text-color-text-secondary);
+      font-size: var(--type-body-m-regular-font-size);
+      line-height: var(--type-body-m-regular-line-height);
+      letter-spacing: 0;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+    }
+
+    .card-footer,
+    .post-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: var(--space-3);
+      color: var(--colors-text-color-text-tertiary);
+      font-size: var(--type-caption-m-regular-font-size);
+      line-height: var(--type-caption-m-regular-line-height);
+      letter-spacing: 0;
+    }
+
+    .avatar-stack {
+      display: flex;
+    }
+
+    .avatar-stack img {
+      width: var(--tokens-24);
+      height: var(--tokens-24);
+      object-fit: cover;
+      margin-left: calc(var(--space-2) * -1);
+      border: var(--tokens-2) solid var(--colors-backgrouds-secondary);
+      border-radius: var(--radius-full);
+    }
+
+    .avatar-stack img:first-child {
+      margin-left: 0;
+    }
+
+    .feed-list {
+      display: grid;
+      gap: var(--space-4);
+    }
+
+    .feed-card {
+      padding: var(--space-4);
+    }
+
+    .feed-media {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      display: block;
+      margin-top: var(--space-3);
+      object-fit: cover;
+      border-radius: var(--radius-xl);
+      background: var(--colors-grays-100);
+    }
+
+    .post-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+    }
+
+    .post-tag {
+      padding: var(--space-1) var(--space-2);
+      border: var(--colors-border-width-primary) solid var(--colors-border-primary);
+      border-radius: var(--radius-full);
+      color: var(--colors-text-color-text-secondary);
+      background: var(--colors-backgrouds-primary);
+      font-size: var(--type-caption-m-regular-font-size);
+      line-height: var(--type-caption-m-regular-line-height);
+      letter-spacing: 0;
+    }
+
+    .featured-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--tokens-24);
+      margin-bottom: var(--space-2);
+      padding: 0 var(--space-2);
+      border-radius: var(--radius-full);
+      color: var(--colors-semantic-labels-mom-secondary);
+      background: var(--colors-brands-mom-100);
+      font-size: var(--type-caption-m-medium-font-size);
+      line-height: var(--type-caption-m-medium-line-height);
+      letter-spacing: 0;
+    }
+
+    .post-actions span {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
+
+    .floating-post {
+      min-width: 132px;
+      min-height: var(--tokens-48);
+      position: fixed;
+      left: 50%;
+      bottom: var(--tokens-72);
+      z-index: 5;
+      transform: translateX(-50%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 var(--space-6);
+      border: 0;
+      border-radius: var(--radius-full);
+      color: var(--colors-semantic-labels-mom-primary);
+      background: var(--colors-semantic-fills-mom-primary);
+      box-shadow: 0 var(--tokens-8) var(--tokens-24)
+        color-mix(in srgb, var(--colors-brands-mom-900) 22%, transparent);
+      font-size: var(--type-body-m-medium-font-size);
+      font-weight: var(--type-body-m-medium-font-weight-emphasized);
+      line-height: var(--type-body-m-medium-line-height);
+      letter-spacing: 0;
+    }
+
+    .bottom-nav {
+      width: min(100%, 393px);
+      min-height: var(--tokens-72);
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 50%;
+      z-index: 4;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      padding: var(--space-2) var(--space-4) max(var(--space-2), env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      border-top: var(--colors-border-width-primary) solid var(--colors-border-primary);
+      background: color-mix(in srgb, var(--colors-backgrouds-secondary) 94%, transparent);
+      backdrop-filter: blur(var(--tokens-16));
+    }
+
+    .nav-item {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-1);
+      border-radius: var(--radius-xl);
+      color: var(--colors-text-color-text-secondary);
+      text-decoration: none;
+      font-size: var(--type-caption-m-regular-font-size);
+      line-height: var(--type-caption-m-regular-line-height);
+      letter-spacing: 0;
+    }
+
+    .nav-item.is-active {
+      color: var(--colors-semantic-labels-mom-secondary);
+      background: var(--colors-brands-mom-50);
+    }
+
+    .nav-symbol {
+      width: var(--tokens-24);
+      height: var(--tokens-24);
+      display: grid;
+      place-items: center;
+      font-size: var(--type-title-m-medium-font-size);
+      font-weight: var(--type-title-m-medium-font-weight);
+      line-height: 1;
+    }
+
+    .group-card:focus-visible,
+    .section-more:focus-visible,
+    .nav-item:focus-visible,
+    .floating-post:focus-visible,
+    .mode-tabs button:focus-visible {
+      outline: var(--tokens-2) solid var(--ring);
+      outline-offset: var(--tokens-2);
+    }
+
+    :root.dark .campaign img,
+    :root.dark .feed-media,
+    :root.dark .profile-avatar,
+    :root.dark .avatar {
+      filter: brightness(0.84) contrast(1.04);
+    }
+
+    @media (max-width: 393px) {
+      .community {
+        width: 100vw;
+      }
+
+      .bottom-nav {
+        width: 100vw;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="community" aria-label="Momcozy community">
+    <header class="app-header">
+      <img class="profile-avatar" src="./assets/activeavatara.png" alt="Profile">
+      <div class="mode-tabs" role="tablist" aria-label="Community feed">
+        <button class="is-active" type="button" role="tab" aria-selected="true">For You</button>
+        <button type="button" role="tab" aria-selected="false">Momcozy Reads</button>
+      </div>
+      <div class="header-spacer" aria-hidden="true"></div>
+    </header>
+
+    <section class="campaign" aria-label="Choose You Too campaign">
+      <img src="./assets/community.png" alt="More Than I Know campaign">
+    </section>
+
+    <section class="section" aria-labelledby="groups-title">
+      <div class="section-heading">
+        <h2 id="groups-title">Group</h2>
+      </div>
+      <div class="group-grid">
+        <a class="group-card" href="./group_v3.html" aria-label="Open Pumping moms group">
+          <span class="group-visual"><img src="./assets/pumpingmomsgroup.png" alt=""></span>
+          <h3>Pumping moms</h3>
+          <p class="group-meta">128 active · 3000 posts</p>
+          <span class="group-cta">Join</span>
+        </a>
+        <a class="group-card" href="./m9.html" aria-label="Open Mobile Flow 9 group">
+          <span class="group-visual"><img src="./assets/M9group.png" alt=""></span>
+          <h3>Mobile Flow 9</h3>
+          <p class="group-meta">1028 members · 3000 posts</p>
+          <span class="group-cta">Join</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="topics-title">
+      <div class="section-heading">
+        <h2 id="topics-title">Trending Topics</h2>
+        <a class="section-more" href="#featured" aria-label="View all trending topics">›</a>
+      </div>
+      <div class="topics" aria-label="Trending topics">
+        <span class="topic-chip"># ChooseYouToo <em>NEW</em></span>
+        <span class="topic-chip"># MoreThanIKnow</span>
+        <span class="topic-chip"># PumpingRoutines</span>
+        <span class="topic-chip"># NightPumping</span>
+      </div>
+    </section>
+
+    <section class="section" id="featured" aria-labelledby="featured-title">
+      <div class="section-heading">
+        <h2 id="featured-title">Featured</h2>
+        <a class="section-more" href="#community-feed" aria-label="View all featured posts">›</a>
+      </div>
+      <div class="featured-list">
+        <article class="featured-card">
+          <div class="author-row">
+            <img class="avatar" src="./assets/activeavatarb.png" alt="">
+            <strong>Momcozy Daily</strong>
+            <time datetime="PT27M">27m</time>
+          </div>
+          <h3>Behind Choose You, Too</h3>
+          <p>This Mother’s Day, we wanted to say something different. No superhero speeches. Just real care, real rest, and real support.</p>
+          <div class="card-footer">
+            <span class="avatar-stack" aria-label="Moms who liked this">
+              <img src="./assets/activeavatara.png" alt="">
+              <img src="./assets/activeavatarc.png" alt="">
+              <img src="./assets/activeavatard.png" alt="">
+            </span>
+            <span>1.2k helpful</span>
+          </div>
+        </article>
+        <article class="featured-card">
+          <div class="author-row">
+            <img class="avatar" src="./assets/activeavatarc.png" alt="">
+            <strong>Night Pumping Club</strong>
+            <time datetime="PT42M">42m</time>
+          </div>
+          <h3>A quiet corner for the 2am crew</h3>
+          <p>Pump timers, warm bottles, and a few people awake at the same hour. You do not have to do this part alone.</p>
+          <div class="card-footer">
+            <span class="avatar-stack" aria-label="Moms who liked this">
+              <img src="./assets/activeavatarb.png" alt="">
+              <img src="./assets/activeavatard.png" alt="">
+            </span>
+            <span>846 helpful</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section feed-list" id="community-feed" aria-label="Community posts">
+      <article class="feed-card">
+        <span class="featured-badge">Featured</span>
+        <div class="author-row">
+          <img class="avatar" src="./assets/activeavatarc.png" alt="">
+          <strong>John Alexander Smith</strong>
+          <time datetime="PT12H">12h</time>
+        </div>
+        <h3>Latest wearable breast pump setup</h3>
+        <p>I was doing my evening pump before bed and noticed how much easier the routine felt after keeping every part in one place.</p>
+        <img class="feed-media" src="./assets/pumping-moment-1.jpg" alt="Warm bedside pumping setup">
+        <div class="post-tags">
+          <span class="post-tag"># PumpingRoutines</span>
+          <span class="post-tag"># Mother’sLove</span>
+        </div>
+        <div class="post-actions" aria-label="Post activity">
+          <span>♡ 55</span>
+          <span>☆ 141</span>
+          <span>○ 93</span>
+        </div>
+      </article>
+
+      <article class="feed-card">
+        <div class="author-row">
+          <img class="avatar" src="./assets/activeavatard.png" alt="">
+          <strong>Anonymous</strong>
+          <time datetime="PT23M">23m</time>
+        </div>
+        <h3>Second letdown check-in</h3>
+        <p>It is taking its sweet time, so I put one tiny lamp on and I am pretending this corner is a little room with all of you.</p>
+        <img class="feed-media" src="./assets/pumping-moment-2.jpg" alt="Night pumping check-in">
+        <div class="post-tags">
+          <span class="post-tag"># NeedCompany</span>
+          <span class="post-tag"># NightPumping</span>
+        </div>
+        <div class="post-actions" aria-label="Post activity">
+          <span>♡ 28</span>
+          <span>☆ 64</span>
+          <span>○ 12</span>
+        </div>
+      </article>
+    </section>
+
+    <button class="floating-post" type="button">Post</button>
+
+    <nav class="bottom-nav" aria-label="Primary navigation">
+      <a class="nav-item" href="#"><span class="nav-symbol" aria-hidden="true">⌂</span><span>Home</span></a>
+      <a class="nav-item" href="#"><span class="nav-symbol" aria-hidden="true">◇</span><span>Device</span></a>
+      <a class="nav-item is-active" href="#groups-title" aria-current="page"><span class="nav-symbol" aria-hidden="true">●</span><span>Community</span></a>
+      <a class="nav-item" href="#"><span class="nav-symbol" aria-hidden="true">○</span><span>Me</span></a>
+    </nav>
+  </main>
+  <script src="./theme-bridge.js"></script>
+</body>
+</html>

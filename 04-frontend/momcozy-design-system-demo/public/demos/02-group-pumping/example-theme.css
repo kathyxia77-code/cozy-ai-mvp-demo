@@ -1,0 +1,189 @@
+:root {
+  color-scheme: light;
+  --group-map-sky: var(--colors-brands-mom-900);
+  --group-map-lamp: var(--colors-brands-parenting-100);
+}
+
+:root.dark {
+  color-scheme: dark;
+  --group-map-sky: var(--colors-grays-black);
+}
+
+html,
+body,
+.stage,
+.scroll,
+.post-view,
+.compose-body {
+  background-color: var(--colors-backgrouds-primary);
+  color: var(--colors-text-color-text-primary);
+}
+
+body,
+button,
+input,
+textarea {
+  font-family: var(--font-sans);
+}
+
+.group-info h1,
+.m9-banner strong,
+.join-confirm-title,
+.leave-confirm-title,
+.tag-picker-title,
+.compose-title,
+.map-header h1 {
+  font-family: var(--font-brand);
+  letter-spacing: var(--type-heading-m-letter-spacing);
+}
+
+.phone,
+.round-icon,
+.post,
+.join-confirm-sheet,
+.leave-confirm-sheet,
+.tag-picker-sheet,
+.compose-options-card,
+.empty-state-action,
+.bubble-status-banner,
+.selected-status-summary {
+  background-color: var(--colors-backgrouds-secondary);
+  color: var(--colors-text-color-text-primary);
+}
+
+.description,
+.meta,
+.post-time,
+.post-subtitle,
+.tag-picker-note,
+.compose-option-label,
+.empty-state-copy {
+  color: var(--colors-text-color-text-secondary);
+}
+
+.compose-title,
+.compose-input,
+.tag-custom-input,
+.tag-picker-subtitle,
+.compose-segmented button.is-active {
+  color: var(--colors-text-color-text-primary);
+}
+
+.compose-input::placeholder,
+.tag-custom-input::placeholder,
+.compose-segmented button:not(.is-active) {
+  color: var(--colors-text-color-text-secondary);
+}
+
+.compose-input,
+.tag-custom-input {
+  border-color: var(--colors-border-primary);
+  background: var(--colors-backgrouds-primary);
+}
+
+.compose-segmented {
+  background: var(--colors-semantic-fills-mom-secondary);
+}
+
+.compose-segmented button.is-active {
+  background: var(--colors-backgrouds-secondary);
+}
+
+.divider,
+.post,
+.compose-options-card,
+.selected-status-summary {
+  border-color: var(--colors-border-primary);
+}
+
+.join,
+.post-button,
+.join-confirm-primary,
+.compose-submit:not(:disabled),
+.empty-state-action,
+.bubble-status-banner-action {
+  background: var(--colors-semantic-fills-mom-primary);
+  color: var(--colors-semantic-labels-mom-primary);
+}
+
+.join[aria-pressed='true'],
+.leave-confirm-stay,
+.tag-picker-close,
+.compose-back,
+.round-icon {
+  background: var(--colors-semantic-fills-mom-secondary);
+  color: var(--colors-semantic-labels-mom-secondary);
+}
+
+.compose-submit:disabled,
+.tag-picker-add:disabled {
+  background: var(--colors-semantic-fills-mom-disabled);
+  color: var(--colors-semantic-labels-mom-disabled);
+}
+
+.leave-confirm-leave,
+.tag-picker-add:not(:disabled) {
+  background: var(--colors-semantic-fills-mom-primary);
+  color: var(--colors-semantic-labels-mom-primary);
+}
+
+.tag-option,
+.topic,
+.bubble,
+.scroll-tab-bubble,
+.tag-expanded-bubble {
+  color: var(--colors-text-color-text-primary);
+}
+
+.tag-option[aria-pressed='true'],
+.bubble.is-selected,
+.scroll-tab-bubble.is-active {
+  border-color: var(--colors-brands-mom-700);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: var(--colors-border-width-primary) solid var(--ring);
+  outline-offset: var(--space-1);
+}
+
+.status-bar,
+.status-bar svg,
+.compose-toolbar,
+.top-nav {
+  color: var(--colors-text-color-text-primary);
+}
+
+.community {
+  background: var(--colors-backgrouds-primary);
+}
+
+:root.dark .post {
+  background-color: var(--colors-backgrouds-primary);
+}
+
+:root.dark .m9-banner img,
+:root.dark .post-img img {
+  filter: brightness(0.82) contrast(1.04);
+}
+
+:root.dark .compose-tool img {
+  filter: invert(1) grayscale(1);
+}
+
+.compose-home-indicator::before {
+  background: var(--colors-text-color-text-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

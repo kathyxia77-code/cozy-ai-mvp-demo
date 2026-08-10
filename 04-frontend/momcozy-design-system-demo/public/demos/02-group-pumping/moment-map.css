@@ -1,0 +1,627 @@
+/* ═══════════════════════════════════════════════════════════
+   The Now Map — styled per Momcozy Design System (Figma: Design Foundation)
+   Tint = Rose（官方规定：Rose For 妈妈/吸奶器线）
+
+   Tokens used（名称 = Figma 变量）:
+     Brand/Rose/50 var(--colors-brands-mom-50) · 75 var(--colors-brands-mom-75) · 100 var(--colors-brands-mom-100) · 300 var(--colors-brands-mom-300)
+     Brand/Rose/500 var(--colors-brands-mom-500) · 700 var(--colors-semantic-fills-mom-primary) · 900 var(--colors-semantic-fills-mom-pressed) · Accent var(--colors-brands-parenting-100)(烛光)
+     Text&Icon/text1 var(--colors-text-color-text-primary) · text2 44% · text3 30% · text4 12%
+     Background/bg1 var(--colors-grays-0) · bg2 var(--colors-backgrouds-primary) · Border/line1 12% · line2 7%
+     Type: display "Exposure"(serif) / UI "Aeonik Soft Pro" 16/22 · 14/20 · ls 2%
+   夜景底色由 text1 加深派生（体系无夜色 token）。
+   所有类名以 mm- 前缀，避免与原型样式冲突。
+   ═══════════════════════════════════════════════════════════ */
+
+.mm-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 80;
+  overflow: hidden;
+  background: var(--colors-semantic-fills-mom-pressed); /* 地图夜色 */
+  color: var(--colors-grays-0);
+  font-family: var(--font-sans);
+  letter-spacing: .02em;
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 560ms cubic-bezier(.33, .0, .2, 1), transform 560ms cubic-bezier(.33, .0, .2, 1), visibility 0s 0s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.mm-overlay.is-away {
+  opacity: 0;
+  transform: scale(1.045);
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 520ms cubic-bezier(.4, 0, .6, 1), transform 520ms cubic-bezier(.4, 0, .6, 1), visibility 0s 520ms;
+}
+
+.mm-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 顶部标题区 */
+.mm-head {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 30px 24px 0;
+  text-align: center;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: mm-fade-up 900ms 250ms cubic-bezier(.2, .7, .3, 1) forwards;
+}
+
+.mm-clock {
+  font-size: 13px;
+  letter-spacing: .18em;
+  color: color-mix(in srgb, var(--colors-brands-mom-100) 62%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+.mm-counter {
+  margin-top: 14px;
+  line-height: 1;
+}
+
+.mm-counter b {
+  display: block;
+  font-family: var(--font-brand); /* 官方 display 衬线 */
+  font-size: 48px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--colors-brands-mom-75); /* Rose/75 */
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 28px color-mix(in srgb, var(--colors-brands-mom-500) 35%, transparent);
+}
+
+.mm-counter span {
+  display: block;
+  margin-top: 9px;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--colors-grays-white) 78%, transparent);
+  letter-spacing: .02em;
+}
+
+.mm-greet {
+  margin-top: 8px;
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--colors-grays-white) 45%, transparent);
+  letter-spacing: .04em;
+  transition: color 400ms ease;
+}
+
+.mm-greet.is-lit {
+  color: color-mix(in srgb, var(--colors-brands-mom-100) 85%, transparent);
+}
+
+/* 跳过 */
+.mm-skip {
+  position: absolute;
+  top: 18px;
+  right: 16px;
+  z-index: 6;
+  border: 0;
+  background: color-mix(in srgb, var(--colors-grays-white) 7%, transparent);
+  color: color-mix(in srgb, var(--colors-grays-white) 55%, transparent);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* 岛屿标签 */
+.mm-labels {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.mm-isl {
+  position: absolute;
+  transform: translate(-50%, -13.5px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  border: 0;
+  background: transparent;
+  padding: 8px 10px;
+  cursor: pointer;
+  pointer-events: auto;
+  color: color-mix(in srgb, var(--colors-grays-white) 82%, transparent);
+  opacity: 0;
+  animation: mm-isl-fade-up 800ms cubic-bezier(.2, .7, .3, 1) forwards;
+  transition: transform 260ms ease, color 260ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mm-isl:hover,
+.mm-isl:focus-visible {
+  transform: translate(-50%, -17.5px) scale(1.04);
+}
+
+.mm-isl-icon {
+  width: 14px;
+  height: 11px;
+  opacity: .8;
+  display: block;
+}
+
+.mm-isl-name {
+  font-size: 12.5px;
+  letter-spacing: .05em;
+  white-space: nowrap;
+  text-shadow: 0 1px 8px color-mix(in srgb, var(--colors-grays-black) 80%, transparent);
+}
+
+.mm-isl-count {
+  font-size: 10.5px;
+  color: color-mix(in srgb, var(--colors-grays-white) 42%, transparent);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mm-isl.is-hot .mm-isl-name {
+  color: var(--colors-brands-parenting-100); /* Rose/Accent — 烛光色标记「现在」 */
+}
+
+.mm-isl.is-hot .mm-isl-count {
+  color: color-mix(in srgb, var(--colors-brands-parenting-100) 55%, transparent);
+}
+
+/* 你的位置 chip */
+.mm-user-chip {
+  position: absolute;
+  z-index: 3;
+  transform: translate(-50%, 0);
+  font-size: 11px;
+  letter-spacing: .06em;
+  color: color-mix(in srgb, var(--colors-brands-mom-100) 90%, transparent);
+  background: color-mix(in srgb, var(--colors-grays-900) 72%, transparent); /* text1 */
+  border: 1px solid color-mix(in srgb, var(--colors-brands-mom-100) 28%, transparent);
+  padding: 4px 10px;
+  border-radius: 999px;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  white-space: nowrap;
+  transition: color 300ms, border-color 300ms;
+}
+
+/* 动态播报 */
+.mm-toast {
+  position: absolute;
+  left: 24px;
+  bottom: 158px;
+  z-index: 6;
+  max-width: calc(100% - 48px);
+  font-size: 11.5px;
+  color: color-mix(in srgb, var(--colors-grays-white) 68%, transparent);
+  background: color-mix(in srgb, var(--colors-grays-900) 66%, transparent); /* text1 */
+  border: 1px solid color-mix(in srgb, var(--colors-grays-white) 7%, transparent);
+  padding: 6px 10px;
+  border-radius: 999px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 420ms ease, transform 420ms ease;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mm-toast.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mm-toast em {
+  font-style: normal;
+  color: var(--colors-brands-mom-100); /* Rose/100 */
+}
+
+/* 底部操作区 */
+.mm-foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  padding: 24px 24px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--colors-brands-mom-900) 84%, transparent) 0%, color-mix(in srgb, var(--colors-brands-mom-900) 94%, transparent) 42%, var(--colors-semantic-fills-mom-pressed) 100%);
+  box-shadow: 0 -18px 32px color-mix(in srgb, var(--colors-brands-mom-900) 42%, transparent);
+  opacity: 0;
+  animation: mm-fade-up 900ms 700ms cubic-bezier(.2, .7, .3, 1) forwards;
+}
+
+.mm-light {
+  width: min(100%, 312px);
+  border: 1px solid color-mix(in srgb, var(--colors-brands-mom-100) 32%, transparent);
+  background: color-mix(in srgb, var(--colors-brands-mom-100) 6%, transparent);
+  color: var(--colors-brands-mom-75); /* Rose/75 */
+  font-size: 13px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  letter-spacing: .03em;
+  transition: background 300ms, border-color 300ms, color 300ms;
+}
+
+.mm-light.is-lit {
+  border-color: color-mix(in srgb, var(--colors-brands-mom-100) 14%, transparent);
+  background: transparent;
+  color: color-mix(in srgb, var(--colors-brands-mom-100) 60%, transparent);
+  cursor: default;
+}
+
+.mm-light-note {
+  text-align: center;
+  font-size: 10.5px;
+  color: color-mix(in srgb, var(--colors-grays-white) 34%, transparent);
+  letter-spacing: .04em;
+  margin: -2px 0 0;
+}
+
+.mm-enter {
+  width: min(100%, 312px);
+  border: 0;
+  background: var(--colors-brands-mom-500); /* Rose/500，体系为纯色无渐变 */
+  color: var(--colors-semantic-fills-mom-pressed); /* Rose/900 */
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  letter-spacing: .02em;
+  box-shadow: 0 4px 26px color-mix(in srgb, var(--colors-brands-mom-500) 32%, transparent);
+  animation: mm-breath 3.2s ease-in-out infinite;
+}
+
+@keyframes mm-breath {
+  0%, 100% { box-shadow: 0 4px 22px color-mix(in srgb, var(--colors-brands-mom-500) 26%, transparent); }
+  50% { box-shadow: 0 4px 34px color-mix(in srgb, var(--colors-brands-mom-500) 50%, transparent); }
+}
+
+/* 岛屿下钻 sheet */
+.mm-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 7;
+  /* Figma sheet: base var(--colors-brands-mom-700) + radial gradients anchored to the panel top and bottom */
+  background:
+    radial-gradient(34.3% 24.6% at 53.6% 100%, var(--colors-brands-mom-500) 0%, color-mix(in srgb, var(--colors-brands-mom-500) 50%, transparent) 47.801%, color-mix(in srgb, var(--colors-brands-mom-700) 0%, transparent) 95.602%),
+    radial-gradient(123.7% 84.9% at 50% 0%, var(--colors-brands-mom-500) 17.445%, color-mix(in srgb, var(--colors-brands-mom-500) 60.4%, transparent) 56.081%, color-mix(in srgb, var(--colors-brands-mom-700) 0%, transparent) 100%),
+    var(--colors-brands-mom-700);
+  border-radius: 24px 24px 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--colors-brands-mom-100) 14%, transparent);
+  padding: 14px 22px calc(20px + env(safe-area-inset-bottom, 0px));
+  transform: translateY(104%);
+  visibility: hidden;
+  transition: transform 460ms cubic-bezier(.25, .9, .3, 1), visibility 0s 460ms;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.mm-sheet.is-open {
+  transform: translateY(0);
+  visibility: visible;
+  transition: transform 460ms cubic-bezier(.25, .9, .3, 1), visibility 0s 0s;
+}
+
+.mm-sheet-grip {
+  width: 34px;
+  height: 4px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--colors-grays-white) 18%, transparent);
+  margin: 0 auto 12px;
+}
+
+.mm-sheet-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.mm-sheet-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--colors-brands-mom-75); /* Rose/75 */
+  letter-spacing: .02em;
+}
+
+.mm-sheet-sub {
+  font-size: 11.5px;
+  color: color-mix(in srgb, var(--colors-grays-white) 42%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+.mm-sheet-lines {
+  margin: 10px 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.mm-line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--colors-grays-white) 82%, transparent);
+  line-height: 1.45;
+}
+
+.mm-line-meta {
+  flex: 0 0 auto;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--colors-brands-mom-100) 55%, transparent);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .02em;
+}
+
+.mm-sheet-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.mm-sheet-go {
+  flex: 1;
+  border: 0;
+  background: var(--colors-grays-0);
+  border: 1px solid var(--colors-grays-0);
+  color: var(--colors-semantic-fills-mom-primary);
+  font-size: 13.5px;
+  padding: 11px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  letter-spacing: .03em;
+}
+
+.mm-sheet-close {
+  flex: 0 0 auto;
+  border: 0;
+  background: color-mix(in srgb, var(--colors-grays-white) 7%, transparent);
+  color: color-mix(in srgb, var(--colors-grays-white) 55%, transparent);
+  font-size: 13px;
+  padding: 11px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+/* 回到地图的常驻入口（信息流里）：体系白卡 + 夜色小缩影 */
+.mm-strip {
+  position: relative;
+  z-index: 2;
+  margin: 2px 0 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 358px;
+  text-align: left;
+  background: var(--colors-grays-0); /* bg1 */
+  color: var(--colors-text-color-text-primary); /* text1 */
+  border: 0;
+  border-radius: 16px;
+  padding: 11px 14px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--colors-grays-900) 5%, transparent);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mm-strip-dots {
+  flex: 0 0 auto;
+  position: relative;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--colors-text-color-text-primary); /* 夜图缩影 */
+  overflow: hidden;
+}
+
+.mm-strip-dots i {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--colors-brands-mom-100); /* Rose/100 */
+  animation: mm-twinkle 2.6s ease-in-out infinite;
+}
+
+.mm-strip-dots i:nth-child(1) { left: 6px;  top: 14px; animation-delay: 0s; }
+.mm-strip-dots i:nth-child(2) { left: 14px; top: 6px;  animation-delay: .5s; background: var(--colors-brands-parenting-100); }
+.mm-strip-dots i:nth-child(3) { left: 20px; top: 18px; animation-delay: 1.1s; }
+.mm-strip-dots i:nth-child(4) { left: 11px; top: 21px; animation-delay: 1.7s; width: 3px; height: 3px; }
+
+.mm-strip-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  letter-spacing: .02em;
+  line-height: 1.35;
+}
+
+.mm-strip-text b {
+  font-weight: 600;
+  color: var(--colors-semantic-fills-mom-primary); /* Rose/700 */
+  font-variant-numeric: tabular-nums;
+}
+
+.mm-strip-text small {
+  display: block;
+  font-size: 11px;
+  color: color-mix(in srgb, var(--colors-grays-900) 44%, transparent); /* text2 */
+}
+
+.mm-strip-arrow {
+  flex: 0 0 auto;
+  font-size: 14px;
+  color: color-mix(in srgb, var(--colors-grays-900) 30%, transparent); /* text3 */
+}
+
+@keyframes mm-twinkle {
+  0%, 100% { opacity: .25; transform: scale(.8); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+@keyframes mm-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes mm-isl-fade-up {
+  from { opacity: 0; transform: translate(-50%, -3.5px); }
+  to { opacity: 1; transform: translate(-50%, -13.5px); }
+}
+
+/* 聚焦一座岛时：底部操作与播报让位，其他岛屿退后 */
+.mm-overlay.is-lens .mm-foot,
+.mm-overlay.is-lens .mm-toast,
+.mm-overlay.is-lens .mm-skip {
+  animation: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 280ms ease;
+}
+
+.mm-overlay.is-lens .mm-isl {
+  opacity: .22;
+  transition: opacity 320ms ease;
+}
+
+.mm-overlay.is-lens .mm-isl.is-focus {
+  opacity: 1;
+}
+
+.mm-overlay.is-lens .mm-user-chip {
+  opacity: 0;
+  transition: opacity 280ms ease;
+}
+
+/* ── 网页版（独立站 hero）变体 ───────────────────────── */
+.mm-overlay--page {
+  position: absolute;
+  border-radius: 0;
+}
+
+.mm-overlay::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 51.4%;
+  top: -17.14vh;
+  width: 147.58vw;
+  height: 34.15vh;
+  min-height: 0;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 0%,
+      color-mix(in srgb, var(--colors-brands-mom-300) 68%, transparent) 0%,
+      color-mix(in srgb, var(--colors-brands-mom-100) 34%, transparent) 36%,
+      color-mix(in srgb, var(--colors-brands-mom-75) 15%, transparent) 58%,
+      color-mix(in srgb, var(--colors-brands-mom-75) 0%, transparent) 78%);
+  filter: blur(28px);
+  opacity: .78;
+  mix-blend-mode: screen;
+}
+
+@media (min-width: 760px) and (orientation: landscape) {
+  .mm-overlay::before {
+    left: 50%;
+    top: -17vh;
+    width: min(148vw, 1180px);
+    height: 34vh;
+    min-height: 0;
+    filter: blur(34px);
+    opacity: .68;
+  }
+}
+
+.mm-overlay--page .mm-head {
+  padding-top: clamp(52px, 9vh, 92px);
+}
+
+@media (max-width: 639px) {
+  .mm-overlay--page .mm-head {
+    padding-top: clamp(72px, 14vh, 128px);
+  }
+}
+
+.mm-overlay--page .mm-clock {
+  font-size: 14px;
+}
+
+.mm-overlay--page .mm-counter b {
+  font-size: clamp(56px, 9vw, 88px);
+}
+
+.mm-overlay--page .mm-counter span {
+  font-size: clamp(15px, 2.2vw, 18px);
+  margin-top: 12px;
+}
+
+.mm-overlay--page .mm-greet {
+  font-size: clamp(13px, 1.8vw, 15px);
+}
+
+.mm-overlay--page .mm-isl-name {
+  font-size: clamp(13px, 1.6vw, 15px);
+}
+
+.mm-overlay--page .mm-foot {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--colors-grays-black) 0%, transparent) 0%, color-mix(in srgb, var(--colors-grays-black) 60%, transparent) 60%, color-mix(in srgb, var(--colors-grays-black) 80%, transparent) 100%);
+  box-shadow: none;
+  border-top: 0;
+}
+
+@media (max-width: 759px) and (orientation: portrait) {
+  .mm-overlay--page .mm-foot {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .mm-overlay--page .mm-light,
+  .mm-overlay--page .mm-enter {
+    width: 100%;
+  }
+}
+
+@media (min-width: 760px) and (orientation: landscape) {
+  .mm-overlay--page .mm-light,
+  .mm-overlay--page .mm-enter {
+    width: min(100%, 520px);
+  }
+}
+
+.mm-overlay--page .mm-sheet {
+  max-width: 560px;
+  margin: 0 auto;
+  border-radius: 22px 22px 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mm-enter { animation: none; }
+  .mm-strip-dots i { animation: none; opacity: .8; }
+}

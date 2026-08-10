@@ -1,0 +1,76 @@
+@import './styles/momcozy-theme.css';
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--colors-text-color-text-primary);
+  background:
+    radial-gradient(
+      circle at top left,
+      color-mix(in srgb, var(--colors-brands-mom-100) 56%, transparent),
+      transparent 32%
+    ),
+    linear-gradient(135deg, var(--colors-grays-100), var(--colors-grays-50));
+  font-family: var(--font-sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.type-heading-xl {
+  font-family: var(--type-heading-xl-font-family);
+  font-size: var(--type-heading-xl-font-size);
+  font-weight: var(--type-heading-xl-font-weight);
+  letter-spacing: var(--type-heading-xl-letter-spacing);
+  line-height: var(--type-heading-xl-line-height);
+}
+
+.type-heading-m {
+  font-family: var(--type-heading-m-font-family);
+  font-size: var(--type-heading-m-font-size);
+  font-weight: var(--type-heading-m-font-weight);
+  letter-spacing: var(--type-heading-m-letter-spacing);
+  line-height: var(--type-heading-m-line-height);
+}
+
+.type-title-xl {
+  font-family: var(--type-title-xl-medium-font-family);
+  font-size: var(--type-title-xl-medium-font-size);
+  font-weight: var(--type-title-xl-medium-font-weight);
+  letter-spacing: 0;
+  line-height: var(--type-title-xl-medium-line-height);
+}
+
+.type-title-m {
+  font-family: var(--type-title-m-medium-font-family);
+  font-size: var(--type-title-m-medium-font-size);
+  font-weight: var(--type-title-m-medium-font-weight);
+  letter-spacing: 0;
+  line-height: var(--type-title-m-medium-line-height);
+}

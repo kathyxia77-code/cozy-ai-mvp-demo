@@ -1,0 +1,3108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f4f2" />
+    <title>Voice Log — Complete Flow Demo</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #e9e5e8;
+      }
+
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      *:focus,
+      *:focus-visible,
+      *:focus-within {
+        outline: none !important;
+        box-shadow: none !important;
+      }
+
+      html,
+      body {
+        width: 100%;
+        min-height: 100%;
+        margin: 0;
+      }
+
+      body {
+        display: grid;
+        min-height: 100dvh;
+        place-items: center;
+        overflow: auto;
+        background:
+          radial-gradient(circle at 50% 12%, rgba(255, 255, 255, 0.96), transparent 35%),
+          linear-gradient(145deg, #eee9ec 0%, #dfd9df 100%);
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+        user-select: none;
+        -webkit-user-drag: none;
+      }
+
+      .demo {
+        display: grid;
+        width: 100%;
+        height: 100dvh;
+        grid-template-columns: minmax(0, 1fr) auto minmax(180px, 1fr);
+        grid-template-rows: 1fr;
+        gap: 20px;
+        place-items: center;
+        padding: 12px;
+      }
+
+      /*
+       * The source mockup is a 1080px transparent square. Its visible phone
+       * occupies approximately x=326..754 and y=93..975, so the stage crops
+       * the unused transparent canvas while retaining the original frame.
+       */
+      .device {
+        position: relative;
+        grid-column: 2;
+        width: min(428px, calc((100dvh - 24px) * 428 / 882), calc(100vw - 224px));
+        aspect-ratio: 428 / 882;
+        isolation: isolate;
+      }
+
+      .screen {
+        position: absolute;
+        z-index: 1;
+        top: 1.93%;
+        left: 4.67%;
+        width: 90.89%;
+        height: 96.03%;
+        overflow: hidden;
+        border-radius: 13.5% / 6.3%;
+        background: #f8f6f3;
+        container-type: inline-size;
+      }
+
+      .screen-scroll {
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .screen-scroll::-webkit-scrollbar,
+      .rail::-webkit-scrollbar {
+        display: none;
+      }
+
+      .page {
+        position: relative;
+        min-height: 100%;
+        padding-top: 26.73%;
+        padding-bottom: 26%;
+        overflow: hidden;
+        background: #f8f6f3;
+      }
+
+      .header-glow {
+        position: absolute;
+        z-index: 0;
+        top: 2.2%;
+        left: 0;
+        width: 100%;
+        pointer-events: none;
+      }
+
+      .home-header-fixed {
+        position: absolute;
+        z-index: 3;
+        top: 15.78cqi;
+        left: 0;
+        width: 100%;
+        pointer-events: none;
+      }
+
+      .content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4cqi;
+        width: 92.04%;
+        margin-inline: auto;
+      }
+
+      .module,
+      .module-group,
+      .module-image {
+        width: 100%;
+      }
+
+      .module-group {
+        min-width: 0;
+      }
+
+      .section-header {
+        width: 100%;
+      }
+
+      .ai-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 2.49cqi;
+      }
+
+      .rail {
+        display: flex;
+        width: calc(100% + 4.33%);
+        margin-right: -4.33%;
+        padding-right: 4.33%;
+        gap: 3.24%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x proximity;
+        scrollbar-width: none;
+        touch-action: pan-x;
+      }
+
+      .asset-link {
+        display: block;
+        flex: 0 0 auto;
+        border-radius: 24px;
+        outline: none;
+        scroll-snap-align: start;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .asset-link:focus-visible {
+        box-shadow: 0 0 0 3px rgba(119, 5, 35, 0.35);
+      }
+
+      .checkin-card {
+        width: 29.19%;
+      }
+
+      .checkin-card.sleep {
+        width: 29.46%;
+      }
+
+      .article-card {
+        width: 67.03%;
+      }
+
+      .product-card {
+        width: 57.03%;
+      }
+
+      .voice-entry-three {
+        width: 100%;
+        margin: 4cqi 0 0;
+      }
+
+      .voice-entry-three img {
+        width: 100%;
+        height: auto;
+      }
+
+      .status-bar {
+        position: absolute;
+        z-index: 3;
+        top: 0;
+        left: 0;
+        width: 100%;
+        pointer-events: none;
+      }
+
+      .top-glass {
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 29cqi;
+        pointer-events: none;
+        background: linear-gradient(
+          to bottom,
+          rgba(248, 246, 243, 0.72) 0%,
+          rgba(248, 246, 243, 0.6) 54.4%,
+          rgba(248, 246, 243, 0.28) 74.1%,
+          rgba(248, 246, 243, 0) 92.2%,
+          rgba(248, 246, 243, 0) 100%
+        );
+        -webkit-backdrop-filter: blur(15px) saturate(1.08);
+        backdrop-filter: blur(15px) saturate(1.08);
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          #000 0%,
+          #000 58.6%,
+          rgba(0, 0, 0, 0.72) 74.1%,
+          transparent 92.2%,
+          transparent 100%
+        );
+        mask-image: linear-gradient(
+          to bottom,
+          #000 0%,
+          #000 58.6%,
+          rgba(0, 0, 0, 0.72) 74.1%,
+          transparent 92.2%,
+          transparent 100%
+        );
+        -webkit-mask-size: 100% 100%;
+        mask-size: 100% 100%;
+        -webkit-mask-position: top left;
+        mask-position: top left;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+      }
+
+      .bottom-navigation {
+        position: absolute;
+        z-index: 3;
+        bottom: 0;
+        left: 3.98%;
+        width: 92.04%;
+        pointer-events: none;
+      }
+
+      .phone-frame {
+        position: absolute;
+        z-index: 4;
+        top: -10.54%;
+        left: -76.17%;
+        width: 252.34%;
+        max-width: none;
+        pointer-events: none;
+      }
+
+      .flow-layer {
+        position: absolute;
+        z-index: 5;
+        inset: 0;
+      }
+
+      .flow-layer[hidden] {
+        display: none;
+      }
+
+      .flow-scrim {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        border: 0;
+        background: rgba(26, 23, 23, 0.49);
+        cursor: default;
+      }
+
+      .voice-sheet {
+        position: absolute;
+        z-index: 1;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 147.76cqi;
+        overflow: hidden;
+        border-radius: 9.45cqi 9.45cqi 0 0;
+        background: #fbf7f8;
+        color: #4f0016;
+        box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.55);
+        isolation: isolate;
+        transition: height 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      .voice-sheet.is-result {
+        height: 181.09cqi;
+      }
+
+      .voice-sheet[hidden] {
+        display: none;
+      }
+
+      .recording-character {
+        width: 38.06cqi;
+      }
+
+      .suggestion-panel {
+        position: absolute;
+        z-index: 2;
+        top: calc(75.62cqi - 18px);
+        right: 3.98cqi;
+        left: 3.98cqi;
+        color: #28141d;
+        font-family: "Aeonik Soft Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .suggestion-title {
+        margin: 0 0 2.99cqi;
+        font-size: 3.98cqi;
+        font-weight: 600;
+        line-height: 1.25;
+      }
+
+      .suggestion-list {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.99cqi;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .suggestion-chip {
+        display: flex;
+        align-items: center;
+        min-height: 11.44cqi;
+        padding: 1.99cqi 3.98cqi;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.9);
+        font-size: 3.48cqi;
+        font-weight: 400;
+        line-height: 1.3;
+        white-space: nowrap;
+      }
+
+      .suggestion-chip:nth-child(1) {
+        width: 78%;
+      }
+
+      .suggestion-chip:nth-child(2) {
+        width: 69%;
+      }
+
+      .suggestion-chip:nth-child(3) {
+        width: 100%;
+      }
+
+      .voice-input-button,
+      .recording-send {
+        position: absolute;
+        z-index: 3;
+        bottom: 3.23cqi;
+        left: 50%;
+        width: 26.53cqi;
+        height: 26.53cqi;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        cursor: pointer;
+        transform: translateX(-50%);
+      }
+
+      .voice-input-button img,
+      .recording-send img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .voice-input-button:active,
+      .recording-send:active {
+        transform: translateX(-50%) scale(0.97);
+      }
+
+
+      .sheet-gradient {
+        position: absolute;
+        z-index: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 91.6cqi;
+        overflow: hidden;
+        background: #fbf7f8;
+        pointer-events: none;
+      }
+
+      .sheet-gradient::after {
+        position: absolute;
+        bottom: -30.53cqi;
+        left: 50%;
+        width: 61.07cqi;
+        height: 61.07cqi;
+        border-radius: 9999px;
+        background: linear-gradient(180deg, #f3dce8 0%, #eae5fa 100%);
+        box-shadow: 0 0 49.75cqi rgba(234, 229, 250, 0.78);
+        content: "";
+        filter: blur(24.88cqi);
+        transform: translateX(-50%);
+      }
+
+      .sheet-close {
+        position: absolute;
+        z-index: 3;
+        top: 3.98cqi;
+        left: 3.98cqi;
+        width: 10.95cqi;
+        height: 10.95cqi;
+        padding: 0;
+        border: 1px solid rgba(255, 255, 255, 0.76);
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.74);
+        box-shadow:
+          0 5px 18px rgba(76, 37, 47, 0.08),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.48);
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .sheet-close::before,
+      .sheet-close::after {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5.97cqi;
+        height: 0.45cqi;
+        border-radius: 999px;
+        background: #241b20;
+        content: "";
+      }
+
+      .sheet-close::before {
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+
+      .sheet-close::after {
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
+
+      .sheet-title {
+        position: absolute;
+        z-index: 2;
+        top: 14.93cqi;
+        left: 50%;
+        margin: 0;
+        transform: translateX(-50%);
+        font-family: "Exposure[-10]", Georgia, "Times New Roman", serif;
+        font-size: 5.97cqi;
+        font-weight: 400;
+        line-height: 1.2;
+        letter-spacing: 0.12cqi;
+        white-space: nowrap;
+      }
+
+      .sheet-character {
+        position: absolute;
+        z-index: 1;
+        top: 28cqi;
+        left: 50%;
+        width: 38.81cqi;
+        max-width: none;
+        transform: translateX(-50%);
+        pointer-events: none;
+      }
+
+      .home-indicator {
+        position: absolute;
+        z-index: 2;
+        bottom: 1.99cqi;
+        left: 50%;
+        width: 35.82cqi;
+        height: 1.24cqi;
+        border-radius: 999px;
+        background: #050505;
+        transform: translateX(-50%);
+      }
+
+
+      .agreement-sheet[hidden],
+      .permission-layer[hidden],
+      .settings-guide-layer[hidden] {
+        display: none;
+      }
+
+      .agreement-sheet {
+        position: absolute;
+        z-index: 2;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 90%;
+        overflow: hidden;
+        border-radius: 9.45cqi 9.45cqi 0 0;
+        background: #fbf7f8;
+        color: #281b20;
+        box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.55);
+        will-change: transform;
+      }
+
+      .agreement-sheet.is-dragging {
+        transition: none;
+        user-select: none;
+      }
+
+      .agreement-sheet.is-settling {
+        transition: transform 220ms cubic-bezier(0.22, 0.72, 0.28, 1);
+      }
+
+      .sheet-drag-handle {
+        position: absolute;
+        z-index: 5;
+        top: 3.48cqi;
+        left: 50%;
+        width: 15.92cqi;
+        height: 5.47cqi;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        cursor: grab;
+        touch-action: none;
+        transform: translateX(-50%);
+      }
+
+      .sheet-drag-handle::after {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 15.92cqi;
+        height: 1.49cqi;
+        border-radius: 999px;
+        background: #d6d1d3;
+        content: "";
+        transform: translateX(-50%);
+      }
+
+      .agreement-page-title {
+        position: absolute;
+        z-index: 3;
+        top: 5.47cqi;
+        left: 50%;
+        margin: 0;
+        color: #281b20;
+        font-family: "Aeonik Soft Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 3.48cqi;
+        font-weight: 600;
+        line-height: 1.3;
+        white-space: nowrap;
+        transform: translateX(-50%);
+      }
+
+      .agreement-document {
+        position: absolute;
+        z-index: 1;
+        top: 17.91cqi;
+        right: 3.98cqi;
+        bottom: 25.87cqi;
+        left: 3.98cqi;
+        padding: 0 0 5.97cqi;
+        overflow-x: hidden;
+        overflow-y: auto;
+        color: #33272c;
+        font-family: "Aeonik Soft Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 2.99cqi;
+        line-height: 1.42;
+        overscroll-behavior: contain;
+        scrollbar-width: none;
+      }
+
+      .agreement-document::-webkit-scrollbar {
+        display: none;
+      }
+
+      .agreement-document p {
+        margin: 0 0 4.23cqi;
+      }
+
+      .agreement-footer {
+        position: absolute;
+        z-index: 2;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 29.85cqi;
+        background: linear-gradient(to bottom, rgba(251, 247, 248, 0), #fbf7f8 26%);
+        pointer-events: none;
+      }
+
+      .value-copy {
+        position: absolute;
+        z-index: 2;
+        top: 83.33cqi;
+        left: 50%;
+        width: 80%;
+        margin: 0;
+        color: #520019;
+        font-family: "Aeonik Soft Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 3.48cqi;
+        line-height: 1.43;
+        text-align: center;
+        transform: translateX(-50%);
+      }
+
+      .agreement-control {
+        position: absolute;
+        z-index: 2;
+        top: 111.69cqi;
+        left: 50%;
+        display: inline-flex;
+        align-items: center;
+        gap: 1.99cqi;
+        color: #3d101d;
+        font-family: "Aeonik Soft Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 2.99cqi;
+        line-height: 1.5;
+        white-space: nowrap;
+        cursor: pointer;
+        transform: translateX(-50%);
+      }
+
+      .agreement-control input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        opacity: 0;
+      }
+
+      .agreement-check {
+        position: relative;
+        flex: 0 0 auto;
+        width: 4.48cqi;
+        height: 4.48cqi;
+        border: 1.5px solid #69001e;
+        border-radius: 1.05cqi;
+        background: rgba(255, 255, 255, 0.78);
+      }
+
+      .agreement-control input:checked + .agreement-check {
+        background: #5d001b;
+      }
+
+      .agreement-control input:checked + .agreement-check::after {
+        position: absolute;
+        top: 42%;
+        left: 50%;
+        width: 2.45cqi;
+        height: 1.25cqi;
+        border-bottom: 0.55cqi solid #fff;
+        border-left: 0.55cqi solid #fff;
+        content: "";
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
+
+      .agreement-link {
+        border-radius: 2px;
+        color: inherit;
+        font-weight: 700;
+        text-decoration: underline;
+        text-underline-offset: 0.55cqi;
+      }
+
+      .primary-action {
+        position: absolute;
+        z-index: 2;
+        right: 3.98cqi;
+        bottom: 14.43cqi;
+        left: 3.98cqi;
+        width: calc(100% - 7.96cqi);
+        height: 12.94cqi;
+        padding: 0;
+        border: 0;
+        border-radius: 999px;
+        background: #770523;
+        color: #fff;
+        font-family: "Aeonik Soft Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 3.98cqi;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .primary-action:active {
+        background: #65031d;
+        transform: translateY(1px);
+      }
+
+      .agreement-accept {
+        bottom: 7.96cqi;
+        pointer-events: auto;
+      }
+
+      .agreement-control.is-invalid {
+        animation: agreement-nudge 280ms ease-in-out;
+      }
+
+      @keyframes agreement-nudge {
+        0%, 100% { transform: translateX(-50%); }
+        30% { transform: translateX(calc(-50% - 4px)); }
+        70% { transform: translateX(calc(-50% + 4px)); }
+      }
+
+      .permission-layer,
+      .settings-guide-layer {
+        position: absolute;
+        z-index: 10;
+        inset: 0;
+        background: rgba(31, 28, 29, 0.22);
+        backdrop-filter: blur(1.2px);
+      }
+
+      .permission-dialog {
+        position: absolute;
+        top: 38.8%;
+        left: 50%;
+        width: 74.63cqi;
+        padding: 5.47cqi 3.48cqi 3.48cqi;
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        border-radius: 7.46cqi;
+        background: rgba(255, 255, 255, 0.94);
+        color: #111;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        box-shadow: 0 5.97cqi 11.94cqi rgba(24, 16, 19, 0.18);
+        transform: translateX(-50%);
+        backdrop-filter: blur(9.95cqi);
+      }
+
+      .permission-title {
+        margin: 0 1.99cqi;
+        font-size: 4.23cqi;
+        font-weight: 700;
+        line-height: 1.28;
+      }
+
+      .permission-copy {
+        margin: 2.99cqi 1.99cqi 0;
+        font-size: 3.98cqi;
+        line-height: 1.35;
+      }
+
+      .permission-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3.98cqi;
+        margin-top: 7.96cqi;
+      }
+
+      .permission-action {
+        min-width: 0;
+        height: 11.94cqi;
+        padding: 0 2.49cqi;
+        border: 0;
+        border-radius: 999px;
+        background: rgba(225, 223, 225, 0.88);
+        color: #151216;
+        font: inherit;
+        font-size: 3.98cqi;
+        font-weight: 500;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      .permission-action:active {
+        background: rgba(210, 207, 210, 0.94);
+      }
+
+      .settings-guide-dialog {
+        top: 37.5%;
+      }
+
+      .settings-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 1.99cqi;
+        margin-top: 6.47cqi;
+      }
+
+      .settings-action {
+        width: 100%;
+      }
+
+      .settings-action-primary {
+        background: #770523;
+        color: #fff;
+        font-weight: 600;
+      }
+
+      .scenario-controls {
+        grid-column: 3;
+        justify-self: start;
+        width: 180px;
+        padding: 12px;
+        border: 1px solid rgba(83, 53, 65, 0.12);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.88);
+        box-shadow: 0 12px 32px rgba(48, 27, 36, 0.12);
+        backdrop-filter: blur(18px);
+      }
+
+      .controls-heading {
+        margin-bottom: 8px;
+      }
+
+      .controls-heading h2 {
+        margin: 0;
+        color: #281b20;
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .control-grid {
+        display: grid;
+        gap: 8px;
+      }
+
+      .control-card {
+        display: flex;
+        min-width: 0;
+        min-height: 40px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 7px 8px;
+        border-radius: 11px;
+        background: #f7f3f5;
+      }
+
+      .control-title,
+      .permission-legend {
+        color: #33272c;
+        font-size: 11px;
+        font-weight: 650;
+      }
+
+      .state-switch {
+        position: relative;
+        flex: 0 0 auto;
+        width: 42px;
+        height: 24px;
+      }
+
+      .state-switch input {
+        position: absolute;
+        opacity: 0;
+      }
+
+      .switch-track {
+        position: absolute;
+        inset: 0;
+        border-radius: 999px;
+        background: #d8d0d4;
+        cursor: pointer;
+        transition: background 160ms ease;
+      }
+
+      .switch-track::after {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 2px 6px rgba(42, 24, 31, 0.22);
+        content: "";
+        transition: transform 160ms ease;
+      }
+
+      .state-switch input:checked + .switch-track {
+        background: #770523;
+      }
+
+      .state-switch input:checked + .switch-track::after {
+        transform: translateX(18px);
+      }
+
+      .permission-control {
+        flex-direction: column;
+        align-items: stretch;
+        margin: 0;
+        border: 0;
+      }
+
+      .permission-options {
+        display: flex;
+        gap: 4px;
+      }
+
+      .permission-option {
+        position: relative;
+        flex: 1;
+      }
+
+      .permission-option input {
+        position: absolute;
+        opacity: 0;
+      }
+
+      .permission-option span {
+        display: block;
+        padding: 6px 3px;
+        border-radius: 8px;
+        color: #6d5c64;
+        font-size: 9px;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+
+      .permission-option input:checked + span {
+        background: #770523;
+        color: #fff;
+      }
+
+      @media (max-width: 720px) {
+        .demo {
+          grid-template-columns: 1fr;
+          grid-template-rows: minmax(0, 1fr) auto;
+          gap: 8px;
+          padding: 6px;
+        }
+
+        .device {
+          grid-column: 1;
+          width: min(428px, calc((100dvh - 158px) * 428 / 882), calc(100vw - 12px));
+        }
+
+        .scenario-controls {
+          grid-column: 1;
+          justify-self: center;
+          width: min(428px, calc(100vw - 12px));
+          padding: 8px;
+        }
+
+        .control-grid {
+          grid-template-columns: 0.8fr 1.2fr;
+          gap: 6px;
+        }
+
+        .control-card {
+          min-height: 42px;
+          padding: 6px 8px;
+        }
+      }
+
+      /* Recording flow states */
+      .recording-idle[hidden],
+      .recording-live[hidden],
+      .conversation-recording-overlay[hidden],
+      .conversation-scroll[hidden],
+      .post-recording[hidden],
+      .voice-input-button[hidden],
+      .recording-send[hidden],
+      .recording-ending-notice[hidden],
+      .thinking-row[hidden],
+      .generated-card[hidden],
+      .all-recorded-message[hidden] {
+        display: none;
+      }
+
+      .recording-live {
+        position: absolute;
+        z-index: 2;
+        inset: 0;
+      }
+
+      .recording-status {
+        position: absolute;
+        z-index: 3;
+        top: 84.08cqi;
+        left: 50%;
+        display: flex;
+        width: 80%;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.49cqi;
+        transform: translateX(-50%);
+        color: #28141d;
+        font-family: "Aeonik Soft Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        text-align: center;
+      }
+
+      .listening-counter,
+      .recording-ending-notice {
+        margin: 0;
+        line-height: 1.3;
+      }
+
+      .listening-counter {
+        font-size: 3.48cqi;
+        font-weight: 400;
+      }
+
+      .recording-ending-notice {
+        min-height: 3.88cqi;
+        color: #9a2347;
+        font-size: 2.99cqi;
+        font-weight: 500;
+      }
+
+      .recording-sheet.is-complete .recording-status {
+        gap: 3.48cqi;
+      }
+
+      .live-waveform {
+        position: absolute;
+        z-index: 3;
+        top: 101.49cqi;
+        left: 50%;
+        display: flex;
+        width: 66.67cqi;
+        height: 14.43cqi;
+        align-items: center;
+        justify-content: center;
+        gap: 0.55cqi;
+        transform: translateX(-50%);
+      }
+
+      .conversation-recording-overlay {
+        position: absolute;
+        z-index: 3;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        min-height: 58.71cqi;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 2.49cqi;
+        padding: 11.94cqi 7.96cqi 26.37cqi;
+        background:
+          radial-gradient(
+            circle at 50% 108%,
+            rgba(231, 218, 250, 0.72) 0%,
+            rgba(243, 220, 232, 0.48) 38%,
+            rgba(251, 247, 248, 0) 70%
+          ),
+          linear-gradient(
+            180deg,
+            rgba(251, 247, 248, 0) 0%,
+            rgba(251, 247, 248, 0.5) 6%,
+            #fbf7f8 12%,
+            #f9f0f5 54%,
+            #f6e7f2 100%
+          );
+        pointer-events: none;
+      }
+
+      .review-recording-countdown {
+        margin: 0;
+        color: #770523;
+        font-size: 2.99cqi;
+        font-weight: 500;
+        line-height: 1.3;
+        letter-spacing: 0.06cqi;
+      }
+
+      .review-recording-countdown[hidden] {
+        display: none;
+      }
+
+      .conversation-recording-overlay .live-waveform {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 66.67cqi;
+        height: 12.94cqi;
+        transform: none;
+      }
+
+      .wave-bar {
+        width: 0.5cqi;
+        height: calc(1.2cqi + var(--level) * 0.11cqi);
+        min-height: 1.2cqi;
+        max-height: 13.93cqi;
+        border-radius: 999px;
+        background: #d05a7c;
+        transform-origin: center;
+        animation: waveform-pulse 620ms ease-in-out infinite alternate;
+        animation-delay: var(--delay);
+      }
+
+      .recording-sheet.is-complete .wave-bar {
+        animation-play-state: paused;
+        opacity: 0.62;
+      }
+
+      .recording-send {
+        z-index: 4;
+      }
+
+      .recording-sheet.is-conversation-recording .home-indicator {
+        z-index: 5;
+      }
+
+      .conversation-scroll {
+        position: absolute;
+        z-index: 2;
+        top: 28.11cqi;
+        right: 0;
+        bottom: 24.88cqi;
+        left: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: 0 3.98cqi 3.98cqi;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .conversation-scroll::-webkit-scrollbar {
+        display: none;
+      }
+
+      .conversation-thread {
+        display: flex;
+        min-height: 100%;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 5.97cqi;
+      }
+
+      .conversation-history {
+        display: contents;
+      }
+
+      .post-recording {
+        position: relative;
+        display: flex;
+        flex: 0 0 auto;
+        flex-direction: column;
+        gap: 2.99cqi;
+        color: #240f1b;
+        font-family: "Aeonik Soft Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .archived-turn .generated-card {
+        animation: none;
+      }
+
+      .archived-turn.is-locked-turn .editable-field {
+        text-decoration: none;
+      }
+
+      .archived-turn.is-locked-turn
+        .record-item:not(.is-recorded)
+        .record-delete {
+        display: none;
+      }
+
+      .archived-turn.is-locked-turn .save-records {
+        display: none;
+      }
+
+      .transcript-bubble {
+        min-height: 15.42cqi;
+        padding: 4.98cqi;
+        border: 1px solid rgba(36, 15, 27, 0.1);
+        border-radius: 5.97cqi 5.97cqi 1cqi 5.97cqi;
+        background: rgba(255, 255, 255, 0.94);
+        color: #240f1b;
+        font-size: 3.98cqi;
+        font-weight: 400;
+        line-height: 1.4;
+        letter-spacing: 0.08cqi;
+      }
+
+      .transcript-bubble.is-processing {
+        color: #9f969b;
+      }
+
+      .processing-line {
+        display: flex;
+        align-items: center;
+        gap: 2.24cqi;
+      }
+
+      .loading-spinner {
+        width: 3.98cqi;
+        height: 3.98cqi;
+        flex: 0 0 auto;
+        border: 0.5cqi solid rgba(119, 5, 35, 0.16);
+        border-top-color: #9a2347;
+        border-radius: 50%;
+        animation: loading-spin 720ms linear infinite;
+      }
+
+      .thinking-row {
+        display: flex;
+        min-height: 5.22cqi;
+        align-items: center;
+        justify-content: center;
+        gap: 1cqi;
+        font-size: 3.98cqi;
+        line-height: 1.3;
+      }
+
+      .thinking-dots {
+        display: inline-flex;
+        gap: 0.75cqi;
+        align-items: center;
+      }
+
+      .thinking-dots span {
+        width: 1cqi;
+        height: 1cqi;
+        border-radius: 50%;
+        background: #770523;
+        animation: thinking-pulse 900ms ease-in-out infinite;
+      }
+
+      .thinking-dots span:nth-child(2) {
+        animation-delay: 150ms;
+      }
+
+      .thinking-dots span:nth-child(3) {
+        animation-delay: 300ms;
+      }
+
+      .generated-card {
+        display: flex;
+        flex-direction: column;
+        gap: 2.99cqi;
+        animation: card-arrive 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      }
+
+      .record-list {
+        overflow: hidden;
+        padding: 1cqi 3.98cqi;
+        border-radius: 5.97cqi;
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 1cqi 5.97cqi rgba(36, 15, 27, 0.04);
+      }
+
+      .recorded-count {
+        align-self: flex-end;
+        margin: -1cqi 3.98cqi 0 0;
+        color: rgba(36, 15, 27, 0.42);
+        font-size: 3.48cqi;
+        font-weight: 400;
+        line-height: 1.43;
+        letter-spacing: 0.07cqi;
+      }
+
+      .failed-record-list {
+        flex: 0 0 auto;
+      }
+
+      .failed-record-list .record-item {
+        border-bottom: 0;
+      }
+
+      .record-item {
+        --record-accent: #770523;
+        display: grid;
+        grid-template-columns: 7.96cqi minmax(0, 1fr) 5.97cqi;
+        gap: 1.99cqi;
+        min-height: 16.17cqi;
+        align-items: center;
+        padding: 2.99cqi 0;
+        border-bottom: 0.5px solid rgba(36, 15, 27, 0.07);
+        transition: opacity 180ms ease, transform 180ms ease;
+      }
+
+      .record-item:last-child {
+        border-bottom: 0;
+      }
+
+      .record-item.is-last-visible {
+        border-bottom: 0;
+      }
+
+      .record-item[hidden] {
+        display: none;
+      }
+
+      .record-item.is-removing {
+        opacity: 0;
+        transform: translateX(3.98cqi);
+      }
+
+      .record-item.is-recorded .editable-field {
+        text-decoration: none;
+      }
+
+      .record-item.is-recorded .record-delete {
+        display: grid;
+        width: 5.47cqi;
+        height: 5.47cqi;
+        place-items: center;
+        border-radius: 50%;
+        background: #1c1c1c;
+        color: #fff;
+        cursor: default;
+      }
+
+      .record-item.is-recorded .record-delete img {
+        display: none;
+      }
+
+      .record-item.is-recorded .record-delete::after {
+        content: "✓";
+        font-size: 3.23cqi;
+        font-weight: 700;
+        line-height: 1;
+      }
+
+      .record-item[data-type="feeding"] {
+        --record-accent: #288760;
+      }
+
+      .record-item[data-type="diaper"] {
+        --record-accent: #b87828;
+      }
+
+      .record-item[data-type="sleep"] {
+        --record-accent: #552c95;
+      }
+
+      .record-icon {
+        width: 7.96cqi;
+        height: 7.96cqi;
+        object-fit: contain;
+      }
+
+      .record-icon-shell {
+        display: grid;
+        width: 7.96cqi;
+        height: 7.96cqi;
+        place-items: center;
+        overflow: hidden;
+        border-radius: 50%;
+        background: linear-gradient(180deg, rgba(240, 203, 88, 0.1), #fff);
+        box-shadow: inset 0 1cqi 2.99cqi #fff;
+      }
+
+      .record-icon-shell .record-icon {
+        width: 4.98cqi;
+        height: 4.98cqi;
+      }
+
+      .record-content {
+        display: flex;
+        min-width: 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75cqi;
+      }
+
+      .record-category {
+        margin: 0;
+        color: rgba(27, 24, 33, 0.48);
+        font-size: 2.99cqi;
+        font-weight: 400;
+        line-height: 1.5;
+        letter-spacing: 0.06cqi;
+      }
+
+      .record-fields {
+        display: flex;
+        min-width: 0;
+        flex-wrap: wrap;
+        gap: 0.25cqi 2.99cqi;
+        color: #240f1b;
+        font-size: 3.48cqi;
+        line-height: 1.43;
+        letter-spacing: 0.07cqi;
+      }
+
+      .field-group {
+        display: inline-flex;
+        min-width: 0;
+        gap: 0.75cqi;
+        align-items: baseline;
+      }
+
+      .editable-field {
+        text-decoration-line: underline;
+        text-decoration-style: dotted;
+        text-decoration-color: var(--record-accent);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.5cqi;
+      }
+
+      .record-delete {
+        width: 5.97cqi;
+        height: 5.97cqi;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      .record-delete img {
+        width: 100%;
+        height: 100%;
+      }
+
+      .record-tip {
+        grid-column: 1 / -1;
+        width: 100%;
+        min-height: 11.44cqi;
+        margin-top: 2.99cqi;
+        padding: 1.24cqi 2.24cqi;
+        border-radius: 1.74cqi;
+        font-size: 2.99cqi;
+        line-height: 1.5;
+        letter-spacing: 0.06cqi;
+      }
+
+      .record-tip strong {
+        display: block;
+        font-weight: 600;
+      }
+
+      .record-tip.tip-check {
+        background: #fdebef;
+        color: #8f1535;
+      }
+
+      .record-tip.tip-info {
+        background: #ebf7ed;
+        color: #1a6045;
+      }
+
+      .record-tip.tip-error {
+        background: #f4f2ff;
+        color: #552c95;
+      }
+
+      .save-records {
+        width: 100%;
+        height: 11.94cqi;
+        padding: 0;
+        border: 0;
+        border-radius: 999px;
+        background: #fdfcfc;
+        color: #770523;
+        font: inherit;
+        font-size: 3.98cqi;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .save-records:disabled {
+        cursor: default;
+        opacity: 0.45;
+      }
+
+      .all-recorded-message {
+        margin: 0;
+        padding: 3.48cqi 3.98cqi;
+        border: 1px solid rgba(36, 15, 27, 0.08);
+        border-radius: 4.98cqi 4.98cqi 1cqi 4.98cqi;
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 1cqi 5.97cqi rgba(36, 15, 27, 0.04);
+        color: #240f1b;
+        font-size: 3.48cqi;
+        font-weight: 400;
+        line-height: 1.45;
+        letter-spacing: 0.07cqi;
+      }
+
+      .calendar-message-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5cqi;
+        color: #770523;
+        font-weight: 600;
+        text-decoration: none;
+        vertical-align: -0.75cqi;
+      }
+
+      .calendar-message-link span {
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.5cqi;
+      }
+
+      .calendar-message-link img {
+        width: 4.48cqi;
+        height: 4.48cqi;
+        flex: 0 0 auto;
+        object-fit: contain;
+      }
+
+      .recording-sheet.is-post-recording:not(.is-result) .voice-input-button {
+        cursor: default;
+      }
+
+      .recording-sheet.is-post-recording:not(.is-result) .voice-input-button:active {
+        transform: translateX(-50%);
+      }
+
+      @keyframes loading-spin {
+        to {
+          transform: rotate(1turn);
+        }
+      }
+
+      @keyframes thinking-pulse {
+        0%,
+        100% {
+          opacity: 0.28;
+          transform: translateY(0);
+        }
+        50% {
+          opacity: 1;
+          transform: translateY(-0.75cqi);
+        }
+      }
+
+      @keyframes card-arrive {
+        from {
+          opacity: 0;
+          transform: translateY(2.49cqi) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes waveform-pulse {
+        0% {
+          transform: scaleY(0.36);
+          opacity: 0.62;
+        }
+        100% {
+          transform: scaleY(1);
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 460px) {
+        .demo {
+          padding: 6px;
+        }
+
+        .device {
+          width: min(428px, calc((100dvh - 158px) * 428 / 882), calc(100vw - 12px));
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .wave-bar {
+          animation-duration: 1400ms;
+        }
+
+        .loading-spinner,
+        .thinking-dots span {
+          animation-duration: 1400ms;
+        }
+
+        .screen-scroll,
+        .rail {
+          scroll-behavior: auto;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="../01-user-guide/momcozy-theme.css" />
+    <link rel="stylesheet" href="./voice-log-theme.css" />
+    <script src="./theme-bridge.js" defer></script>
+  </head>
+  <body>
+    <button
+      class="standalone-theme-toggle"
+      type="button"
+      id="voiceLogThemeToggle"
+      aria-label="Switch to dark mode"
+      aria-pressed="false"
+      title="Switch to dark mode"
+    >
+      <svg class="standalone-theme-icon standalone-theme-icon--moon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 14.6A8.2 8.2 0 0 1 9.4 3 7.2 7.2 0 1 0 21 14.6Z" />
+      </svg>
+      <svg class="standalone-theme-icon standalone-theme-icon--sun" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2.2M12 19.8V22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M2 12h2.2M19.8 12H22M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6" />
+      </svg>
+    </button>
+    <main class="demo" aria-label="Voice Log complete onboarding, permission, and conversation demo">
+      <div class="device">
+        <div class="screen">
+          <div class="screen-scroll">
+            <div class="page">
+              <img
+                class="header-glow"
+                src="assets/home/chrome/header-background.png"
+                alt=""
+                aria-hidden="true"
+              />
+
+              <div class="content">
+                <section class="module" aria-label="Postpartum overview">
+                  <img
+                    class="module-image"
+                    src="assets/home/overview/postpartum-card.png"
+                    alt="Today, May 13th — Postpartum week one"
+                  />
+                </section>
+
+                <section class="module" aria-label="Daily care brief">
+                  <img
+                    class="module-image"
+                    src="assets/home/overview/daily-care-card.png"
+                    alt="Personalized daily care suggestions"
+                  />
+                </section>
+
+                <section class="module-group" aria-label="Daily check-ins">
+                  <img
+                    class="section-header"
+                    src="assets/home/daily-checkins/section-header.png"
+                    alt="Daily Check-ins — View all"
+                  />
+                  <div class="rail" tabindex="0" aria-label="Scrollable daily check-ins">
+                    <a class="asset-link checkin-card" href="#pump" aria-label="Open Pump check-in">
+                      <img src="assets/home/daily-checkins/cards/pump-card.png" alt="Pump, 1 hour 30 minutes ago" />
+                    </a>
+                    <a class="asset-link checkin-card" href="#feeding" aria-label="Open Feeding check-in">
+                      <img src="assets/home/daily-checkins/cards/feeding-card.png" alt="Feeding, 1 hour 30 minutes ago" />
+                    </a>
+                    <a class="asset-link checkin-card sleep" href="#sleep" aria-label="Open Sleep check-in">
+                      <img src="assets/home/daily-checkins/cards/sleep-card.png" alt="Sleep, 2 hours 48 minutes ago" />
+                    </a>
+                    <a class="asset-link checkin-card" href="#diaper" aria-label="Open Diaper check-in">
+                      <img src="assets/home/daily-checkins/cards/diaper-card.png" alt="Diaper, 1 hour 30 minutes ago" />
+                    </a>
+                    <a class="asset-link checkin-card" href="#supplement" aria-label="Open Supplement check-in">
+                      <img src="assets/home/daily-checkins/cards/supplement-card.png" alt="Supplement, zero of two" />
+                    </a>
+                    <a class="asset-link checkin-card" href="#symptoms" aria-label="Open Symptoms">
+                      <img src="assets/home/daily-checkins/cards/symptoms-card.png" alt="Symptoms, five records" />
+                    </a>
+                    <a class="asset-link checkin-card" href="#period" aria-label="Open Period tracking">
+                      <img src="assets/home/daily-checkins/cards/period-card.png" alt="Period, April 12" />
+                    </a>
+                  </div>
+                  <a class="asset-link voice-entry-three" href="#voice-log" aria-label="Open Voice Log">
+                    <img src="assets/home/daily-checkins/ai-quick-log-entry.png" alt="Voice Log" />
+                  </a>
+                </section>
+
+                <section class="module" aria-label="Reminders">
+                  <a class="asset-link" href="#reminders" aria-label="Open reminders">
+                    <img
+                      class="module-image"
+                      src="assets/home/reminders/reminder-card.png"
+                      alt="Reminders and maternity ball program schedule"
+                      loading="lazy"
+                    />
+                  </a>
+                </section>
+
+                <section class="module-group" aria-label="AI insights">
+                  <img
+                    class="section-header"
+                    src="assets/home/ai-insights/section-header.png"
+                    alt="AI insights"
+                    loading="lazy"
+                  />
+                  <div class="ai-stack">
+                    <a class="asset-link" href="#lactation-plan" aria-label="Open AI lactation plan">
+                      <img
+                        src="assets/home/ai-insights/lactation-plan-card.png"
+                        alt="AI lactation plan"
+                        loading="lazy"
+                      />
+                    </a>
+                    <a class="asset-link" href="#sleep-schedule" aria-label="Open AI baby sleep schedule">
+                      <img
+                        src="assets/home/ai-insights/baby-sleep-schedule-card.png"
+                        alt="AI baby sleep schedule"
+                        loading="lazy"
+                      />
+                    </a>
+                  </div>
+                </section>
+
+                <section class="module" aria-label="Campaign">
+                  <a class="asset-link" href="#campaign" aria-label="Open One app, Every moment campaign">
+                    <img
+                      class="module-image"
+                      src="assets/home/campaign/every-moment-card.png"
+                      alt="One app. Every moment."
+                      loading="lazy"
+                    />
+                  </a>
+                </section>
+
+                <section class="module-group" aria-label="Momcozy Reads">
+                  <img
+                    class="section-header"
+                    src="assets/home/reads/section-header.png"
+                    alt="Momcozy Reads — View all"
+                    loading="lazy"
+                  />
+                  <div class="rail" tabindex="0" aria-label="Scrollable Momcozy articles">
+                    <a class="asset-link article-card" href="#newborn-bathing" aria-label="Read the newborn bathing guide">
+                      <img
+                        src="assets/home/reads/newborn-bathing-card.png"
+                        alt="A Complete Guide to Newborn Bathing"
+                        loading="lazy"
+                      />
+                    </a>
+                    <a class="asset-link article-card" href="#breast-massager" aria-label="Read the breast massager guide">
+                      <img
+                        src="assets/home/reads/breast-massager-card.png"
+                        alt="How to Use a Breast Massager"
+                        loading="lazy"
+                      />
+                    </a>
+                  </div>
+                </section>
+
+                <section class="module-group" aria-label="Featured goods">
+                  <img
+                    class="section-header"
+                    src="assets/home/featured-products/section-header.png"
+                    alt="Featured goods — View all"
+                    loading="lazy"
+                  />
+                  <div class="rail" tabindex="0" aria-label="Scrollable featured products">
+                    <a class="asset-link product-card" href="#air-purifier" aria-label="Open CozyBreath Air purifier">
+                      <img
+                        src="assets/home/featured-products/cozybreath-air-purifier-card.png"
+                        alt="CozyBreath Air purifier"
+                        loading="lazy"
+                      />
+                    </a>
+                    <a class="asset-link product-card" href="#sleep-light" aria-label="Open WN08 Relax and Sleep Light Speaker">
+                      <img
+                        src="assets/home/featured-products/wn08-sleep-light-card.png"
+                        alt="WN08 Relax and Sleep Light Speaker"
+                        loading="lazy"
+                      />
+                    </a>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </div>
+
+          <div class="top-glass" aria-hidden="true"></div>
+          <img
+            class="status-bar"
+            src="assets/shared/device/ios-status-bar.png"
+            alt=""
+            aria-hidden="true"
+          />
+          <img
+            class="home-header-fixed"
+            src="assets/home/chrome/header.png"
+            alt="Calendar, profile greeting, and notifications"
+            draggable="false"
+          />
+          <img
+            class="home-header-avatar"
+            src="assets/home/chrome/header.png"
+            alt=""
+            aria-hidden="true"
+            draggable="false"
+          />
+          <img
+            class="bottom-navigation"
+            src="assets/home/chrome/bottom-navigation.png"
+            alt=""
+            aria-hidden="true"
+          />
+
+          <div class="flow-layer" id="voice-flow" hidden>
+            <button
+              class="flow-scrim"
+              type="button"
+              aria-label="Close Voice Log"
+              data-close-flow
+            ></button>
+
+            <section
+              class="voice-sheet intro-sheet"
+              id="voice-intro-sheet"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="voice-sheet-title"
+              aria-describedby="voice-sheet-description"
+              hidden
+            >
+              <div class="sheet-gradient" aria-hidden="true"></div>
+
+              <button
+                class="sheet-close"
+                type="button"
+                aria-label="Close Voice Log"
+                data-close-flow
+              ></button>
+
+              <h1 class="sheet-title" id="voice-sheet-title">Voice Log</h1>
+
+              <img
+                class="sheet-character"
+                src="assets/voice-log/shared/character.png"
+                alt="Momcozy character recording a note"
+              />
+
+              <p class="value-copy" id="voice-sheet-description">
+                Log moments hands-free, speak naturally, AI organizes
+              </p>
+
+              <label class="agreement-control" id="agreement-control">
+                <input id="agreement" type="checkbox" />
+                <span class="agreement-check" aria-hidden="true"></span>
+                <span>
+                  I agree to the
+                  <a class="agreement-link" href="#user-agreement">User Agreement</a>
+                </span>
+              </label>
+
+              <button class="primary-action" id="get-started" type="button">
+                Get Started
+              </button>
+
+              <div class="home-indicator" aria-hidden="true"></div>
+            </section>
+
+            <section
+              class="agreement-sheet"
+              id="agreement-sheet"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="agreement-page-title"
+              hidden
+            >
+              <button
+                class="sheet-drag-handle"
+                id="agreement-drag-handle"
+                type="button"
+                aria-label="Drag down to close User Agreement"
+              ></button>
+
+              <button
+                class="sheet-close"
+                id="agreement-back"
+                type="button"
+                aria-label="Return to Voice Log introduction"
+              ></button>
+
+              <h1 class="agreement-page-title" id="agreement-page-title">
+                User Agreement
+              </h1>
+
+              <div class="agreement-document" id="agreement-document" tabindex="0">
+                <p>We value the privacy of you and your baby.</p>
+
+                <p>
+                  To provide personalized breastfeeding plans, we need to collect and
+                  process information about you and your baby, such as your
+                  breastfeeding goals, maternity leave duration, your baby’s age,
+                  height and weight, breastfeeding records, and other
+                  breastfeeding-related information you choose to provide.
+                </p>
+
+                <p>
+                  Subject to applicable laws, some of this information may be
+                  considered health-related information and children’s personal
+                  information. We process it only to provide and improve the
+                  breastfeeding plan and Voice Log services.
+                </p>
+
+                <p>
+                  We do not use your personal information to train artificial
+                  intelligence models. Where required by law, we rely on your consent.
+                  If you are a legal guardian, your consent also applies to your
+                  baby’s personal information associated with your account.
+                </p>
+
+                <p>
+                  You may withdraw your consent at any time by contacting
+                  Dataprivacy@momcozy.com. Withdrawal will not affect processing
+                  conducted before withdrawal, but it may prevent us from continuing
+                  to provide services that require this information.
+                </p>
+              </div>
+
+              <div class="agreement-footer">
+                <button
+                  class="primary-action agreement-accept"
+                  id="agree-and-continue"
+                  type="button"
+                >
+                  Agree and Continue
+                </button>
+                <div class="home-indicator" aria-hidden="true"></div>
+              </div>
+            </section>
+
+            <section
+              class="voice-sheet recording-sheet"
+              id="recording-sheet"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="recording-sheet-title"
+              aria-describedby="recording-suggestions-title"
+              hidden
+            >
+              <div class="sheet-gradient" aria-hidden="true"></div>
+
+              <button
+                class="sheet-close"
+                type="button"
+                aria-label="Close Voice Log"
+                data-close-flow
+              ></button>
+
+              <h1 class="sheet-title" id="recording-sheet-title">Voice Log</h1>
+
+              <div class="recording-idle" id="recording-idle">
+                <img
+                  class="sheet-character recording-character"
+                  src="assets/voice-log/shared/character.png"
+                  alt="Momcozy character recording a note"
+                />
+
+                <div class="suggestion-panel">
+                  <h2 class="suggestion-title" id="recording-suggestions-title">
+                    Try Saying:
+                  </h2>
+                  <ul class="suggestion-list">
+                    <li class="suggestion-chip">Bonnie slept from 1:10 to 2:05 pm.</li>
+                    <li class="suggestion-chip">I pumped 5 oz total just now.</li>
+                    <li class="suggestion-chip">Remind me to feed Bonnie in 2 hours.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="recording-live" id="recording-live" hidden>
+                <img
+                  class="sheet-character recording-character"
+                  src="assets/voice-log/shared/character.png"
+                  alt="Momcozy character listening"
+                />
+
+                <div class="recording-status" aria-live="polite">
+                  <p class="listening-counter" id="listening-counter">Listening...0s</p>
+                  <p
+                    class="recording-ending-notice"
+                    id="recording-ending-notice"
+                    hidden
+                  ></p>
+                </div>
+                <div class="live-waveform" id="prep-waveform" aria-hidden="true"></div>
+              </div>
+
+              <div
+                class="conversation-recording-overlay"
+                id="conversation-recording-overlay"
+                aria-live="polite"
+                hidden
+              >
+                <p
+                  class="review-recording-countdown"
+                  id="review-recording-countdown"
+                  hidden
+                ></p>
+                <div
+                  class="live-waveform"
+                  id="conversation-waveform"
+                  aria-hidden="true"
+                ></div>
+              </div>
+
+              <div class="conversation-scroll" id="conversation-scroll" hidden>
+                <div class="conversation-thread" id="conversation-thread">
+                  <div class="conversation-history" id="conversation-history"></div>
+
+                  <div class="post-recording" id="post-recording" hidden>
+                <div
+                  class="transcript-bubble is-processing"
+                  id="transcript-bubble"
+                  aria-live="polite"
+                >
+                  <span class="processing-line" id="processing-line">
+                    <span id="transcript-text">Processing...</span>
+                    <span class="loading-spinner" aria-hidden="true"></span>
+                  </span>
+                </div>
+
+                <div class="thinking-row" id="thinking-row" aria-live="polite" hidden>
+                  <span>Thinking...</span>
+                  <span class="thinking-dots" aria-hidden="true">
+                    <span></span><span></span><span></span>
+                  </span>
+                </div>
+
+                <article class="generated-card" id="generated-card" hidden>
+                  <div class="record-list" id="record-list">
+                    <div class="record-item" data-type="pumping">
+                      <img
+                        class="record-icon"
+                        src="assets/voice-log/review/record-types/pumping-icon.png"
+                        alt=""
+                        aria-hidden="true"
+                      />
+                      <div class="record-content">
+                        <p class="record-category">Pumping</p>
+                        <div class="record-fields">
+                          <span class="field-group">
+                            <span>Left</span><span class="editable-field">114</span><span>oz</span>
+                          </span>
+                          <span class="field-group">
+                            <span>Right</span><span class="editable-field">28</span><span>oz</span>
+                          </span>
+                        </div>
+                      </div>
+                      <button class="record-delete" type="button" aria-label="Delete pumping record">
+                        <img src="assets/voice-log/review/icons/delete-icon.png" alt="" />
+                      </button>
+                      <div class="record-tip tip-check" hidden>
+                        <strong>Need Check</strong>
+                        Abnormal milk volume, please check.
+                      </div>
+                    </div>
+
+                    <div class="record-item" data-type="feeding">
+                      <img
+                        class="record-icon"
+                        src="assets/voice-log/review/record-types/feeding-icon.png"
+                        alt=""
+                        aria-hidden="true"
+                      />
+                      <div class="record-content">
+                        <p class="record-category">Feeding</p>
+                        <div class="record-fields">
+                          <span class="editable-field">Bottle</span>
+                          <span class="editable-field">176ml</span>
+                          <span class="editable-field">Formula</span>
+                        </div>
+                      </div>
+                      <button class="record-delete" type="button" aria-label="Delete feeding record">
+                        <img src="assets/voice-log/review/icons/delete-icon.png" alt="" />
+                      </button>
+                      <div class="record-tip tip-info" hidden>
+                        <strong>Need Info</strong>
+                        No amount information. Please fill in.
+                      </div>
+                    </div>
+
+                    <div class="record-item" data-type="diaper">
+                      <span class="record-icon-shell" aria-hidden="true">
+                        <img
+                          class="record-icon"
+                          src="assets/voice-log/review/record-types/diaper-icon.png"
+                          alt=""
+                        />
+                      </span>
+                      <div class="record-content">
+                        <p class="record-category">Diaper</p>
+                        <div class="record-fields">
+                          <span class="editable-field">Pee</span>
+                          <span class="editable-field">Green</span>
+                        </div>
+                      </div>
+                      <button class="record-delete" type="button" aria-label="Delete diaper record">
+                        <img src="assets/voice-log/review/icons/delete-icon.png" alt="" />
+                      </button>
+                    </div>
+
+                    <div class="record-item" data-type="sleep">
+                      <img
+                        class="record-icon"
+                        src="assets/voice-log/review/record-types/sleep-icon.png"
+                        alt=""
+                        aria-hidden="true"
+                      />
+                      <div class="record-content">
+                        <p class="record-category">Sleep</p>
+                        <div class="record-fields">
+                          <span class="field-group">
+                            <span class="editable-field">Mar 28, 2026</span>
+                            <span class="editable-field" data-field="sleep-start-time">5:00 PM</span>
+                          </span>
+                          <span aria-hidden="true">-</span>
+                          <span class="field-group">
+                            <span class="editable-field">Mar 28, 2026</span>
+                            <span class="editable-field" data-field="sleep-end-time">7:19 PM</span>
+                          </span>
+                        </div>
+                      </div>
+                      <button class="record-delete" type="button" aria-label="Delete sleep record">
+                        <img src="assets/voice-log/review/icons/delete-icon.png" alt="" />
+                      </button>
+                      <div class="record-tip tip-error">
+                        <strong>Cannot Save:</strong>
+                        Time conflict, please re-enter after checking.
+                      </div>
+                    </div>
+                  </div>
+
+                  <button class="save-records" id="save-records" type="button">Save</button>
+                    </article>
+
+                    <p
+                      class="all-recorded-message"
+                      id="all-recorded-message"
+                      aria-live="polite"
+                      hidden
+                    >
+                      All items have been recorded. You can continue to add new records or
+                      check the usage records on the
+                      <a
+                        class="calendar-message-link"
+                        href="#calendar"
+                        aria-label="Open calendar"
+                      >
+                        <img
+                          src="assets/voice-log/review/icons/calendar-icon.png"
+                          alt=""
+                          aria-hidden="true"
+                        />
+                        <span>calendar</span></a>.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                class="voice-input-button"
+                id="voice-input"
+                type="button"
+                aria-label="Start recording"
+              >
+                <img
+                  src="assets/voice-log/review/actions/record-button.png"
+                  alt=""
+                  aria-hidden="true"
+                />
+              </button>
+
+              <button
+                class="recording-send"
+                id="recording-send"
+                type="button"
+                aria-label="Send recording"
+                hidden
+              >
+                <img
+                  src="assets/voice-log/review/actions/send-button.png"
+                  alt=""
+                  aria-hidden="true"
+                />
+              </button>
+
+              <div class="home-indicator" aria-hidden="true"></div>
+            </section>
+
+            <div class="permission-layer" id="permission-layer" hidden>
+              <section
+                class="permission-dialog"
+                role="alertdialog"
+                aria-modal="true"
+                aria-labelledby="permission-title"
+                aria-describedby="permission-copy"
+              >
+                <h2 class="permission-title" id="permission-title">
+                  “Momcozy” would like to access the Microphone
+                </h2>
+                <p class="permission-copy" id="permission-copy">
+                  Momcozy needs microphone access for Voice Log
+                </p>
+                <div class="permission-actions">
+                  <button class="permission-action" id="deny-microphone" type="button">
+                    Don’t Allow
+                  </button>
+                  <button class="permission-action" id="allow-microphone" type="button">
+                    Allow
+                  </button>
+                </div>
+              </section>
+            </div>
+
+            <div class="settings-guide-layer" id="settings-guide-layer" hidden>
+              <section
+                class="permission-dialog settings-guide-dialog"
+                role="alertdialog"
+                aria-modal="true"
+                aria-labelledby="settings-guide-title"
+                aria-describedby="settings-guide-copy"
+              >
+                <h2 class="permission-title" id="settings-guide-title">
+                  Turn On Microphone Access
+                </h2>
+                <p class="permission-copy" id="settings-guide-copy">
+                  Open Settings and allow microphone access for Momcozy.
+                </p>
+                <div class="settings-actions">
+                  <button
+                    class="permission-action settings-action settings-action-primary"
+                    id="open-settings"
+                    type="button"
+                  >
+                    Open Settings
+                  </button>
+                  <button
+                    class="permission-action settings-action"
+                    id="not-now"
+                    type="button"
+                  >
+                    Not Now
+                  </button>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <img
+          class="phone-frame"
+          src="assets/shared/device/iphone-17-frame.png"
+          alt=""
+          aria-hidden="true"
+        />
+      </div>
+
+      <section class="scenario-controls" aria-label="Demo flow state controls">
+        <div class="controls-heading">
+          <h2>State</h2>
+        </div>
+
+        <div class="control-grid">
+          <div class="control-card">
+            <span class="control-title">Agreement</span>
+            <label class="state-switch">
+              <input
+                id="agreement-state-toggle"
+                type="checkbox"
+                role="switch"
+                aria-label="User Agreement accepted"
+              />
+              <span class="switch-track" aria-hidden="true"></span>
+            </label>
+          </div>
+
+          <div class="control-card permission-control" role="group" aria-labelledby="permission-control-label">
+            <div class="permission-legend" id="permission-control-label">Microphone</div>
+            <div class="permission-options">
+              <label class="permission-option">
+                <input type="radio" name="permission-state" value="prompt" checked />
+                <span>Ask</span>
+              </label>
+              <label class="permission-option">
+                <input type="radio" name="permission-state" value="granted" />
+                <span>Allow</span>
+              </label>
+              <label class="permission-option">
+                <input type="radio" name="permission-state" value="denied" />
+                <span>Deny</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const MAX_RECORDING_SECONDS = 30;
+      const ENDING_COUNTDOWN_SECONDS = 7;
+      const PROCESSING_DURATION = 1000;
+      const TYPEWRITER_DURATION = 1500;
+      const THINKING_DURATION = 2000;
+      const TRANSCRIPT =
+        "Anna woke up at 7 a.m., drank 4 ounces of milk, had a wet diaper changed, and took her vitamin D. She fell back asleep at 8:30 a.m.";
+      const CORRECTION_TRANSCRIPT = "I was wrong, this nap started at 6 PM.";
+
+      const flow = document.querySelector("#voice-flow");
+      const entry = document.querySelector(".voice-entry-three");
+      const introSheet = document.querySelector("#voice-intro-sheet");
+      const agreementSheet = document.querySelector("#agreement-sheet");
+      const recordingSheet = document.querySelector("#recording-sheet");
+      const agreement = document.querySelector("#agreement");
+      const agreementControl = document.querySelector("#agreement-control");
+      const agreementLink = document.querySelector(".agreement-link");
+      const getStarted = document.querySelector("#get-started");
+      const agreementBack = document.querySelector("#agreement-back");
+      const agreementDragHandle = document.querySelector("#agreement-drag-handle");
+      const agreementDocument = document.querySelector("#agreement-document");
+      const agreeAndContinue = document.querySelector("#agree-and-continue");
+      const permissionLayer = document.querySelector("#permission-layer");
+      const denyMicrophone = document.querySelector("#deny-microphone");
+      const allowMicrophone = document.querySelector("#allow-microphone");
+      const settingsGuideLayer = document.querySelector("#settings-guide-layer");
+      const openSettings = document.querySelector("#open-settings");
+      const notNow = document.querySelector("#not-now");
+      const agreementStateToggle = document.querySelector("#agreement-state-toggle");
+      const permissionRadios = document.querySelectorAll(
+        'input[name="permission-state"]'
+      );
+      const recordingIdle = document.querySelector("#recording-idle");
+      const recordingLive = document.querySelector("#recording-live");
+      const conversationRecordingOverlay = document.querySelector(
+        "#conversation-recording-overlay"
+      );
+      const reviewRecordingCountdown = document.querySelector(
+        "#review-recording-countdown"
+      );
+      const conversationScroll = document.querySelector("#conversation-scroll");
+      const conversationHistory = document.querySelector("#conversation-history");
+      const postRecording = document.querySelector("#post-recording");
+      const voiceInput = document.querySelector("#voice-input");
+      const recordingSend = document.querySelector("#recording-send");
+      const listeningCounter = document.querySelector("#listening-counter");
+      const recordingEndingNotice = document.querySelector("#recording-ending-notice");
+      const prepWaveform = document.querySelector("#prep-waveform");
+      const conversationWaveform = document.querySelector("#conversation-waveform");
+      const transcriptBubble = document.querySelector("#transcript-bubble");
+      const processingLine = document.querySelector("#processing-line");
+      const transcriptText = document.querySelector("#transcript-text");
+      const processingSpinner = processingLine.querySelector(".loading-spinner");
+      const thinkingRow = document.querySelector("#thinking-row");
+      const generatedCard = document.querySelector("#generated-card");
+      const allRecordedMessage = document.querySelector("#all-recorded-message");
+      const recordItems = document.querySelectorAll(".record-item");
+      const saveRecords = document.querySelector("#save-records");
+      const closeButtons = document.querySelectorAll("[data-close-flow]");
+      const screenScroll = document.querySelector(".screen-scroll");
+
+      let recordingStartedAt = 0;
+      let recordingTimer = 0;
+      let lastRenderedSecond = -1;
+      let isRecording = false;
+      let recordingComplete = false;
+      let postRecordingTimer = 0;
+      let typewriterFrame = 0;
+      let postRecordingRun = 0;
+      let activeTranscript = TRANSCRIPT;
+      let recordingContext = "prep";
+      let agreementDragStartY = 0;
+      let agreementDragDistance = 0;
+      let agreementDragStartedAt = 0;
+      let agreementDragging = false;
+      let agreementDragTimer = 0;
+
+      function setAgreementState(accepted) {
+        agreement.checked = accepted;
+        agreementStateToggle.checked = accepted;
+        agreementControl.classList.remove("is-invalid");
+      }
+
+      function getPermissionState() {
+        return recordingSheet.dataset.microphonePermission || "prompt";
+      }
+
+      function setPermissionState(state) {
+        permissionRadios.forEach((radio) => {
+          radio.checked = radio.value === state;
+        });
+        recordingSheet.dataset.microphonePermission = state;
+      }
+
+      function resetAgreementDrag() {
+        window.clearTimeout(agreementDragTimer);
+        agreementDragging = false;
+        agreementDragDistance = 0;
+        agreementSheet.classList.remove("is-dragging", "is-settling");
+        agreementSheet.style.transform = "";
+      }
+
+      function hidePermissionDialog(restoreFocus = false) {
+        permissionLayer.hidden = true;
+        recordingSheet.removeAttribute("inert");
+        recordingSheet.removeAttribute("aria-hidden");
+        if (restoreFocus && !recordingSheet.hidden) voiceInput.focus();
+      }
+
+      function hideSettingsGuide(restoreFocus = false) {
+        settingsGuideLayer.hidden = true;
+        recordingSheet.removeAttribute("inert");
+        recordingSheet.removeAttribute("aria-hidden");
+        if (restoreFocus && !recordingSheet.hidden) voiceInput.focus();
+      }
+
+      function showPermissionDialog() {
+        hideSettingsGuide();
+        permissionLayer.hidden = false;
+        recordingSheet.setAttribute("inert", "");
+        recordingSheet.setAttribute("aria-hidden", "true");
+        denyMicrophone.focus();
+      }
+
+      function showSettingsGuide() {
+        hidePermissionDialog();
+        settingsGuideLayer.hidden = false;
+        recordingSheet.setAttribute("inert", "");
+        recordingSheet.setAttribute("aria-hidden", "true");
+        openSettings.focus();
+      }
+
+      function showIntroSheet() {
+        hidePermissionDialog();
+        hideSettingsGuide();
+        resetAgreementDrag();
+        agreementSheet.hidden = true;
+        recordingSheet.hidden = true;
+        introSheet.hidden = false;
+        introSheet.removeAttribute("inert");
+        introSheet.removeAttribute("aria-hidden");
+        introSheet.querySelector(".sheet-close").focus();
+      }
+
+      function showAgreementSheet() {
+        hidePermissionDialog();
+        hideSettingsGuide();
+        agreementControl.classList.remove("is-invalid");
+        resetAgreementDrag();
+        recordingSheet.hidden = true;
+        introSheet.hidden = false;
+        introSheet.setAttribute("inert", "");
+        introSheet.setAttribute("aria-hidden", "true");
+        agreementSheet.hidden = false;
+        agreementDocument.scrollTop = 0;
+        agreementBack.focus();
+      }
+
+      function showRecordingSheet() {
+        hidePermissionDialog();
+        hideSettingsGuide();
+        resetAgreementDrag();
+        resetRecording();
+        introSheet.hidden = true;
+        introSheet.removeAttribute("inert");
+        introSheet.removeAttribute("aria-hidden");
+        agreementSheet.hidden = true;
+        recordingSheet.hidden = false;
+        voiceInput.focus();
+      }
+
+      function handleVoiceInput() {
+        if (voiceInput.disabled) return;
+
+        const permission = getPermissionState();
+        if (permission === "denied") {
+          showSettingsGuide();
+          return;
+        }
+
+        if (permission === "prompt") {
+          showPermissionDialog();
+          return;
+        }
+
+        startRecording();
+      }
+
+      function clearPostRecordingSequence() {
+        window.clearTimeout(postRecordingTimer);
+        window.cancelAnimationFrame(typewriterFrame);
+        postRecordingTimer = 0;
+        typewriterFrame = 0;
+        postRecordingRun += 1;
+      }
+
+      function scrollConversationToBottom(behavior = "auto") {
+        window.requestAnimationFrame(() => {
+          conversationScroll.scrollTo({
+            top: conversationScroll.scrollHeight,
+            behavior
+          });
+        });
+      }
+
+      function archiveCurrentTurn() {
+        if (postRecording.hidden || generatedCard.hidden) return null;
+
+        const archivedTurn = postRecording.cloneNode(true);
+        archivedTurn.hidden = false;
+        archivedTurn.removeAttribute("id");
+        archivedTurn.classList.add("archived-turn");
+        archivedTurn.querySelectorAll("[id]").forEach((element) => {
+          element.removeAttribute("id");
+        });
+        archivedTurn.querySelectorAll("[aria-live]").forEach((element) => {
+          element.removeAttribute("aria-live");
+        });
+        conversationHistory.appendChild(archivedTurn);
+        return archivedTurn;
+      }
+
+      function resetActiveRecordList() {
+        const primaryList = generatedCard.querySelector("#record-list");
+        const failedList = generatedCard.querySelector(".failed-record-list");
+
+        if (primaryList && failedList) {
+          failedList.querySelectorAll(".record-item").forEach((item) => {
+            primaryList.appendChild(item);
+          });
+          failedList.remove();
+        }
+
+        generatedCard.querySelector(".recorded-count")?.remove();
+        generatedCard.removeAttribute("data-review-state");
+        generatedCard.removeAttribute("data-card-mode");
+        primaryList?.classList.remove("is-recorded-list");
+        recordItems.forEach((item) => {
+          item.hidden = false;
+          item.classList.remove("is-removing", "is-last-visible", "is-recorded");
+          const deleteButton = item.querySelector(".record-delete");
+          if (deleteButton) deleteButton.disabled = false;
+        });
+        const sleepStartTime = generatedCard.querySelector(
+          '[data-field="sleep-start-time"]'
+        );
+        const sleepErrorTip = generatedCard.querySelector(
+          '.record-item[data-type="sleep"] .tip-error'
+        );
+        if (sleepStartTime) sleepStartTime.textContent = "5:00 PM";
+        if (sleepErrorTip) sleepErrorTip.hidden = false;
+        updateSaveButton(generatedCard);
+      }
+
+      function configureCorrectionCard() {
+        generatedCard.dataset.cardMode = "sleep-correction";
+        recordItems.forEach((item) => {
+          const isSleepRecord = item.dataset.type === "sleep";
+          item.hidden = !isSleepRecord;
+          item.classList.remove("is-recorded", "is-last-visible");
+          const deleteButton = item.querySelector(".record-delete");
+          if (deleteButton) deleteButton.disabled = false;
+        });
+
+        const sleepStartTime = generatedCard.querySelector(
+          '[data-field="sleep-start-time"]'
+        );
+        const sleepErrorTip = generatedCard.querySelector(
+          '.record-item[data-type="sleep"] .tip-error'
+        );
+        if (sleepStartTime) sleepStartTime.textContent = "06:00 PM";
+        if (sleepErrorTip) sleepErrorTip.hidden = true;
+        updateSaveButton(generatedCard);
+      }
+
+      function buildWaveform(target) {
+        const fragment = document.createDocumentFragment();
+
+        for (let index = 0; index < 48; index += 1) {
+          const bar = document.createElement("span");
+          const level = 12 + Math.round(
+            (Math.sin(index * 0.91) + Math.sin(index * 0.37 + 1.4) + 2) * 10
+          );
+          bar.className = "wave-bar";
+          bar.style.setProperty("--level", level);
+          bar.style.setProperty("--delay", `${-(index % 9) * 68}ms`);
+          fragment.appendChild(bar);
+        }
+
+        target.appendChild(fragment);
+      }
+
+      function renderRecordingTime(elapsedSeconds) {
+        const boundedElapsed = Math.min(MAX_RECORDING_SECONDS, elapsedSeconds);
+        const remainingSeconds = MAX_RECORDING_SECONDS - boundedElapsed;
+
+        if (recordingContext === "prep") {
+          listeningCounter.textContent = `Listening...${boundedElapsed}s`;
+        }
+
+        if (remainingSeconds <= ENDING_COUNTDOWN_SECONDS && remainingSeconds > 0) {
+          if (recordingContext === "conversation") {
+            reviewRecordingCountdown.hidden = false;
+            reviewRecordingCountdown.textContent = `Recording ends in ${remainingSeconds}s`;
+          } else {
+            recordingEndingNotice.hidden = false;
+            recordingEndingNotice.textContent = `Recording ends in ${remainingSeconds}s`;
+          }
+          return;
+        }
+
+        recordingEndingNotice.hidden = true;
+        recordingEndingNotice.textContent = "";
+        reviewRecordingCountdown.hidden = true;
+        reviewRecordingCountdown.textContent = "";
+      }
+
+      function finishRecording(endedByLimit = false) {
+        if (!isRecording) return;
+
+        window.clearInterval(recordingTimer);
+        recordingTimer = 0;
+        isRecording = false;
+        recordingComplete = true;
+        recordingSheet.classList.remove("is-recording");
+        recordingSheet.classList.add("is-complete");
+        reviewRecordingCountdown.hidden = true;
+        reviewRecordingCountdown.textContent = "";
+        if (recordingContext === "prep") {
+          recordingEndingNotice.hidden = false;
+          recordingEndingNotice.textContent = endedByLimit
+            ? "Recording complete"
+            : "Recording sent";
+        }
+        recordingSend.setAttribute("aria-label", "Send recording");
+      }
+
+      function updateRecordingTimer() {
+        const elapsedSeconds = Math.min(
+          MAX_RECORDING_SECONDS,
+          Math.floor((performance.now() - recordingStartedAt) / 1000)
+        );
+
+        if (elapsedSeconds !== lastRenderedSecond) {
+          lastRenderedSecond = elapsedSeconds;
+          renderRecordingTime(elapsedSeconds);
+        }
+
+        if (elapsedSeconds >= MAX_RECORDING_SECONDS) {
+          finishRecording(true);
+        }
+      }
+
+      function resetRecording() {
+        clearPostRecordingSequence();
+        window.clearInterval(recordingTimer);
+        recordingTimer = 0;
+        recordingStartedAt = 0;
+        lastRenderedSecond = -1;
+        isRecording = false;
+        recordingComplete = false;
+        activeTranscript = TRANSCRIPT;
+        recordingContext = "prep";
+        recordingSheet.classList.remove(
+          "is-recording",
+          "is-complete",
+          "is-post-recording",
+          "is-result",
+          "is-conversation-recording"
+        );
+        recordingIdle.hidden = false;
+        recordingLive.hidden = true;
+        conversationRecordingOverlay.hidden = true;
+        reviewRecordingCountdown.hidden = true;
+        reviewRecordingCountdown.textContent = "";
+        conversationScroll.hidden = true;
+        conversationScroll.scrollTop = 0;
+        conversationHistory.textContent = "";
+        postRecording.hidden = true;
+        voiceInput.hidden = false;
+        voiceInput.disabled = false;
+        voiceInput.setAttribute("aria-label", "Start recording");
+        recordingSend.hidden = true;
+        recordingSend.setAttribute("aria-label", "Send recording");
+        listeningCounter.textContent = "Listening...0s";
+        recordingEndingNotice.hidden = true;
+        recordingEndingNotice.textContent = "";
+        transcriptBubble.classList.add("is-processing");
+        processingLine.hidden = false;
+        processingSpinner.hidden = false;
+        transcriptText.textContent = "Processing...";
+        thinkingRow.hidden = true;
+        generatedCard.hidden = true;
+        allRecordedMessage.hidden = true;
+        resetActiveRecordList();
+      }
+
+      function startRecording() {
+        if (isRecording) return;
+
+        clearPostRecordingSequence();
+        const hasPreviousResult = !postRecording.hidden && !generatedCard.hidden;
+        recordingContext = hasPreviousResult ? "conversation" : "prep";
+        activeTranscript = hasPreviousResult ? CORRECTION_TRANSCRIPT : TRANSCRIPT;
+        recordingIdle.hidden = true;
+        recordingLive.hidden = hasPreviousResult;
+        conversationScroll.hidden = !hasPreviousResult;
+        conversationRecordingOverlay.hidden = !hasPreviousResult;
+        reviewRecordingCountdown.hidden = true;
+        reviewRecordingCountdown.textContent = "";
+        voiceInput.hidden = true;
+        voiceInput.disabled = false;
+        recordingSend.hidden = false;
+        recordingSheet.classList.remove(
+          "is-complete",
+          "is-post-recording",
+          "is-result",
+          "is-conversation-recording"
+        );
+        if (hasPreviousResult) {
+          recordingSheet.classList.add(
+            "is-post-recording",
+            "is-result",
+            "is-conversation-recording"
+          );
+        }
+        recordingSheet.classList.add("is-recording");
+        recordingComplete = false;
+        isRecording = true;
+        lastRenderedSecond = -1;
+        recordingStartedAt = performance.now();
+        updateRecordingTimer();
+        recordingTimer = window.setInterval(updateRecordingTimer, 125);
+        recordingSend.focus();
+      }
+
+      function typeTranscript(runId) {
+        const startedAt = performance.now();
+        transcriptBubble.classList.remove("is-processing");
+        transcriptText.textContent = "";
+        processingSpinner.hidden = true;
+
+        function render(now) {
+          if (runId !== postRecordingRun) return;
+
+          const progress = Math.min(1, (now - startedAt) / TYPEWRITER_DURATION);
+          const visibleCharacters = Math.max(
+            1,
+            Math.floor(activeTranscript.length * progress)
+          );
+          transcriptText.textContent = activeTranscript.slice(0, visibleCharacters);
+          scrollConversationToBottom();
+
+          if (progress < 1) {
+            typewriterFrame = window.requestAnimationFrame(render);
+            return;
+          }
+
+          transcriptText.textContent = activeTranscript;
+          thinkingRow.hidden = false;
+          scrollConversationToBottom("smooth");
+          postRecordingTimer = window.setTimeout(() => {
+            if (runId !== postRecordingRun) return;
+            thinkingRow.hidden = true;
+            generatedCard.hidden = false;
+            recordingSheet.classList.add("is-result");
+            voiceInput.disabled = false;
+            voiceInput.setAttribute("aria-label", "Record another voice log");
+            scrollConversationToBottom("smooth");
+          }, THINKING_DURATION);
+        }
+
+        typewriterFrame = window.requestAnimationFrame(render);
+      }
+
+      function startPostRecordingSequence() {
+        const isCorrectionTurn = activeTranscript === CORRECTION_TRANSCRIPT;
+        const archivedTurn = archiveCurrentTurn();
+        archivedTurn?.classList.add("is-locked-turn");
+        clearPostRecordingSequence();
+        const runId = postRecordingRun;
+
+        window.clearInterval(recordingTimer);
+        recordingTimer = 0;
+        isRecording = false;
+        recordingComplete = true;
+        recordingIdle.hidden = true;
+        recordingLive.hidden = true;
+        conversationRecordingOverlay.hidden = true;
+        reviewRecordingCountdown.hidden = true;
+        reviewRecordingCountdown.textContent = "";
+        conversationScroll.hidden = false;
+        postRecording.hidden = false;
+        resetActiveRecordList();
+        if (isCorrectionTurn) configureCorrectionCard();
+        recordingSend.hidden = true;
+        voiceInput.hidden = false;
+        voiceInput.disabled = true;
+        voiceInput.setAttribute("aria-label", "Voice processing in progress");
+        recordingSheet.classList.remove(
+          "is-recording",
+          "is-complete",
+          "is-result",
+          "is-conversation-recording"
+        );
+        recordingSheet.classList.add("is-post-recording");
+        if (conversationHistory.childElementCount > 0) {
+          recordingSheet.classList.add("is-result");
+        }
+        transcriptBubble.classList.add("is-processing");
+        processingLine.hidden = false;
+        processingSpinner.hidden = false;
+        transcriptText.textContent = "Processing...";
+        thinkingRow.hidden = true;
+        generatedCard.hidden = true;
+        allRecordedMessage.hidden = true;
+        scrollConversationToBottom();
+
+        postRecordingTimer = window.setTimeout(
+          () => typeTranscript(runId),
+          PROCESSING_DURATION
+        );
+      }
+
+      function updateSaveButton(card = generatedCard) {
+        const items = card.querySelectorAll(".record-item");
+        const button = card.querySelector(".save-records");
+        const visibleRecords = Array.from(items).filter(
+          (item) => !item.hidden && !item.classList.contains("is-recorded")
+        );
+        items.forEach((item) => item.classList.remove("is-last-visible"));
+        const lastVisibleRecord = visibleRecords[visibleRecords.length - 1];
+        if (lastVisibleRecord) lastVisibleRecord.classList.add("is-last-visible");
+        button.hidden = false;
+        button.disabled = visibleRecords.length === 0;
+        button.textContent = visibleRecords.length === 0 ? "No records to save" : "Save";
+      }
+
+      function saveReviewItems(card, button) {
+        if (card.dataset.reviewState === "partial") return;
+
+        const primaryList = card.querySelector(".record-list:not(.failed-record-list)");
+        const visibleItems = Array.from(card.querySelectorAll(".record-item")).filter(
+          (item) => !item.hidden
+        );
+        const failedItems = visibleItems.filter((item) =>
+          item.querySelector(".record-tip.tip-error:not([hidden])")
+        );
+        const recordedItems = visibleItems.filter((item) => !failedItems.includes(item));
+
+        recordedItems.forEach((item) => {
+          item.classList.add("is-recorded");
+          const deleteButton = item.querySelector(".record-delete");
+          if (deleteButton) deleteButton.disabled = true;
+        });
+        primaryList.classList.add("is-recorded-list");
+
+        const recordedCount = document.createElement("p");
+        recordedCount.className = "recorded-count";
+        recordedCount.textContent = `${recordedItems.length} items recorded`;
+
+        if (failedItems.length > 0) {
+          const failedList = document.createElement("div");
+          failedList.className = "record-list failed-record-list";
+          failedItems.forEach((item) => failedList.appendChild(item));
+          primaryList.after(recordedCount, failedList);
+          card.dataset.reviewState = "partial";
+          button.disabled = false;
+          button.textContent = "Save";
+        } else {
+          primaryList.after(recordedCount);
+          button.disabled = true;
+          button.hidden = true;
+          allRecordedMessage.hidden = false;
+        }
+
+        scrollConversationToBottom("smooth");
+      }
+
+      function openFlow() {
+        hidePermissionDialog();
+        hideSettingsGuide();
+        resetAgreementDrag();
+        flow.hidden = false;
+        screenScroll.setAttribute("inert", "");
+
+        if (agreementStateToggle.checked) {
+          showRecordingSheet();
+          return;
+        }
+
+        showIntroSheet();
+      }
+
+      function closeFlow() {
+        hidePermissionDialog();
+        hideSettingsGuide();
+        resetAgreementDrag();
+        resetRecording();
+        introSheet.hidden = true;
+        agreementSheet.hidden = true;
+        recordingSheet.hidden = true;
+        flow.hidden = true;
+        screenScroll.removeAttribute("inert");
+        entry.focus();
+      }
+
+      buildWaveform(prepWaveform);
+      buildWaveform(conversationWaveform);
+      setAgreementState(false);
+      setPermissionState("prompt");
+
+      entry.addEventListener("click", (event) => {
+        event.preventDefault();
+        openFlow();
+      });
+
+      agreementStateToggle.addEventListener("change", () => {
+        setAgreementState(agreementStateToggle.checked);
+      });
+
+      permissionRadios.forEach((radio) => {
+        radio.addEventListener("change", () => {
+          if (radio.checked) setPermissionState(radio.value);
+        });
+      });
+
+      agreement.addEventListener("change", () => {
+        setAgreementState(agreement.checked);
+      });
+
+      agreementLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        showAgreementSheet();
+      });
+
+      agreementBack.addEventListener("click", showIntroSheet);
+
+      getStarted.addEventListener("click", () => {
+        if (agreement.checked) {
+          setAgreementState(true);
+          showRecordingSheet();
+          return;
+        }
+
+        agreementControl.classList.remove("is-invalid");
+        void agreementControl.offsetWidth;
+        agreementControl.classList.add("is-invalid");
+        agreement.focus();
+      });
+
+      agreeAndContinue.addEventListener("click", () => {
+        setAgreementState(true);
+        showRecordingSheet();
+      });
+
+      agreementControl.addEventListener("animationend", () => {
+        agreementControl.classList.remove("is-invalid");
+      });
+
+      voiceInput.addEventListener("click", handleVoiceInput);
+
+      denyMicrophone.addEventListener("click", () => {
+        setPermissionState("denied");
+        hidePermissionDialog(true);
+      });
+
+      allowMicrophone.addEventListener("click", () => {
+        setPermissionState("granted");
+        hidePermissionDialog();
+        startRecording();
+      });
+
+      openSettings.addEventListener("click", () => {
+        setPermissionState("granted");
+        hideSettingsGuide(true);
+      });
+
+      notNow.addEventListener("click", () => {
+        hideSettingsGuide(true);
+      });
+
+      recordingSend.addEventListener("click", () => {
+        if (isRecording) {
+          startPostRecordingSequence();
+          return;
+        }
+
+        if (recordingComplete) {
+          startPostRecordingSequence();
+        }
+      });
+
+      conversationScroll.addEventListener("click", (event) => {
+        const calendarLink = event.target.closest(".calendar-message-link");
+        if (calendarLink) {
+          event.preventDefault();
+          return;
+        }
+
+        const deleteButton = event.target.closest(".record-delete");
+        if (deleteButton) {
+          const record = deleteButton.closest(".record-item");
+          const card = deleteButton.closest(".generated-card");
+          if (!record || !card) return;
+          record.hidden = true;
+          updateSaveButton(card);
+          return;
+        }
+
+        const saveButton = event.target.closest(".save-records");
+        if (!saveButton || saveButton.disabled) return;
+        const card = saveButton.closest(".generated-card");
+        if (!card) return;
+        saveReviewItems(card, saveButton);
+      });
+
+      agreementDragHandle.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0) return;
+
+        resetAgreementDrag();
+        agreementDragging = true;
+        agreementDragStartY = event.clientY;
+        agreementDragStartedAt = performance.now();
+        agreementSheet.classList.add("is-dragging");
+        agreementDragHandle.setPointerCapture(event.pointerId);
+      });
+
+      agreementDragHandle.addEventListener("pointermove", (event) => {
+        if (!agreementDragging) return;
+
+        agreementDragDistance = Math.max(0, event.clientY - agreementDragStartY);
+        agreementSheet.style.transform = `translateY(${agreementDragDistance}px)`;
+        event.preventDefault();
+      });
+
+      function finishAgreementDrag(event, cancelled = false) {
+        if (!agreementDragging) return;
+
+        agreementDragging = false;
+        if (agreementDragHandle.hasPointerCapture(event.pointerId)) {
+          agreementDragHandle.releasePointerCapture(event.pointerId);
+        }
+
+        const elapsed = Math.max(1, performance.now() - agreementDragStartedAt);
+        const velocity = agreementDragDistance / elapsed;
+        const shouldClose = !cancelled &&
+          (agreementDragDistance >= 72 || velocity >= 0.55);
+
+        agreementSheet.classList.remove("is-dragging");
+        agreementSheet.classList.add("is-settling");
+
+        if (shouldClose) {
+          agreementSheet.style.transform = "translateY(100%)";
+          agreementDragTimer = window.setTimeout(showIntroSheet, 220);
+          return;
+        }
+
+        agreementSheet.style.transform = "translateY(0)";
+        agreementDragTimer = window.setTimeout(resetAgreementDrag, 220);
+      }
+
+      agreementDragHandle.addEventListener("pointerup", (event) => {
+        finishAgreementDrag(event);
+      });
+
+      agreementDragHandle.addEventListener("pointercancel", (event) => {
+        finishAgreementDrag(event, true);
+      });
+
+      closeButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          if (!agreementSheet.hidden) {
+            showIntroSheet();
+            return;
+          }
+          closeFlow();
+        });
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape" || flow.hidden) return;
+
+        if (!permissionLayer.hidden) {
+          hidePermissionDialog(true);
+          return;
+        }
+
+        if (!settingsGuideLayer.hidden) {
+          hideSettingsGuide(true);
+          return;
+        }
+
+        if (!agreementSheet.hidden) {
+          showIntroSheet();
+          return;
+        }
+
+        closeFlow();
+      });
+    </script>
+  </body>
+</html>
