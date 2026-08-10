@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/demos/04-cozy-ai-assistant.html"
+    }
+  ]
+}

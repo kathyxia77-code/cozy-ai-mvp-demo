@@ -33,3 +33,5 @@ Open `http://127.0.0.1:5177/demos` or go directly to the Cozy AI demo at `http:/
 ## Vercel
 
 The GitHub repository root is a workspace, while the deployable Vite app lives in `04-frontend/momcozy-design-system-demo/`. The root `vercel.json` points Vercel at that package, publishes its `dist/` output, and rewrites `/` to the Cozy AI demo route.
+
+If the Vercel project Root Directory is set directly to `04-frontend/momcozy-design-system-demo`, the package-local `vercel.json` applies the same `/` rewrite after Vite builds the app.
