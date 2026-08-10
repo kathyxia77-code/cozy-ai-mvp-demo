@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix 04-frontend/momcozy-design-system-demo install --include=dev && npm --prefix 04-frontend/momcozy-design-system-demo run build && rm -rf dist && cp -R 04-frontend/momcozy-design-system-demo/dist dist"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

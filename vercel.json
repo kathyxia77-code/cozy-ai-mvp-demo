@@ -1,7 +1,6 @@
 {
-  "installCommand": "corepack enable && pnpm --dir 04-frontend/momcozy-design-system-demo install --frozen-lockfile",
-  "buildCommand": "pnpm --dir 04-frontend/momcozy-design-system-demo build",
-  "outputDirectory": "04-frontend/momcozy-design-system-demo/dist",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "rewrites": [
     {
       "source": "/",

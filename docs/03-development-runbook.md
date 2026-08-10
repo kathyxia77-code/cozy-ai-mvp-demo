@@ -39,7 +39,7 @@ Do not open the package's root `index.html` directly; it is a Vite entry point.
 
 ## Vercel Deployment
 
-Deploy from the repository root when possible. The root `vercel.json` installs and builds `04-frontend/momcozy-design-system-demo/`, publishes `04-frontend/momcozy-design-system-demo/dist`, and rewrites `/` to `/demos/04-cozy-ai-assistant.html` so the production site opens directly to the Cozy AI demo instead of returning a root-level 404.
+Deploy from the repository root when possible. The root `package.json` build script installs and builds `04-frontend/momcozy-design-system-demo/`, copies its Vite output to root `dist/`, and the root `vercel.json` publishes `dist/` while rewriting `/` to `/demos/04-cozy-ai-assistant.html` so the production site opens directly to the Cozy AI demo instead of returning a root-level 404.
 
 If a Vercel project is configured with Root Directory set to `04-frontend/momcozy-design-system-demo`, Vercel ignores the repository-root config and reads the package-local `vercel.json` instead. Keep both Vercel config files in sync when changing the production entry route.
 
