@@ -37,6 +37,10 @@ Cozy AI forecast demo states can be selected with `?forecast=ready`, `?forecast=
 
 Do not open the package's root `index.html` directly; it is a Vite entry point.
 
+## Vercel Deployment
+
+Deploy from the repository root. The root `vercel.json` installs and builds `04-frontend/momcozy-design-system-demo/`, publishes `04-frontend/momcozy-design-system-demo/dist`, and rewrites `/` to `/demos/04-cozy-ai-assistant.html` so the production site opens directly to the Cozy AI demo instead of returning a root-level 404.
+
 ## Optional OpenAI Mode
 
 Set the API key in the terminal environment, never in source code or documentation:

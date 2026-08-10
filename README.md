@@ -29,3 +29,7 @@ pnpm demo
 ```
 
 Open `http://127.0.0.1:5177/demos` or go directly to the Cozy AI demo at `http://127.0.0.1:5177/demos/04-cozy-ai-assistant.html`.
+
+## Vercel
+
+The GitHub repository root is a workspace, while the deployable Vite app lives in `04-frontend/momcozy-design-system-demo/`. The root `vercel.json` points Vercel at that package, publishes its `dist/` output, and rewrites `/` to the Cozy AI demo route.
