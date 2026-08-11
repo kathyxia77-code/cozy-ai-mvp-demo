@@ -1,6 +1,6 @@
-# Cozy AI MVP Frontend
+# Cozie MVP Frontend
 
-这个工程包含基于 Vite + React 的预览壳，以及可独立运行的 Cozy AI iPhone 16 交互页。Cozy AI 以 `393 × 852 CSS px` 为基线，页面结构与交互来自 Cozy AI MVP Figma，视觉值来自 Momcozy 3.0 设计系统 token。
+这个工程包含基于 Vite + React 的预览壳，以及可独立运行的 Cozie iPhone 16 交互页。Cozie 以 `393 × 852 CSS px` 为基线，页面结构与交互来自 Cozie MVP Figma，视觉值来自 Momcozy 3.0 设计系统 token。
 
 ## 运行
 
@@ -17,7 +17,7 @@ App 壳：http://127.0.0.1:5177/
 Demo 01：http://127.0.0.1:5177/guide
 Demo 02：http://127.0.0.1:5177/group-pumping
 Demo 03：http://127.0.0.1:5177/voice-log
-Cozy AI：http://127.0.0.1:5177/demos/04-cozy-ai-assistant.html
+Cozie：http://127.0.0.1:5177/demos/04-cozy-ai-assistant.html
 ```
 
 其中 `/` 是 React + shadcn/ui 的 App 壳；三个独立 Demo 都由该预览壳承载，并通过右上角开关同步 Light/Dark Mode：
@@ -27,7 +27,7 @@ Cozy AI：http://127.0.0.1:5177/demos/04-cozy-ai-assistant.html
 | 01 | User Guide | `/guide` | `public/demos/01-user-guide/` |
 | 02 | Group Pumping Community | `/group-pumping` | `public/demos/02-group-pumping/` |
 | 03 | Voice Log | `/voice-log` | `public/demos/03-voice-log/` |
-| 04 | Cozy AI | `/demos/04-cozy-ai-assistant.html` | `public/demos/04-cozy-ai-assistant.html` |
+| 04 | Cozie | `/demos/04-cozy-ai-assistant.html` | `public/demos/04-cozy-ai-assistant.html` |
 
 更新 `src/styles/momcozy-theme.css` 后，运行下面命令同步给静态 User Guide iframe：
 
@@ -55,7 +55,7 @@ http://127.0.0.1:8765/demos/04-cozy-ai-assistant.html
 
 - `src/styles/momcozy-theme.css`：Momcozy token 与 shadcn 语义变量。
 - `src/components/ui/`：轻量 shadcn/ui 风格组件壳，当前包含 Button、Card、Badge。
-- `src/App.tsx`：Cozy AI iPhone 16 预览壳。
+- `src/App.tsx`：Cozie iPhone 16 预览壳。
 - `src/App.css`：移动端预览壳布局。
 - `public/fonts/`：Exposure[-10] 与 Aeonik Soft Pro 字体资源。
 - `public/figma/`：从 Figma 下载或裁切的页面资产。
@@ -63,7 +63,7 @@ http://127.0.0.1:8765/demos/04-cozy-ai-assistant.html
 - `public/demos/01-user-guide/`：User Guide 静态 Demo，已将基础颜色、字体、圆角、间距、按钮和阴影映射到 Momcozy token。
 - `public/demos/02-group-pumping/`：社区、群组列表和详情页 Demo，使用主题桥接同步 Light/Dark Mode。
 - `public/demos/03-voice-log/`：Voice Log 完整交互 Demo。代码生成的弹层、文字、按钮、边框、状态与控制面板使用 Momcozy semantic tokens；UI 型 PNG 切片随主题适配，照片与设备外框保持原始影像。
-- `public/demos/04-cozy-ai-assistant.html`：Cozy AI 授权、对话、Forecast、Voice Log、计划、引用与人工支持流程。
+- `public/demos/04-cozy-ai-assistant.html`：Cozie 授权、对话、Forecast、Voice Log、计划、引用与人工支持流程。
 - `public/demos/README.md`：四个 Demo 的编号、入口、职责和共享资源说明。
 - `scripts/sync-user-guide-theme.mjs`：把主 token 文件同步到静态 User Guide，避免 iframe 内主题副本漂移。
 

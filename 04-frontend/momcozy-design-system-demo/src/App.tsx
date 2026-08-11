@@ -6,7 +6,7 @@ function App() {
       <iframe
         className="preview-frame"
         src="/demos/04-cozy-ai-assistant.html"
-          title="Cozy AI iPhone 16 interactive preview"
+          title="Cozie iPhone 16 interactive preview"
       />
     </main>
   )

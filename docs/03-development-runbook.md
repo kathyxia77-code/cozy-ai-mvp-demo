@@ -31,15 +31,15 @@ Useful routes:
 | User Guide | `http://127.0.0.1:5177/guide` |
 | Group Pumping | `http://127.0.0.1:5177/group-pumping` |
 | Voice Log | `http://127.0.0.1:5177/voice-log` |
-| Cozy AI static demo | `http://127.0.0.1:5177/demos/04-cozy-ai-assistant.html` |
+| Cozie static demo | `http://127.0.0.1:5177/demos/04-cozy-ai-assistant.html` |
 
-Cozy AI forecast demo states can be selected with `?forecast=ready`, `?forecast=empty`, or `?forecast=hidden`. With no `forecast` query, the passive new-user learning message is shown in the expanded forecast dropdown; prediction summaries and items appear only in the `ready` state.
+Cozie forecast demo states can be selected with `?forecast=ready`, `?forecast=empty`, or `?forecast=hidden`. With no `forecast` query, the passive new-user learning message is shown in the expanded forecast dropdown; prediction summaries and items appear only in the `ready` state.
 
 Do not open the package's root `index.html` directly; it is a Vite entry point.
 
 ## Vercel Deployment
 
-Deploy from the repository root when possible. The root `package.json` build script installs and builds `04-frontend/momcozy-design-system-demo/`, copies its Vite output to root `dist/`, and the root `vercel.json` publishes `dist/` while rewriting `/` to `/demos/04-cozy-ai-assistant.html` so the production site opens directly to the Cozy AI demo instead of returning a root-level 404.
+Deploy from the repository root when possible. The root `package.json` build script installs and builds `04-frontend/momcozy-design-system-demo/`, copies its Vite output to root `dist/`, and the root `vercel.json` publishes `dist/` while rewriting `/` to `/demos/04-cozy-ai-assistant.html` so the production site opens directly to the Cozie demo instead of returning a root-level 404.
 
 If a Vercel project is configured with Root Directory set to `04-frontend/momcozy-design-system-demo`, Vercel ignores the repository-root config and reads the package-local `vercel.json` instead. Keep both Vercel config files in sync when changing the production entry route.
 

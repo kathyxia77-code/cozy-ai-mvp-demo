@@ -2,7 +2,7 @@
 
 ## 目录说明
 
-- `figma-exports/`：当前 Cozy AI PRD 对应的 Figma 页面截图，是页面结构和交互状态的视觉输入。
+- `figma-exports/`：当前 Cozie PRD 对应的 Figma 页面截图，是页面结构和交互状态的视觉输入。
 - `assets/`：Cozie IP 等产品素材。
 
 ## 使用顺序

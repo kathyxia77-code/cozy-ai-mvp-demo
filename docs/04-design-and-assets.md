@@ -15,7 +15,7 @@ When a screenshot conflicts with a privacy or safety requirement, follow the req
 
 ## Design Inputs
 
-- `02-design/figma-exports/`: visual references for Cozy AI screens and states.
+- `02-design/figma-exports/`: visual references for Cozie screens and states.
 - `02-design/assets/`: product-specific assets such as Cozie artwork.
 - `03-design-system/momcozy-design-system-kit-1.1.0/`: delivered design-system authority.
 - `04-frontend/momcozy-design-system-demo/public/fonts/`: Exposure and Aeonik Soft Pro font assets.

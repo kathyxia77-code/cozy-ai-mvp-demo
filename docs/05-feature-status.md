@@ -7,13 +7,13 @@
 | Capability | Current status | Current implementation or authority |
 | --- | --- | --- |
 | Privacy consent and activation | Interactive static demo | `public/demos/04-cozy-ai-assistant.html` |
-| Conversation shell, composer, and guided prompts | Interactive static demo | `public/demos/04-cozy-ai-assistant.html` |
+| Conversation shell, composer, and guided prompts | Interactive static demo. Processing states show only an animated Cozie avatar and the current status in one aligned 36px row, with no name; completed assistant messages retain only the response bubble and its actions. | `public/demos/04-cozy-ai-assistant.html` |
 | Inline voice input | Interactive static demo. The composer switches between text and voice modes in place: microphone starts a waveform-only input without displaying live transcript text, pause converts the simulated transcript into editable text, and send during voice mode sends the transcript as a normal text message. No production ASR service is connected. | Static demo plus product requirements |
 | Baby profile selection | Interactive static demo. The conversation-header user-plus CTA opens a full-screen selector for existing profiles and an add-baby form. Selection writes the baby's name and age back to the header and persists locally in the browser; no production profile service is connected. | Static demo plus product requirements |
 | Forecast states | Interactive static demo; no production prediction service. Default and `?forecast=empty` show the passive learning message inside the expanded `What's coming up next?` dropdown, without a prediction summary, prediction items, or CTA. `?forecast=ready` shows valid mock predictions collapsed to the latest summary. `?forecast=hidden` simulates the Feature Flag being off. | Static demo plus product requirements |
 | Chat history and new conversation | Interactive static demo; no production persistence | Static demo plus product requirements |
 | Voice Log and lactation-plan flows | Interactive static demo | Static demo and numbered Voice Log demo |
-| Citations, feedback, and support escalation | Interactive static demo; no production storage or RAG | Static demo plus product requirements |
+| Citations, feedback, and support escalation | Interactive static demo. Thumbs-down feedback supports issue selections plus an optional 500-character free-text comment, including text-only submission; records are stored locally for the demo, with no production storage or RAG. | Static demo plus product requirements |
 | Medical-risk interception | Local demo behavior | Static demo and optional proxy instructions |
 | Live general responses | Optional local OpenAI proxy with Mock fallback | `scripts/cozie_llm_server.py` |
 | Reusable React feature architecture | Planned | Frontend development plan |
@@ -29,7 +29,7 @@
 - Approved FAQ/RAG corpus, citation format, and no-match policy implementation.
 - Feedback storage, analytics events, audit logging, and human-handoff integration.
 - Production voice transcription and microphone lifecycle integration.
-- Migration strategy from the monolithic static Cozy AI demo to maintainable React features.
+- Migration strategy from the monolithic static Cozie demo to maintainable React features.
 - Automated accessibility, responsive, interaction, and screenshot regression coverage.
 
 ## Status Vocabulary

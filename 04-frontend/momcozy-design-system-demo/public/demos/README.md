@@ -7,7 +7,7 @@
 | 01 | User Guide | 新版本功能说明与帮助内容 | `/guide` | `01-user-guide/index.html` |
 | 02 | Group Pumping Community | 母婴社区、群组与话题互动 | `/group-pumping` | `02-group-pumping/index.html` |
 | 03 | Voice Log | 语音记录、权限、AI 结构化与保存 | `/voice-log` | `03-voice-log/index.html` |
-| 04 | Cozy AI | iPhone 16 对话、记录、预测与支持流程 | `/demos/04-cozy-ai-assistant.html` | `04-cozy-ai-assistant.html` |
+| 04 | Cozie | iPhone 16 对话、记录、预测与支持流程 | `/demos/04-cozy-ai-assistant.html` | `04-cozy-ai-assistant.html` |
 
 ## 共享约定
 

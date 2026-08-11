@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Cozy AI</title>
+    <title>Cozie</title>
     <link rel="stylesheet" href="./01-user-guide/momcozy-theme.css" />
     <style>
       * {
@@ -652,10 +652,23 @@
         gap: 8px;
       }
 
-      .cozie-message-identity {
-        display: flex;
+      .chat-message--cozie:has(.cozie-message-identity) {
+        grid-template-columns: 36px minmax(0, 1fr);
         align-items: center;
-        gap: 8px;
+        column-gap: 8px;
+        row-gap: 0;
+      }
+
+      .chat-message--cozie:has(.cozie-message-identity) .response-state {
+        height: 36px;
+        white-space: nowrap;
+      }
+
+      .cozie-message-identity {
+        width: 36px;
+        height: 36px;
+        display: grid;
+        place-items: center;
       }
 
       .cozie-message-avatar {
@@ -665,6 +678,25 @@
         object-fit: contain;
         border-radius: 9999px;
         background: var(--colors-brands-mom-50);
+        transform-origin: center;
+        animation: cozie-avatar-breathe 1.8s ease-in-out infinite;
+      }
+
+      @keyframes cozie-avatar-breathe {
+        0%, 100% {
+          opacity: 0.68;
+          transform: scale(0.88);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.12);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .cozie-message-avatar {
+          animation: none;
+        }
       }
 
       .cozie-message-content {
@@ -672,12 +704,6 @@
         min-width: 0;
         display: grid;
         justify-items: start;
-      }
-
-      .cozie-message-name {
-        color: var(--colors-brands-mom-900);
-        font-size: 13px;
-        font-weight: 600;
       }
 
       .response-state {
@@ -903,6 +929,33 @@
         flex: 0 0 auto;
         margin: 0;
         accent-color: var(--colors-semantic-fills-mom-primary);
+      }
+
+      .feedback-text-field {
+        display: grid;
+        gap: 9px;
+        color: var(--colors-brands-mom-900);
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .feedback-text-field textarea {
+        width: 100%;
+        min-height: 96px;
+        padding: 11px;
+        border: 1px solid var(--colors-border-secondary);
+        border-radius: 12px;
+        outline: none;
+        resize: vertical;
+        color: var(--colors-text-color-text-primary);
+        background: var(--colors-backgrouds-primary);
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.4;
+      }
+
+      .feedback-text-field textarea:focus {
+        border-color: var(--colors-brands-mom-500);
       }
 
       .feedback-submit {
@@ -2623,19 +2676,19 @@
         <section class="screen consent-screen" data-screen="consent" aria-labelledby="consent-title">
           <header class="consent-header">
             <button class="icon-button" type="button" aria-label="Close">×</button>
-            <div class="brand"><span class="brand-mark">✦</span>Cozy AI</div>
+            <div class="brand"><span class="brand-mark">✦</span>Cozie</div>
             <span aria-hidden="true"></span>
           </header>
 
           <img
             class="consent-character"
             src="../assets/cozie-ip.png"
-            alt="Cozie, the Cozy AI guide"
+            alt="Cozie, your parenting guide"
           />
           <h1 id="consent-title">How can I help today?</h1>
           <p class="consent-intro">Warm answers for feeding, sleep, device support, and everyday baby care.</p>
 
-          <div class="trust-list" aria-label="Why use Cozy AI">
+          <div class="trust-list" aria-label="Why use Cozie">
             <div class="trust-item">
               <span class="trust-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
@@ -2674,7 +2727,7 @@
           </div>
 
           <div class="consent-actions">
-            <p class="privacy-note">Your conversations help personalize Cozy AI. You can manage or delete them at any time.</p>
+            <p class="privacy-note">Your conversations help personalize Cozie. You can manage or delete them at any time.</p>
             <label class="privacy-consent">
               <input type="checkbox" data-privacy-consent />
               <span>I agree to the <a href="#privacy">Privacy Statement</a></span>
@@ -2711,7 +2764,7 @@
               </div>
               <div class="assistant-identity">
                 <img src="../assets/cozie-ip.png" alt="" />
-                <span>Cozy AI</span>
+                <span>Cozie</span>
               </div>
               <button class="new-chat-button" type="button" data-action="new-chat" aria-label="Start a new chat" hidden>
                 <svg class="header-action-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -2746,14 +2799,6 @@
             </section>
             <div class="conversation-stream" data-conversation-stream aria-live="polite">
               <article class="chat-message chat-message--cozie static-cozie-message">
-                <div class="cozie-message-identity">
-                  <img
-                    class="cozie-message-avatar"
-                    src="../assets/cozie-ip.png"
-                    alt="Cozie"
-                  />
-                  <strong class="cozie-message-name">Cozie</strong>
-                </div>
                 <div class="cozie-message-content">
                   <div class="cozie-message-bubble">
                     <div class="assistant-reply" data-reply role="status"></div>
@@ -2767,7 +2812,7 @@
             </aside>
             <aside class="safety-alert" data-safety role="alert">
               <strong>Please seek medical care now</strong>
-              This may need prompt clinical assessment. Contact your pediatrician or local urgent medical service. Cozy AI can also connect you with human support.
+              This may need prompt clinical assessment. Contact your pediatrician or local urgent medical service. Cozie can also connect you with human support.
             </aside>
             <article class="tool-card" data-tool-card aria-live="polite">
               <div class="tool-card__title"><span aria-hidden="true">✦</span><span data-tool-title>Lactation Plan</span></div>
@@ -2788,7 +2833,7 @@
             </div>
             <form class="composer" data-composer>
               <button type="button" aria-label="Add attachment">＋</button>
-              <textarea name="message" rows="1" maxlength="1000" aria-label="Message Cozy AI" placeholder="Ask a question or log your baby’s day" autocomplete="off"></textarea>
+              <textarea name="message" rows="1" maxlength="1000" aria-label="Message Cozie" placeholder="Ask a question or log your baby’s day" autocomplete="off"></textarea>
               <div class="voice-listening" data-inline-voice aria-live="polite">
                 <svg class="voice-wave" viewBox="0 0 220 44" preserveAspectRatio="none" aria-hidden="true">
                   <path d="M0 22 C 22 8, 44 36, 66 22 S 110 8, 132 22 S 176 36, 220 22" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="3" />
@@ -2806,13 +2851,13 @@
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" /></svg>
               </button>
             </form>
-            <p class="disclaimer">AI-generated, not professional advice</p>
+            <p class="disclaimer">For informational purposes only. Not medical advice.</p>
           </div>
 
           <nav class="tab-bar" aria-label="Main navigation">
             <button class="tab-button" type="button"><span class="tab-icon">⌂</span><span>Home</span></button>
             <button class="tab-button" type="button"><span class="tab-icon">⬡</span><span>Device</span></button>
-            <button class="tab-button" type="button" aria-current="page"><span class="tab-icon"><img src="../assets/cozie-ip.png" alt="" /></span><span>Cozy AI</span></button>
+            <button class="tab-button" type="button" aria-current="page"><span class="tab-icon"><img src="../assets/cozie-ip.png" alt="" /></span><span>Cozie</span></button>
             <button class="tab-button" type="button"><span class="tab-icon">◎</span><span>Community</span></button>
             <button class="tab-button" type="button"><span class="tab-icon">♙</span><span>Me</span></button>
           </nav>
@@ -2873,12 +2918,12 @@
               </button>
             </header>
             <h2 id="history-title">Chat History</h2>
-            <div class="history-brand" aria-label="Cozy AI assistant">
+            <div class="history-brand" aria-label="Cozie assistant">
               <img
                 src="../assets/cozie-ip.png"
-                alt="Cozie, the Cozy AI guide"
+                alt="Cozie, your parenting guide"
               />
-              <strong>Cozy AI</strong>
+              <strong>Cozie</strong>
             </div>
             <div class="history-list"></div>
             <p class="history-end">No more data</p>
@@ -2927,7 +2972,7 @@
                 <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8" /><path d="M3 3v5h5" /></svg>
               </span>
               <span class="history-setting-copy">
-                <strong>Reset Cozy AI memory</strong>
+                <strong>Reset Cozie memory</strong>
                 <span data-memory-status>Clear what Cozie has learned about you</span>
               </span>
               <svg class="history-setting-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
@@ -2982,6 +3027,10 @@
                   <label class="feedback-option"><input type="checkbox" name="format" value="Need to send a graph but generate text" /> Need to send a graph but generate text</label>
                 </div>
               </fieldset>
+              <label class="feedback-text-field">
+                Additional feedback
+                <textarea name="comment" maxlength="500" placeholder="Tell us what could be better"></textarea>
+              </label>
             </div>
             <button class="primary-button feedback-submit" type="submit" data-feedback-submit disabled>Submit</button>
           </form>
@@ -3062,7 +3111,7 @@
 
         <section class="detail-screen" data-detail="lactation" aria-labelledby="plan-title">
           <header class="detail-header">
-            <button class="icon-button" type="button" data-action="close-detail" aria-label="Back to Cozy AI">‹</button>
+            <button class="icon-button" type="button" data-action="close-detail" aria-label="Back to Cozie">‹</button>
             <h1 id="plan-title">Lactation Plan</h1>
             <span aria-hidden="true"></span>
           </header>
@@ -3142,6 +3191,7 @@
       const feedbackSheet = document.querySelector('[data-feedback-sheet]')
       const feedbackForm = document.querySelector('[data-feedback-form]')
       const feedbackSubmit = document.querySelector('[data-feedback-submit]')
+      const feedbackText = feedbackForm.querySelector('textarea[name="comment"]')
       const toast = document.querySelector('[data-toast]')
       const reply = document.querySelector('[data-reply]')
       const consentCheckbox = document.querySelector('[data-privacy-consent]')
@@ -3393,7 +3443,6 @@
               src="../assets/cozie-ip.png"
               alt="Cozie"
             />
-            <strong class="cozie-message-name">Cozie</strong>
           </div>
           <div class="cozie-message-content">
             <div class="response-state" data-response-state data-stage="thinking">
@@ -3418,13 +3467,18 @@
         return item
       }
 
+      function finishCozieProcessingState(item) {
+        item.querySelector('.cozie-message-identity')?.remove()
+        item.querySelector('[data-response-state]')?.remove()
+      }
+
       function appendCompletedCozieMessage(message) {
         const item = appendCozieMessage()
-        item.querySelector('[data-response-state]').hidden = true
         const body = item.querySelector('[data-response-body]')
         body.textContent = message
         body.hidden = false
         item.querySelector('[data-message-actions]').hidden = false
+        finishCozieProcessingState(item)
         return item
       }
 
@@ -3442,7 +3496,7 @@
               label: 'Delete all conversations',
             }
           : {
-              title: 'Reset Cozy AI memory?',
+              title: 'Reset Cozie memory?',
               description: 'Cozie will forget your current preferences and conversation context. Your saved chat history will remain.',
               label: 'Reset memory',
             }
@@ -3469,7 +3523,7 @@
       function resetAgentMemory() {
         startNewChat()
         memoryStatus.textContent = 'Memory reset just now'
-        showToast('Cozy AI memory reset')
+        showToast('Cozie memory reset')
       }
 
       function restoreHistorySession(sessionId) {
@@ -3588,9 +3642,9 @@
         const responseState = cozieMessage.querySelector('[data-response-state]')
         const responseBody = cozieMessage.querySelector('[data-response-body]')
 
-        responseState.hidden = true
         responseBody.textContent = 'Thinking got stopped.'
         responseBody.hidden = false
+        finishCozieProcessingState(cozieMessage)
 
         const notice = document.createElement('div')
         notice.className = 'generation-stopped'
@@ -3944,8 +3998,8 @@
         if (generation !== responseGeneration) return
         responseBody.textContent = answer
         responseBody.hidden = false
-        responseState.hidden = true
         responseActions.hidden = false
+        finishCozieProcessingState(cozieMessage)
         citation.classList.toggle('is-visible', plan.needsCitation)
         safetyAlert.classList.toggle('is-visible', plan.hasMedicalRisk)
 
@@ -4212,9 +4266,13 @@
         if (event.target === feedbackSheet) closeFeedback()
       })
 
-      feedbackForm.addEventListener('change', () => {
-        feedbackSubmit.disabled = !feedbackForm.querySelector('input:checked')
-      })
+      function updateFeedbackSubmitState() {
+        const hasSelection = Boolean(feedbackForm.querySelector('input:checked'))
+        feedbackSubmit.disabled = !hasSelection && !feedbackText.value.trim()
+      }
+
+      feedbackForm.addEventListener('change', updateFeedbackSubmitState)
+      feedbackText.addEventListener('input', updateFeedbackSubmitState)
 
       feedbackForm.addEventListener('submit', (event) => {
         event.preventDefault()
@@ -4230,6 +4288,7 @@
             Answer: formData.getAll('answer'),
             Format: formData.getAll('format'),
           },
+          comment: formData.get('comment').trim(),
           submittedAt: new Date().toISOString(),
         })
 
@@ -4303,7 +4362,7 @@
       planForm.addEventListener('submit', (event) => {
         event.preventDefault()
         const data = new FormData(planForm)
-        document.querySelector('[data-plan-copy]').textContent = `Focus: ${data.get('goal')}. Start with ${data.get('frequency')} daily sessions and adjust based on comfort and output. Cozy AI will check in after three days.`
+        document.querySelector('[data-plan-copy]').textContent = `Focus: ${data.get('goal')}. Start with ${data.get('frequency')} daily sessions and adjust based on comfort and output. Cozie will check in after three days.`
         planResult.classList.add('is-visible')
         planResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
       })

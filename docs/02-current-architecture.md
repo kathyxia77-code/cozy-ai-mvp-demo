@@ -18,13 +18,13 @@ The current frontend is intentionally simpler than the proposed feature architec
 
 - Vite serves the React preview shell and static files from `public/`.
 - `src/App.tsx` renders an iframe whose source is `/demos/04-cozy-ai-assistant.html`.
-- The Cozy AI interaction is currently implemented primarily in the single static HTML demo.
+- The Cozie interaction is currently implemented primarily in the single static HTML demo.
 - Other numbered demos live in their own folders under `public/demos/`.
 - Shared Momcozy tokens live in `src/styles/momcozy-theme.css`; the User Guide receives a synchronized copy through `pnpm sync:guide-theme`.
 
 ## LLM Flow
 
-The Cozy AI static demo supports two response paths:
+The Cozie static demo supports two response paths:
 
 1. Local Mock behavior for file-based use, missing provider configuration, or provider failure.
 2. An optional Python server at `scripts/cozie_llm_server.py` that serves `public/` and forwards chat requests to the OpenAI Responses API.
@@ -35,7 +35,7 @@ The browser never receives the provider API key. The Python process reads `OPENA
 
 | Concern | Current owner |
 | --- | --- |
-| Cozy AI interactive behavior | `public/demos/04-cozy-ai-assistant.html` |
+| Cozie interactive behavior | `public/demos/04-cozy-ai-assistant.html` |
 | React preview frame | `src/App.tsx`, `src/App.css` |
 | Shared frontend tokens | `src/styles/momcozy-theme.css` |
 | Reusable UI primitives | `src/components/ui/` |

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Serve the Cozy AI demo and proxy Cozie requests to OpenAI."""
+"""Serve the Cozie demo and proxy Cozie requests to OpenAI."""
 
 import json
 import os

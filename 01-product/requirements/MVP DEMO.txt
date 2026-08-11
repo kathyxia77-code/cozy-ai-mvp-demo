@@ -10,23 +10,23 @@ Momcozy 已经拥有母婴硬件、App、用户记录、设备数据、专业内
 Momcozy 已经拥有母婴硬件、App、用户记录、设备数据、专业内容和服务资源，但这些能力目前主要以独立页面、设备功能、说明资料和人工服务的形式存在。用户购买产品后，Momcozy 与用户之间仍以单点功能和被动答疑为主，没有形成贯穿孕期、产后和育儿阶段的连续服务关系。
 当前 MomCozyAgent 与 MomCozyApp 已经验证了统一自然语言入口、连续上下文、业务数据读取、工具执行、私有知识库、结构化结果展示的技术可行性。本次立项不是重新做一个聊天机器人，而是将已有原型建设成 Momcozy 面向用户的智能服务入口，使品牌从“销售母婴产品”进一步延伸为“持续提供智能母婴服务”。
 
-基于竞品对比定义的"Agent 架构 + 吸乳/睡眠/康复三域统一计划排期 + 情绪识别 + IBCLC/家庭协同"，Cozy AI 对话入口框架应该是"三合一融合入口"——既不是单纯的记录框，也不是单纯的咨询 Tab，而是：
+基于竞品对比定义的"Agent 架构 + 吸乳/睡眠/康复三域统一计划排期 + 情绪识别 + IBCLC/家庭协同"，Cozie 对话入口框架应该是"三合一融合入口"——既不是单纯的记录框，也不是单纯的咨询 Tab，而是：
                                              🎯 入口定位：「今日节奏」+「对话入口」融合框架
 4. 功能概述
 Epic 1：主入口冷启动与首次引导
 目标：新用户0学习成本上手，建立“值得信任、智能贴心”的产品心智
 场景一：冷启动隐私授权
-目标：作为新用户，打开App-Cozy AI Tab时我希望看到能让我对数据隐私保护、以及服务信任没有疑虑。
-设计意图：降低信任摩擦。通过视觉引导和文案，让用户在第一眼就明白“Cozy AI是什么，能做什么，以及是否值得信任”。
+目标：作为新用户，打开 App-Cozie Tab 时我希望看到能让我对数据隐私保护、以及服务信任没有疑虑。
+设计意图：降低信任摩擦。通过视觉引导和文案，让用户在第一眼就明白“Cozie 是什么，能做什么，以及是否值得信任”。
 场景二： 全局对话Tab页框架
-目的： 作为新用户，进入App-Cozy AI Tab全局对话页，就能一眼明白主对话页面的全部交互结构
+目的： 作为新用户，进入 App-Cozie Tab 全局对话页，就能一眼明白主对话页面的全部交互结构
 设计意图：简单易操作。顶部-中部-底部上下结构清晰
 场景三： 新用户智能体对话引导
 目的： 作为新用户，首次进入全局对话的操作第一条消息的指引。
 设计意图：简单易操作。很快知道如何发送第一条消息，以及问什么问题。 
 5. 详细需求- MVP范围（928内测范围）
 
- Cozy AI 主入口功能详情
+ Cozie 主入口功能详情
 本章定义母婴助手 Agent 在 APP 内作为独立一级 Tab 的主入口产品方案，覆盖页面结构、会话管理、多模态输入与输出、新用户引导、对话中意图引导等完整交互定义。
 
 母婴助手作为 APP 底部导航栏的独立 Tab（图标：对话气泡 + Cozie IP组合），点击后进入专属对话空间，与 APP 其他模块（首页、设备、社区、我的）平级。
@@ -40,17 +40,17 @@ Epic 1：主入口冷启动与首次引导
 [图片]
 [图片]
 
-设计目的：作为新用户，打开App-Cozy AI Tab时我希望看到能让我对数据隐私保护、以及服务信任没有疑虑。
+设计目的：作为新用户，打开 App-Cozie Tab 时我希望看到能让我对数据隐私保护、以及服务信任没有疑虑。
 
-前置条件： 用户首次启动Cozy AI Tab
+前置条件： 用户首次启动 Cozie Tab
 账号首次进入该页面，若已授权激活使用则直接跳转下个页面
 需求说明： 
 1. Tab 入口：
 1.1、APP底部tab栏新增一个中间tab
- 1.2、tab名：Cozy AI；tab图案：Cozie IP图（如左原型）
+ 1.2、tab名：Cozie；tab图案：Cozie IP图（如左原型）
 2.  隐私授权页（全屏展示）
 2.1、展示母婴Cozie IP插画+文案：“How can I help you today?" “Warm answers for feeding, sleep, device support, and everyday baby care.”
-2.2、展示Cozy AI能力卡片3张
+2.2、展示 Cozie 能力卡片3张
 能力介绍卡片
   卡片1：「Personalized 」「Your AI-powered Parenting Assitant」
   卡片2：「20K+」「Truested by 20,0000 + moms」
@@ -59,13 +59,13 @@ Epic 1：主入口冷启动与首次引导
  隐私协议：I agree to Privacty Statement； 
  激活使用CTA：Get Started
 交互：
-1. 首次点击Cozy AI tab,全屏展示隐私授权页；
+1. 首次点击 Cozie tab,全屏展示隐私授权页；
 2. 能力卡片可以大于3，超过3个支持从左到右自动轮播；
 3. privacy statement默认不选中状态；用户勾选后才可以进行下一步，未勾选则按钮置灰；勾选后按钮亮起；
 4. 点击激活使用（get started）按钮进入对话页；
 5. privacy statement点击展开弹层，内部内容等待合规提供后填充；
- 4. 不同意/点击右上角退回箭，退回上一次且Cozy AI的原页面。 
-F-1.2 Cozy AI全局对话Tab页框架
+ 4. 不同意/点击右上角退回箭，退回上一次且 Cozie 的原页面。
+F-1.2 Cozie 全局对话Tab页框架
 暂时无法在飞书文档外展示此内容
 状态
 原型
@@ -106,19 +106,18 @@ F-1.2 Cozy AI全局对话Tab页框架
 2. 语音输入：点击麦克风 icon 切换为语音输入方式；输入框内仅显示声波动效，不在波形上展示转写文字，也不弹出大面积语音卡片；发送键旁显示暂停键。点击暂停键后，语音转写为文字并落入输入框，用户可编辑后发送；录音过程中也可直接点击发送键，以转写文字发送为一条消息。
 四、合规文案底部常驻：对话内容仅供参考，具体建议咨询专家/医生
 常驻底栏在输入框下方，灰色：
-“Cozy AI offers information, not medical advice." 或者
-"For informational purposes only. Not medical advice."
+“For informational purposes only. Not medical advice.”
 历史对话页面结构
 
 [图片]
 
-前置动作： 点击Cozy AI全局对话页面👈按钮，打开此页面
+前置动作： 点击 Cozie 全局对话页面👈按钮，打开此页面
 主入口左侧抽屉：历史对话列表
 跨会话记忆：Mom 的偏好、宝宝过敏史、家庭情况等关键事实持久化
 可视化聊天历史保留最近 12小时，Memory 持久化
 需求说明： 
 1. title：Chat History
-2. 展示：IP图+ Cozy AI
+2. 展示：IP图+ Cozie
 3. 按活跃时序由近至远排序历史对话消息记录
 4. 每条消息显示“主题摘要”限制50个字符； 
 5. 展示每条历史消息最后一条消息的时间。 
@@ -186,10 +185,11 @@ Lactation Plan； Voice Log； BB Sleep Forcast； IBCLC；
 用户发送消息，且AI回复文字消息；或带着结构化图/表渲染流式输出。 
 
 需求说明： 
-1. 主对话流中不处理Agent处理的状态机；
-2. 流式输出，且再长篇消息（大于等于3行的），需要按照语义进行分段；
-3. 回复消息来自RAG索引的，必须在底部带上信源标签：“文案待RAG PRD定义”
-4. 卡片消息出现在文字消息后。 
+1. Agent 处理消息时，在同一行等高展示带呼吸动效的 Cozie 头像及当前处理状态，不展示名字；
+2. Agent 回复完成后，移除头像和处理状态，仅保留消息气泡及其快捷操作；
+3. 流式输出，且再长篇消息（大于等于3行的），需要按照语义进行分段；
+4. 回复消息来自RAG索引的，必须在底部带上信源标签：“文案待RAG PRD定义”
+5. 卡片消息出现在文字消息后。
 
 
 （未定义对话流中应该展示的状态机） 待与Agent- PRD对齐后补充。 
@@ -201,7 +201,7 @@ Lactation Plan； Voice Log； BB Sleep Forcast； IBCLC；
 前置条件： 
 AI已回复消息；每条消息下的统一的交互功能
 需求说明： 
-1. 每条Cozy AI回复的消息，统一带快速复制、点👍、点👎快捷按钮；
+1. 每条 Cozie 回复的消息，统一带快速复制、点👍、点👎快捷按钮；
 2. 每个键被点击后，变化为实心样式； 
 3. 点击快速复制后弹Toast： Copied successfully  1秒自动消失
 4. 点👍弹出toast：Cozie is happy to have your affirmation.  1秒自动消失
@@ -212,6 +212,7 @@ Thanks for making Cozie better!
 Issues: Comprehension error; Context Error; Error in unrecognized questions; 
 Answer: Factual error; Reasoning error; Imcomplete content; Medical advice content; Calculation error; Illegal /Harmful content;
 Format: Format error; Repeated content; Need to send a graph but generate text. 
+补充反馈：提供最多 500 字符的自由输入文本框；可单独填写文本提交，也可与问题选项一起提交。
 CTA: Submit  
 💡后台需求： 需按照问卷表单提交的信息存表
 6. 特殊交互：长按消息框，可选择text进行复制
@@ -282,11 +283,11 @@ Figma 原型主要展示关键画面，但正式产品还需覆盖授权状态�
 6.2 隐私授权与首次激活状态矩阵
 
 | 状态 | 触发条件 | 页面表现 | 用户可操作 | 系统行为 | 异常处理 |
-| 未授权初始态 | 账号首次进入 Cozy AI Tab | 全屏展示 Cozie IP、能力卡；Privacy Statement 默认不勾选；Get Started 置灰 | 返回、查看协议、勾选协议 | 查询账号授权状态和当前协议版本 | 查询失败时保留当前页并支持重试 |
+| 未授权初始态 | 账号首次进入 Cozie Tab | 全屏展示 Cozie IP、能力卡；Privacy Statement 默认不勾选；Get Started 置灰 | 返回、查看协议、勾选协议 | 查询账号授权状态和当前协议版本 | 查询失败时保留当前页并支持重试 |
 | 查看协议 | 点击 Privacy Statement | 展开协议弹层 | 阅读、关闭 | 记录协议展示事件 | 内容加载失败时展示加载失败提示 |
 | 已勾选待激活 | 用户勾选协议 | 勾选框选中；Get Started 点亮 | 取消勾选、点击 Get Started | 暂不创建会话 | 无 |
 | 激活中 | 点击 Get Started | CTA 显示加载状态并防止重复点击 | 等待 | 保存用户 ID、协议版本、授权时间和地区 | 保存失败时恢复可点击并提示重试 |
-| 已授权 | 授权保存成功或账号历史已授权 | 跳过授权页，进入 Cozy AI 全局对话页 | 开始使用 | 拉取宝宝资料、新手状态和当前 Session | 单项数据失败按对应页面空态降级 |
+| 已授权 | 授权保存成功或账号历史已授权 | 跳过授权页，进入 Cozie 全局对话页 | 开始使用 | 拉取宝宝资料、新手状态和当前 Session | 单项数据失败按对应页面空态降级 |
 
 6.3 全局对话与 Session 生命周期状态矩阵
 

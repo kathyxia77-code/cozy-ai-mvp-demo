@@ -4,12 +4,12 @@
 
 ## Product Goal
 
-Cozy AI is Momcozy's conversational service entry point across pregnancy, postpartum, and infant care. It brings existing device data, user logs, approved content, tools, and support paths into one continuous experience rather than acting as a standalone general chatbot.
+Cozie is Momcozy's conversational service entry point across pregnancy, postpartum, and infant care. It brings existing device data, user logs, approved content, tools, and support paths into one continuous experience rather than acting as a standalone general chatbot.
 
 ## MVP Capabilities
 
 - First-use privacy consent and activation.
-- A global Cozy AI tab with baby context, current conversation, new conversation, and chat history.
+- A global Cozie tab with baby context, current conversation, new conversation, and chat history.
 - Text input, voice input, streaming responses, stop generation, retry, and session restoration.
 - Suggested questions and quick-task chips for Lactation Plan, Voice Log, Baby Sleep Forecast, and IBCLC support.
 - Structured task cards for pumping, sleep, and lactation workflows.
@@ -20,7 +20,7 @@ Cozy AI is Momcozy's conversational service entry point across pregnancy, postpa
 ## Non-Negotiable Constraints
 
 - Privacy consent starts unchecked; activation remains disabled until consent is granted.
-- Cozy AI provides information, not medical advice. The disclaimer remains visible in the conversation experience.
+- The disclaimer "For informational purposes only. Not medical advice." remains visible in the conversation experience.
 - Medical red flags and emotional crises must use conservative escalation paths rather than ordinary generated advice.
 - High-risk answers require approved sources. When retrieval has no reliable match, narrow the answer or offer human support.
 - Never claim that a record, device action, or tool submission succeeded without an explicit application confirmation.

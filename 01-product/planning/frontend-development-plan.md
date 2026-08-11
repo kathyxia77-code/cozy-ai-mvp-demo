@@ -1,8 +1,8 @@
-# Cozy AI MVP 前端开发计划
+# Cozie MVP 前端开发计划
 
 ## 1. 目标
 
-按照 PRD、页面状态矩阵和 Figma 截图开发 Cozy AI 移动端交互页面，并在没有真实后端、Agent、Forecast 和客服系统时，通过 Mock 数据完整模拟主要操作及异常状态。
+按照 PRD、页面状态矩阵和 Figma 截图开发 Cozie 移动端交互页面，并在没有真实后端、Agent、Forecast 和客服系统时，通过 Mock 数据完整模拟主要操作及异常状态。
 
 MVP 可演示范围：
 
@@ -62,7 +62,7 @@ src/
 ├── app/                 # 路由、Provider、Feature Flag、错误边界
 ├── pages/
 │   ├── consent/         # 隐私授权页
-│   └── conversation/    # Cozy AI 主入口
+│   └── conversation/    # Cozie 主入口
 ├── features/
 │   ├── chat/            # 消息流、输入、流式生成、反馈
 │   ├── session/         # 当前会话、历史、新建会话
